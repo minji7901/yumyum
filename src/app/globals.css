@@ -2,7 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: #ffffff;
+  --foreground: #333;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
 body {
+  color: var(--foreground);
+  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -75,4 +89,12 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.common-btn {
+  @apply bg-primary hover:bg-hover text-white font-bold py-1 rounded-md text-base block transition-all;
+}
+
+.common-title {
+  @apply text-2xl text-primary my-5 font-bold text-center md:my-8 md:text-4xl;
 }
