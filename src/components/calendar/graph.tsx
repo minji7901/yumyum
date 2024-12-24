@@ -5,43 +5,49 @@ import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { calculateTodayTotals } from '@/utils/calendar/graph';
 
 const data = [
   {
-    "foodNm": "비빔밥_약초",
-    "enerc": "128",
-    "chocdf": "20.05",
-    "prot": "2.98",
-    "fatce": "3.98",
-    "sugar": "0.73",
-    "nat": "243",
-    "foodSize": "400g",
-    "amount": 1
+    "amount": 1,
+    "AMT_NUM1": "128",
+    "AMT_NUM3": "2.98",
+    "AMT_NUM4": "3.98",
+    "AMT_NUM7": "20.05",
+    "AMT_NUM8": "0.73",
+    "AMT_NUM14": "243",
+    "FOOD_NM_KR": "비빔밥_약초",
+    "NUTRI_AMOUNT_SERVING": "400g"
   },
   {
-    "foodNm": "삼각김밥_고추장불고기",
-    "enerc": "165",
-    "chocdf": "34.11",
-    "prot": "3.66",
-    "fatce": "1.58",
-    "sugar": "0.21",
-    "nat": "343",
-    "foodSize": "100g",
-    "amount": 2
+    "amount": 2,
+    "AMT_NUM1": "165",
+    "AMT_NUM3": "3.66",
+    "AMT_NUM4": "1.58",
+    "AMT_NUM7": "34.11",
+    "AMT_NUM8": "0.21",
+    "AMT_NUM14": "343",
+    "FOOD_NM_KR": "삼각김밥_고추장불고기",
+    "NUTRI_AMOUNT_SERVING": "100g"
   }
 ];
 
+const calculateData = calculateTodayTotals(data);
+
+console.log('calculateData', calculateData);
+
+
 const chartData = [
-  { browser: '탄수화물', visitors: 275, fill: 'var(--color-탄수화물)' },
-  { browser: '단백질', visitors: 200, fill: 'var(--color-단백질)' },
-  { browser: '지방', visitors: 187, fill: 'var(--color-지방)' },
-  { browser: '당류', visitors: 173, fill: 'var(--color-당류)' },
-  { browser: '나트륨', visitors: 90, fill: 'var(--color-나트륨)' }
+  { nutrient: '탄수화물', intakeRatio: 275, fill: 'var(--color-탄수화물)' },
+  { nutrient: '단백질', intakeRatio: 200, fill: 'var(--color-단백질)' },
+  { nutrient: '지방', intakeRatio: 187, fill: 'var(--color-지방)' },
+  { nutrient: '당류', intakeRatio: 173, fill: 'var(--color-당류)' },
+  { nutrient: '나트륨', intakeRatio: 90, fill: 'var(--color-나트륨)' }
 ];
 
 const chartConfig = {
-  visitors: {
-    label: 'Visitors'
+  intakeRatio: {
+    label: '권장량 대비 섭취율 '
   },
   탄수화물: {
     label: '탄수화물',
@@ -87,16 +93,16 @@ export function Graph() {
               }}
             >
               <YAxis
-                dataKey="browser"
+                dataKey="nutrient"
                 type="category"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
                 tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
               />
-              <XAxis dataKey="visitors" type="number" hide/>
+              <XAxis dataKey="intakeRatio" type="number" hide/>
               <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-              <Bar dataKey="visitors" layout="vertical" radius={5} />
+              <Bar dataKey="intakeRatio" layout="vertical" radius={5} />
             </BarChart>
           </ChartContainer>
         </CardContent>
