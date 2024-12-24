@@ -1,7 +1,5 @@
-import Image from "next/image";
+import FoodList from '@/components/search/FoodList';
 
 export default function Home() {
-  return (
-    <></>
-  );
+  return <FoodList />;
 }
