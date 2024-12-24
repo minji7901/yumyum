@@ -1,11 +1,15 @@
 import { SearchType } from '@/types/Search';
 import { useQuery } from '@tanstack/react-query';
 
-export const useSearch = () => {
+interface SearchProps {
+  keyword: string;
+}
+
+export const useSearch = ({ keyword }: SearchProps) => {
   const { data, isPending, isError } = useQuery({
-    queryKey: ['search'],
+    queryKey: ['search', keyword],
     queryFn: async () => {
-      const res = await fetch('/api/search');
+      const res = await fetch(`/api/search?keyword=${encodeURIComponent(keyword)}`);
       const data: SearchType = await res.json();
       return data;
     }
