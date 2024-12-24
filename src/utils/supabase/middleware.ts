@@ -25,39 +25,25 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
+  // // Supabase 사용자 정보 가져오기
+  // const {
+  //   data: { user }
+  // } = await supabase.auth.getUser();
 
-  // IMPORTANT: DO NOT REMOVE auth.getUser()
-
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
-
-  // if (!user && !request.nextUrl.pathname.startsWith('/signin') && !request.nextUrl.pathname.startsWith('/signup')) {
-  //   // no user, potentially respond by redirecting the user to the login page
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = '/signin';
-  //   return NextResponse.redirect(url);
+  // // 로그인된 사용자가 로그인/회원가입 페이지에 접근하면 홈으로 리디렉션
+  // if (user) {
+  //   // 로그인된 상태에서 회원가입 페이지에 접근하면 홈으로 리디렉션
+  //   if (request.nextUrl.pathname.startsWith('/signup')) {
+  //     return NextResponse.redirect(new URL('/', request.url)); // 홈 페이지로 리디렉션
+  //   }
+  // } else {
+  //   // 로그인되지 않은 상태에서 로그인/회원가입 페이지 외에 접근하면 로그인 페이지로 리디렉션
+  //   if (!request.nextUrl.pathname.startsWith('/signin') && !request.nextUrl.pathname.startsWith('/signup')) {
+  //     const url = request.nextUrl.clone();
+  //     url.pathname = '/signin';
+  //     return NextResponse.redirect(url);
+  //   }
   // }
-
-  if (user && request.nextUrl.pathname.startsWith('/signin')) {
-    return NextResponse.redirect(request.nextUrl.origin);
-  }
-
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
 
   return supabaseResponse;
 }

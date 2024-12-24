@@ -5,10 +5,6 @@ export async function POST(request: Request) {
   const supabase = createClient();
   const { email, password } = await request.json();
 
-  if (!email || !password) {
-    return NextResponse.json({ errorMsg: '이메일과 비밀번호를 모두 입력해 주세요.' }, { status: 400 });
-  }
-
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password
