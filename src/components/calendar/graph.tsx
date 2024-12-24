@@ -6,6 +6,30 @@ import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
+const data = [
+  {
+    "foodNm": "비빔밥_약초",
+    "enerc": "128",
+    "chocdf": "20.05",
+    "prot": "2.98",
+    "fatce": "3.98",
+    "sugar": "0.73",
+    "nat": "243",
+    "foodSize": "400g",
+    "amount": 1
+  },
+  {
+    "foodNm": "삼각김밥_고추장불고기",
+    "enerc": "165",
+    "chocdf": "34.11",
+    "prot": "3.66",
+    "fatce": "1.58",
+    "sugar": "0.21",
+    "nat": "343",
+    "foodSize": "100g",
+    "amount": 2
+  }
+];
 
 const chartData = [
   { browser: '탄수화물', visitors: 275, fill: 'var(--color-탄수화물)' },
