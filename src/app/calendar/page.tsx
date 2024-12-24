@@ -1,14 +1,18 @@
-import MealCalendar from '@/components/calendar/MealCalendarSection'
-import React from 'react'
+import CalendarDateContext from '@/components/calendar/CalendarDateContext';
+import MealCalendarSection from '@/components/calendar/MealCalendarSection';
+import { Graph } from '@/components/calendar/graph';
+import React from 'react';
 
 const Calendar = () => {
   return (
     <>
       <h1 className="common-title">ooo님의 식단 달력</h1>
-      <MealCalendar />
-      <div></div>
+      <CalendarDateContext>
+        <MealCalendarSection />
+        <Graph />
+      </CalendarDateContext>
     </>
   );
-}
+};
 
-export default Calendar
+export default Calendar;
