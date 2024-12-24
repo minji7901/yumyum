@@ -5,19 +5,19 @@ import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { calculateTodayTotals } from '@/utils/calendar/graph';
+import { calculateRatioNutrients, calculateTotalNutrients, getLabelColor } from '@/utils/calendar/graph';
 
 const data = [
   {
     "amount": 1,
-    "AMT_NUM1": "128",
-    "AMT_NUM3": "2.98",
-    "AMT_NUM4": "3.98",
-    "AMT_NUM7": "20.05",
-    "AMT_NUM8": "0.73",
-    "AMT_NUM14": "243",
+    "AMT_NUM1": "128", // 칼로리
+    "AMT_NUM3": "2.98", // 탄수화물 300g
+    "AMT_NUM4": "3.98", // 단백질 55g
+    "AMT_NUM7": "20.05", // 지방 50g
+    "AMT_NUM8": "0.73", // 당류 75g
+    "AMT_NUM14": "243", // 나트륨(mg) 2000mg
     "FOOD_NM_KR": "비빔밥_약초",
-    "NUTRI_AMOUNT_SERVING": "400g"
+    "Z10500": "400"
   },
   {
     "amount": 2,
@@ -28,48 +28,57 @@ const data = [
     "AMT_NUM8": "0.21",
     "AMT_NUM14": "343",
     "FOOD_NM_KR": "삼각김밥_고추장불고기",
-    "NUTRI_AMOUNT_SERVING": "100g"
+    "Z10500": "100"
   }
 ];
 
-const calculateData = calculateTodayTotals(data);
+const totalData = calculateTotalNutrients(data);
+const ratioData = calculateRatioNutrients(totalData);
+console.log('totalData', totalData);
+console.log('ratioData', ratioData);
 
-console.log('calculateData', calculateData);
 
 
 const chartData = [
-  { nutrient: '탄수화물', intakeRatio: 275, fill: 'var(--color-탄수화물)' },
-  { nutrient: '단백질', intakeRatio: 200, fill: 'var(--color-단백질)' },
-  { nutrient: '지방', intakeRatio: 187, fill: 'var(--color-지방)' },
-  { nutrient: '당류', intakeRatio: 173, fill: 'var(--color-당류)' },
-  { nutrient: '나트륨', intakeRatio: 90, fill: 'var(--color-나트륨)' }
+  { nutrient: 'AMT_NUM3', intakeRatio: ratioData.AMT_NUM3, fill: 'var(--color-AMT_NUM3)' },
+  { nutrient: 'AMT_NUM4', intakeRatio: ratioData.AMT_NUM4, fill: 'var(--color-AMT_NUM4)' },
+  { nutrient: 'AMT_NUM7', intakeRatio: ratioData.AMT_NUM7, fill: 'var(--color-AMT_NUM7)' },
+  { nutrient: 'AMT_NUM8', intakeRatio: ratioData.AMT_NUM8, fill: 'var(--color-AMT_NUM8)' },
+  { nutrient: 'AMT_NUM14', intakeRatio: ratioData.AMT_NUM14, fill: 'var(--color-AMT_NUM14)' }
 ];
 
 const chartConfig = {
   intakeRatio: {
-    label: '권장량 대비 섭취율 '
+    label: '권장량 대비 섭취율(%) '
   },
-  탄수화물: {
+  AMT_NUM3: {
     label: '탄수화물',
     color: 'hsl(var(--chart-1))'
   },
-  단백질: {
+  AMT_NUM4: {
     label: '단백질',
     color: 'hsl(var(--chart-2))'
   },
-  지방: {
+  AMT_NUM7: {
     label: '지방',
     color: 'hsl(var(--chart-3))'
   },
-  당류: {
+  AMT_NUM8: {
     label: '당류',
     color: 'hsl(var(--chart-4))'
   },
-  나트륨: {
+  AMT_NUM14: {
     label: '나트륨',
     color: 'hsl(var(--chart-5))'
   }
 } satisfies ChartConfig;
+
+// 색상 값 동적으로 업데이트
+Object.keys(chartConfig).forEach((key) => {
+  if (key !== 'intakeRatio') { // intakeRatio는 색상 값을 제외하고 업데이트
+    chartConfig[key].color = getLabelColor(ratioData[key]); 
+  }
+});
 
 export function Graph() {
   return (
@@ -78,8 +87,8 @@ export function Graph() {
       <div className="w-full">
       <Card>
         <CardHeader>
-          <CardTitle>하루 평균 칼로리</CardTitle>
-          <CardDescription>00 kcal</CardDescription>
+          <CardTitle>하루 평균 칼로리 </CardTitle>
+          <CardDescription>{ratioData.AMT_NUM1} kcal</CardDescription>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig}>
@@ -108,9 +117,10 @@ export function Graph() {
         </CardContent>
         <CardFooter className="flex-col items-start gap-2 text-sm">
           <div className="flex gap-2 font-medium leading-none">
-            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+            <span className=" p-2 bg-[#E8C468]"/> 미달
+            <span className=" p-2 bg-[#2A9D90]"/> 적정
+            <span className=" p-2 bg-[#E76E50]"/> 초과
           </div>
-          <div className="leading-none text-muted-foreground">Showing total visitors for the last 6 months</div>
         </CardFooter>
       </Card>
       </div>
