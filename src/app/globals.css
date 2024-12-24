@@ -33,3 +33,11 @@ body {
 .common-title {
   @apply text-2xl text-primary my-5 font-bold text-center md:my-8 md:text-4xl;
 }
+
+.common-btn {
+  @apply bg-primary hover:bg-hover text-white font-bold py-1 rounded-md text-base block transition-all;
+}
+
+.common-title {
+  @apply text-2xl text-primary my-5 font-bold text-center md:my-8 md:text-4xl;
+}
