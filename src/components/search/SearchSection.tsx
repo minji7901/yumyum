@@ -12,10 +12,10 @@ const SearchSection = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-5 m-5">
       <SearchBar handleSubmit={handleSubmit} />
       <FoodList keyword={keyword} />
-    </>
+    </div>
   );
 };
 

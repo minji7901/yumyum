@@ -11,18 +11,16 @@ const FoodItem = ({ data }: FoodItemProps) => {
   const kcal = `${Math.floor((parseInt(data.Z10500) / 100) * parseInt(data.AMT_NUM1))}kcal`;
 
   return (
-    <div className="my-10">
-      <p>{data.FOOD_NM_KR}</p>
-      <p>
-        {kcal} {amount}
+    <div className="flex flex-col gap-2 p-5 border-b border-primary">
+      <p className="font-bold">
+        {data.FOOD_NM_KR} <span className="text-sm text-gray-400">{amount}</span>
       </p>
-      <div>
+      <p className="text-primary">{kcal}</p>
+      <div className="flex flex-wrap gap-x-4 gap-y-2">
         {Object.entries(data).map(
           ([key, value]) =>
             formatNutrients(key).name && (
-              <span key={key} className="mr-4">
-                {`${formatNutrients(key).name} : ${value}${formatNutrients(key).unit}`}
-              </span>
+              <p key={key}>{`${formatNutrients(key).name} ${value}${formatNutrients(key).unit}`}</p>
             )
         )}
       </div>
