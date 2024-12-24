@@ -4,7 +4,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #333;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,4 +24,12 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.common-btn {
+  @apply bg-primary hover:bg-hover text-white font-bold rounded-md text-base block transition-all;
+}
+
+.common-title {
+  @apply text-2xl text-primary my-5 font-bold text-center md:my-8 md:text-4xl;
 }

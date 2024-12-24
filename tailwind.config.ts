@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -11,7 +11,9 @@ const config: Config = {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
-        main: '#7EB369'
+        primary: '#7EB369',
+        hover: '#388E3C',
+        softly: '#E0E0E0'
       }
     }
   },
