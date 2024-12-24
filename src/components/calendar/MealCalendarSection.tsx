@@ -1,91 +1,9 @@
-'use client'
+'use client';
 
-import { CalendarDay, genDays } from '@/utils/genCalendarDays';
-import Link from 'next/link';
 import { useContext } from 'react';
 import { SelectedDateContext } from './CalendarDateContext';
-
-const MealCalendarBtn = () => {
-  const dateContext = useContext(SelectedDateContext);
-  const { selectedDate, handleSelectedDate } = dateContext;
-  const { year, month } = selectedDate;
-
-  const onPrevMonthClick = () => {
-    const newMonth = month === 1 ? 12 : month - 1;
-    const newYear = month === 1 && newMonth === 12 ? year - 1 : year;
-    const newDate = { ...selectedDate, year: newYear, month: newMonth };
-    handleSelectedDate(newDate);
-  };
-  const onNextMonthClick = () => {
-    const newMonth = month === 12 ? 1 : month + 1;
-    const newYear = month === 12 && newMonth === 1 ? year + 1 : year;
-    const newDate = { ...selectedDate, year: newYear, month: newMonth };
-    handleSelectedDate(newDate);
-  };
-  return (
-    <>
-      <button type="button" onClick={onPrevMonthClick}>
-        {'<'}
-      </button>
-      <button type="button" onClick={onNextMonthClick}>
-        {'>'}
-      </button>
-    </>
-  );
-};
-
-interface MealCalendarWeekProps {
-  weekInfo: CalendarDay[];
-}
-const MealCalendarWeek = ({ weekInfo }: MealCalendarWeekProps) => {
-  return (
-    <div className="h-20 grid grid-cols-7">
-      {weekInfo.map((curDay, i) => {
-        const { day, kcal } = curDay;
-        const key = day === null ? i : day + i;
-
-        let textColor = 'text-black';
-        if (i === 0) textColor = 'text-red-600';
-        if (i === 6) textColor = 'text-blue-600';
-
-        return (
-          <Link key={key} href="/calendar/dailyNutrition/1048385" className="z-10">
-            <div className={`${textColor}`}>
-              <div>{day}</div> <div>{kcal}</div>
-            </div>
-          </Link>
-        );
-      })}
-    </div>
-  );
-};
-
-const MealCalendarSheet = () => {
-  //요일란은 row가 스타일이 다름
-  const dateContext = useContext(SelectedDateContext);
-  const { selectedDate } = dateContext;
-  const { year, month } = selectedDate;
-
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const weeks = genDays({ year, month });
-
-  return (
-    <>
-      <div className="h-10 grid grid-cols-7">
-        {days.map((curDay) => (
-          <div key={curDay} className="text-center bg-white">
-            {curDay}
-          </div>
-        ))}
-      </div>
-      <div className="grid gap-px">
-        {weeks.map((curWeekInfo, i) => (
-          <MealCalendarWeek key={i} weekInfo={curWeekInfo} />
-        ))}
-      </div>
-    </>
-  );
-};
+import MealCalendarSheet from './MealCalendarSheet';
+import MealCalendarBtn from './MealCalendarBtn';
 
 const MealCalendarSection = () => {
   const dateContext = useContext(SelectedDateContext);

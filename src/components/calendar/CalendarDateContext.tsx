@@ -2,9 +2,14 @@
 import { createContext, useState } from 'react';
 import { SelectedDate, selectedDateInit } from '@/utils/selectedDateInit';
 
+interface NewlySelectedDate {
+  year?: number;
+  month?: number;
+  day?: number;
+}
 interface SelectedDateType {
   selectedDate: SelectedDate;
-  handleSelectedDate: (newDate: SelectedDate) => void;
+  handleSelectedDate: (newDate: NewlySelectedDate) => void;
 }
 export const SelectedDateContext = createContext<SelectedDateType>({
   selectedDate: { year: 0, month: 0, day: 0 },
@@ -17,7 +22,7 @@ interface CalendarDateContextProps {
 const CalendarDateContext = ({ children }: CalendarDateContextProps) => {
   const [selectedDate, setSelectedDate] = useState<SelectedDate>(selectedDateInit());
 
-  const handleSelectedDate = (newDate: SelectedDate) => {
+  const handleSelectedDate = (newDate: NewlySelectedDate) => {
     const newDateToSet = { ...selectedDate, ...newDate };
     setSelectedDate(newDateToSet);
   };
