@@ -35,7 +35,10 @@ const MealCalendarWeek = ({ weekInfo }: MealCalendarWeekProps) => {
               <div
                 className="h-full m-1 relative hover:bg-slate-200 z-[5] hover:cursor-pointer"
                 onClick={(e) => {
-                  if (e.target instanceof HTMLElement && e.target.tagName !== "BUTTON") handleOnDayClick(day);
+                  if (e.target instanceof HTMLElement && e.target.tagName !== "BUTTON") {
+                    handleOnDayClick(day);
+                    alert('날짜가 선택되었습니다')
+                  };
                 }}
               >
                 <div className={`${textColor}`}>{day}</div>
@@ -57,7 +60,6 @@ const MealCalendarSheet = () => {
   const dateContext = useContext(SelectedDateContext);
   const { selectedDate } = dateContext;
   const { year, month } = selectedDate;
-  console.log(year, month);
 
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const weeks = genDays({ year, month });

@@ -98,3 +98,14 @@ body {
 .common-title {
   @apply text-2xl text-primary my-5 font-bold text-center md:my-8 md:text-4xl;
 }
+
+.hide-scroll-y {
+  overflow-y: scroll;
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
