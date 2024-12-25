@@ -8,12 +8,16 @@ interface NewlySelectedDate {
   day?: number;
 }
 interface SelectedDateType {
+  modalVisibility: boolean;
   selectedDate: SelectedDate;
   handleSelectedDate: (newDate: NewlySelectedDate) => void;
+  handleModalVisibility: (bool:boolean) => void;
 }
 export const SelectedDateContext = createContext<SelectedDateType>({
+  modalVisibility: false,
   selectedDate: { year: 0, month: 0, day: 0 },
-  handleSelectedDate: () => {}
+  handleSelectedDate: () => {},
+  handleModalVisibility: () =>{},
 });
 
 interface CalendarDateContextProps {
@@ -21,15 +25,21 @@ interface CalendarDateContextProps {
 }
 const CalendarDateContext = ({ children }: CalendarDateContextProps) => {
   const [selectedDate, setSelectedDate] = useState<SelectedDate>(selectedDateInit());
+  const [modalVisibility, setModalvisibility] = useState<boolean>(false);
 
   const handleSelectedDate = (newDate: NewlySelectedDate) => {
     const newDateToSet = { ...selectedDate, ...newDate };
+    console.log(selectedDate, newDateToSet);
     setSelectedDate(newDateToSet);
   };
 
+  const handleModalVisibility = (bool:boolean)=>{
+    setModalvisibility(bool);
+  }
+
   return (
     <>
-      <SelectedDateContext.Provider value={{ selectedDate, handleSelectedDate }}>
+      <SelectedDateContext.Provider value={{ modalVisibility, selectedDate, handleSelectedDate, handleModalVisibility }}>
         {children}
       </SelectedDateContext.Provider>
     </>

@@ -9,6 +9,7 @@ const MealCalendarSection = () => {
   const dateContext = useContext(SelectedDateContext);
   const { selectedDate } = dateContext;
   const { year, month } = selectedDate;
+  console.log('re rendered', selectedDate.month);
 
   return (
     <section>

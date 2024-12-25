@@ -1,3 +1,5 @@
+import CalendarDateContext from "@/components/calendar/CalendarDateContext";
+
 export default function RootLayout({
   children,
   dailyNutritionModal
@@ -6,9 +8,9 @@ export default function RootLayout({
   dailyNutritionModal?: React.ReactNode;
 }>) {
   return (
-    <>
+    <CalendarDateContext>
       {children}
       {dailyNutritionModal}
-    </>
+    </CalendarDateContext> 
   );
 }
