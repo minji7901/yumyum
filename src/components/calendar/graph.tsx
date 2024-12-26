@@ -94,7 +94,7 @@ export const Graph = () => {
 
   if (isError) {
     return (
-      <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-8 px-6 my-6 bg-[#f8f9fa] text-[#333] text-center">
+      <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-8 px-6 my-14 bg-[#f8f9fa] text-[#333] text-center">
         <h2 className="text-xl font-semibold mb-4">오류 발생</h2>
         <p>그래프 데이터를 가져오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</p>
       </div>
@@ -103,8 +103,7 @@ export const Graph = () => {
 
   if (isEmptyData) {
     return (
-      <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-28 my-10">
-        <h1 className="text-2xl text-[#333333] font-bold mb-8">지난 30일간 섭취한 영양소</h1>
+      <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-28 my-14">
         <div className="text-lg text-[#666666]">달력에 식단 데이터를 추가해 보세요.</div>
       </div>
     );
