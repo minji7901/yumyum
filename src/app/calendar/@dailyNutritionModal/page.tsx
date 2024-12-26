@@ -6,17 +6,6 @@ import FoodTagBox from '@/components/calendar/FoodTagBox';
 import ShowDailyMealData from '@/components/calendar/ShowDailyMealData';
 import { useContext, useRef, useState } from 'react';
 
-/*
-{
-  "fat": 40,
-  "carb": 100,
-  "sugar": 30,
-  "natrium": 0.6,
-  "protein": 40,
-  "calories": 2000
-}
-*/
-
 const Modal = () => {
   const dateContext = useContext(SelectedDateContext);
   const { modalVisibility, handleModalVisibility } = dateContext;
