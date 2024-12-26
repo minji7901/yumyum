@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { MdOutlinePersonOutline } from 'react-icons/md';
 import { IoMdLogIn } from 'react-icons/io';
 import { RiLogoutCircleLine } from 'react-icons/ri';
 import MyPageModal from './MyPageModal';
-import { useUser } from '@/app/hooks/useUser';
+import { useUser } from '@/hooks/useUser';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import Loading from '@/app/loading';
@@ -14,11 +14,9 @@ import Swal from 'sweetalert2';
 import { useLoginContext } from '@/context/LoginProvider';
 
 const Header = () => {
-  const { isLogin, login, logout } = useLoginContext();
+  const { logout, isLogin } = useLoginContext();
   const { loading, user } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  console.log('isLogin:', isLogin);
 
   const router = useRouter();
 
