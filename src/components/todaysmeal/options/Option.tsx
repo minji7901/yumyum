@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 interface OptionProps {
@@ -11,7 +13,7 @@ const Option = ({ label, isSelected, onClick, className = '' }: OptionProps) => 
   return (
     <button
       onClick={onClick}
-      className={`w-full border-2 rounded-full px-4 py-3 text-center font-medium transition-all duration-300 ${
+      className={`w-full border-2 rounded-full px-6 py-3 text-center font-medium transition-all duration-300 ${
         isSelected ? 'bg-primary text-white border-primary' : 'bg-white text-gray-800 border-primary'
       } hover:bg-primary hover:text-white ${className}`}
     >

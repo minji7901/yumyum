@@ -92,7 +92,11 @@ body {
 }
 
 .common-btn {
-  @apply bg-primary hover:bg-hover text-white font-bold rounded-md text-base block transition-all;
+  @apply bg-primary hover:bg-hover text-white font-bold rounded-md text-base inline-flex justify-center items-center transition-all;
+}
+
+.common-btn:disabled {
+  @apply bg-gray-300 cursor-not-allowed hover:bg-gray-300;
 }
 
 .common-title {

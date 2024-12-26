@@ -5,35 +5,38 @@ export type Database = {
     Tables: {
       calendars: {
         Row: {
-          created_at: string;
-          day: number;
-          id: string;
-          month: number;
-          total_calories: number;
-          total_nutritions: Json | null;
-          user_id: string;
-          year: number;
-        };
+          created_at: string
+          date: string | null
+          day: number
+          id: string
+          month: number
+          total_calories: number
+          total_nutritions: Json | null
+          user_id: string
+          year: number
+        }
         Insert: {
-          created_at?: string;
-          day: number;
-          id?: string;
-          month: number;
-          total_calories: number;
-          total_nutritions?: Json | null;
-          user_id?: string;
-          year: number;
-        };
+          created_at?: string
+          date?: string | null
+          day: number
+          id?: string
+          month: number
+          total_calories: number
+          total_nutritions?: Json | null
+          user_id?: string
+          year: number
+        }
         Update: {
-          created_at?: string;
-          day?: number;
-          id?: string;
-          month?: number;
-          total_calories?: number;
-          total_nutritions?: Json | null;
-          user_id?: string;
-          year?: number;
-        };
+          created_at?: string
+          date?: string | null
+          day?: number
+          id?: string
+          month?: number
+          total_calories?: number
+          total_nutritions?: Json | null
+          user_id?: string
+          year?: number
+        }
         Relationships: [
           {
             foreignKeyName: 'calendars_user_id_fkey';
@@ -46,38 +49,38 @@ export type Database = {
       };
       consumed_foods: {
         Row: {
-          amount: number;
-          calendar_id: string;
-          calorie: number;
-          created_at: string;
-          food_code: number;
-          id: string;
-          name: string;
-          nutritions: Json;
-          serving_size: string;
-        };
+          amount: number
+          calendar_id: string
+          calorie: number
+          created_at: string
+          food_code: number
+          id: string
+          name: string
+          nutritions: Json
+          serving_size: string
+        }
         Insert: {
-          amount?: number;
-          calendar_id?: string;
-          calorie: number;
-          created_at?: string;
-          food_code: number;
-          id?: string;
-          name: string;
-          nutritions: Json;
-          serving_size?: string;
-        };
+          amount: number
+          calendar_id?: string
+          calorie: number
+          created_at?: string
+          food_code: number
+          id?: string
+          name: string
+          nutritions: Json
+          serving_size: string
+        }
         Update: {
-          amount?: number;
-          calendar_id?: string;
-          calorie?: number;
-          created_at?: string;
-          food_code?: number;
-          id?: string;
-          name?: string;
-          nutritions?: Json;
-          serving_size?: string;
-        };
+          amount?: number
+          calendar_id?: string
+          calorie?: number
+          created_at?: string
+          food_code?: number
+          id?: string
+          name?: string
+          nutritions?: Json
+          serving_size?: string
+        }
         Relationships: [
           {
             foreignKeyName: 'consumed_foods_calendar_id_fkey';
