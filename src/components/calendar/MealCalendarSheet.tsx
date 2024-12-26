@@ -35,8 +35,8 @@ const MealCalendarWeek = ({ weekInfo }: MealCalendarWeekProps) => {
               <div
                 className="h-full m-1 relative hover:bg-slate-200 z-[5] hover:cursor-pointer"
                 onClick={(e) => {
+                  handleOnDayClick(day);
                   if (e.target instanceof HTMLElement && e.target.tagName !== "BUTTON") {
-                    handleOnDayClick(day);
                     alert('날짜가 선택되었습니다')
                   };
                 }}

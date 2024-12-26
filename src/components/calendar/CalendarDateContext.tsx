@@ -29,7 +29,6 @@ const CalendarDateContext = ({ children }: CalendarDateContextProps) => {
 
   const handleSelectedDate = (newDate: NewlySelectedDate) => {
     const newDateToSet = { ...selectedDate, ...newDate };
-    console.log(selectedDate, newDateToSet);
     setSelectedDate(newDateToSet);
   };
 
