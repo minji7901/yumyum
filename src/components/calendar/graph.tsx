@@ -4,13 +4,13 @@ import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { calculateRatioNutrients, calculateTotalNutrients, getLabelColor } from '@/utils/calendar/graph';
+import { calculateRatioNutrients, calculateTotalNutrients, getLabelColor, SumNutrients } from '@/utils/calendar/graph';
 
 const data = [
   {
     amount: 1,
     AMT_NUM1: '128', // 칼로리
-    AMT_NUM3: '2.98', // 탄수화물 300g 
+    AMT_NUM3: '2.98', // 탄수화물 300g
     AMT_NUM4: '3.98', // 단백질 55g
     AMT_NUM7: '20.05', // 지방 50g
     AMT_NUM8: '0.73', // 당류 75g
@@ -31,6 +31,7 @@ const data = [
   }
 ];
 
+// TODO: 코드 이동 필요
 const totalData = calculateTotalNutrients(data);
 const ratioData = calculateRatioNutrients(totalData);
 console.log('totalData', totalData);
@@ -44,7 +45,7 @@ const chartData = [
   { nutrient: 'AMT_NUM14', intakeRatio: ratioData.AMT_NUM14, fill: 'var(--color-AMT_NUM14)' }
 ];
 
-const chartConfig = {
+const chartConfig: Record<string, { label: string; color?: string }> = {
   intakeRatio: {
     label: '권장량 대비 섭취율(%) '
   },
@@ -70,11 +71,14 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
+// TODO: 함수 이동 필요
 // 색상 값 동적으로 업데이트
 Object.keys(chartConfig).forEach((key) => {
   if (key !== 'intakeRatio') {
     // intakeRatio는 색상 값을 제외하고 업데이트
-    chartConfig[key].color = getLabelColor(ratioData[key]);
+    const typedKey = key as keyof SumNutrients;
+    const configItem = chartConfig[key] as { label: string; color: string };
+    configItem.color = getLabelColor(ratioData[typedKey]);
   }
 });
 
@@ -109,7 +113,7 @@ export const Graph = () => {
                 />
                 <XAxis dataKey="intakeRatio" type="number" hide />
                 <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                <Bar dataKey="intakeRatio" layout="vertical" radius={5} />
+                <Bar dataKey="intakeRatio" layout="vertical" radius={5} barSize={65}/>
               </BarChart>
             </ChartContainer>
           </CardContent>

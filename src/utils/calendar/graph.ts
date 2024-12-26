@@ -10,7 +10,7 @@ interface Nutrients {
   Z10500: string; // 1인분 기준량(g)
 }
 
-interface SumNutrients {
+export interface SumNutrients {
   AMT_NUM1: number;
   AMT_NUM3: number;
   AMT_NUM4: number;
@@ -35,12 +35,12 @@ export const calculateTotalNutrients = (data : Nutrients[]) => {
         const totalNutrient = (nutrientPer100g / 100) * consumedWeight;
 
         // 기존 값과 합산
-        sum[key as keyof Nutrients] = (sum[key] || 0) + totalNutrient;
+        sum[key as keyof SumNutrients] = (sum[key as keyof SumNutrients] || 0) + totalNutrient;
       }
     });
     return sum;
-  }, {} as Record<string, number>);
-  return total;
+  }, {} as SumNutrients);
+  return total ;
 };
 
 export const calculateRatioNutrients = (data : SumNutrients) => {
@@ -67,7 +67,7 @@ export const calculateRatioNutrients = (data : SumNutrients) => {
     const typedKey = key as keyof SumNutrients;
     result[typedKey] = calculateValue(typedKey, data[typedKey]);
     return result;
-  }, {} as Record<string, number>);
+  }, {} as Record<keyof SumNutrients, number>);
 
   return ratioValue;
 };
