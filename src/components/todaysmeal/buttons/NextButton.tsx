@@ -1,14 +1,17 @@
-import React from 'react';
+'use client';
+
+import { IoIosArrowForward } from 'react-icons/io';
 
 interface NextButtonProps {
   onClick: () => void;
   disabled?: boolean;
-};
+}
 
 const NextButton = ({ onClick, disabled = false }: NextButtonProps) => {
   return (
-    <button className="common-btn text-white px-4 py-2 rounded" onClick={onClick} disabled={disabled}>
-      다음으로
+    <button className="common-btn w-1/3 py-3 p-4 space-x-2" onClick={onClick} disabled={disabled}>
+      <span className="hidden sm:inline">다음으로</span>
+      <IoIosArrowForward className="text-lg" />
     </button>
   );
 };

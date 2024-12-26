@@ -6,21 +6,21 @@ import useSignForm from '@/app/hooks/useAuthForm';
 import { useRouter } from 'next/navigation';
 
 interface SignFormProps {
-  isLogin: boolean;
+  isLoginMode: boolean;
 }
 
-const SignForm = ({ isLogin }: SignFormProps) => {
+const SignForm = ({ isLoginMode }: SignFormProps) => {
   const router = useRouter();
 
-   const onSuccess = () => {
-     if (isLogin) {
-       router.push('/'); // 로그인시 루트 페이지로 이동
-     } else {
-       router.push('/signin'); // 회원가입시 로그인으로 이동
-     }
+  const onSuccess = () => {
+    if (isLoginMode) {
+      router.push('/'); // 로그인시 홈으로 이동
+    } else {
+      router.push('/signin'); // 회원가입시 로그인으로 이동
+    }
   };
-  
-  const { register, handleSubmit, errors, isValid, onSubmit } = useSignForm({ isLogin, onSuccess });
+
+  const { register, handleSubmit, errors, isValid, onSubmit } = useSignForm({ isLoginMode, onSuccess });
 
   return (
     <form
@@ -44,7 +44,7 @@ const SignForm = ({ isLogin }: SignFormProps) => {
       />
 
       {/* 회원가입일 경우에만 보여짐 */}
-      {!isLogin && (
+      {!isLoginMode && (
         <>
           <InputField
             id="confirmPassword"
@@ -71,13 +71,13 @@ const SignForm = ({ isLogin }: SignFormProps) => {
         }`}
         disabled={!isValid}
       >
-        {isLogin ? '로그인' : '회원가입'}
+        {isLoginMode ? '로그인' : '회원가입'}
       </button>
 
       <p className="flex items-center justify-center gap-2 mt-5 text-gray-400">
-        {isLogin ? '계정이 없으신가요?' : '계정이 있으신가요?'}
-        <Link href={isLogin ? '/signup' : '/signin'} className="text-primary hover:underline">
-          {isLogin ? '회원가입 하러가기' : '로그인 하러가기'}
+        {isLoginMode ? '계정이 없으신가요?' : '계정이 있으신가요?'}
+        <Link href={isLoginMode ? '/signup' : '/signin'} className="text-primary hover:underline">
+          {isLoginMode ? '회원가입 하러가기' : '로그인 하러가기'}
         </Link>
       </p>
     </form>
