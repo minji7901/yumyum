@@ -23,13 +23,12 @@ const Step1Goal = ({ onNext, onPrev }: Step1GoalProps) => {
     if (selectedGoal) {
       onNext(selectedGoal); // 선택한 목표를 전달하고 다음으로 이동.
     }
-    // TODO: 선택한 목표 기반 식단 추천 로직 짜야함
   };
 
   return (
     <div className="relative w-2/3 h-auto flex flex-col justify-center items-center overflow-hidden py-10">
       {/* 제목 및 설명 */}
-      <div className="text-center mb-6">
+      <div className="w-full text-center mb-6">
         <h2 className="text-2xl font-bold text-center mb-6">목표를 알려주세요.</h2>
 
         {/* 목표 옵션 목록 */}
