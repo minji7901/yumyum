@@ -1,6 +1,4 @@
-'use client';
-
-import { createContext, PropsWithChildren, use, useCallback, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 
 type LoginContextType = {
   isLogin: boolean;
@@ -20,7 +18,6 @@ const LoginProvider = ({ children }: PropsWithChildren) => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
 
   const login = useCallback(() => setIsLogin(true), []);
-
   const logout = useCallback(() => setIsLogin(false), []);
 
   return <LoginContext.Provider value={{ isLogin, login, logout }}>{children}</LoginContext.Provider>;

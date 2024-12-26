@@ -3,7 +3,7 @@ import { IoMdClose } from 'react-icons/io';
 import { CiEdit } from 'react-icons/ci';
 import { FaCheck } from 'react-icons/fa6';
 import Loading from '@/app/loading';
-import { useUser } from '@/app/hooks/useUser';
+import { useUser } from '@/hooks/useUser';
 import { createClient } from '../utils/supabase/client';
 import Swal from 'sweetalert2';
 
@@ -34,10 +34,7 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
     }
 
     try {
-      const { error } = await supabase
-        .from('users') 
-        .update({ nickname: newNickname }) 
-        .eq('id', user.id); 
+      const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', user.id);
 
       if (error) {
         console.error(error.message);
@@ -54,7 +51,7 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
         });
         setIsEditingNickname(false);
 
-        user.nickname = newNickname; 
+        user.nickname = newNickname;
       }
     } catch (error) {
       console.error(error);
