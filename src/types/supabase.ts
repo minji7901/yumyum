@@ -12,6 +12,7 @@ export type Database = {
       calendars: {
         Row: {
           created_at: string
+          date: string | null
           day: number
           id: string
           month: number
@@ -22,6 +23,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          date?: string | null
           day: number
           id?: string
           month: number
@@ -32,6 +34,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          date?: string | null
           day?: number
           id?: string
           month?: number
@@ -52,6 +55,7 @@ export type Database = {
       }
       consumed_foods: {
         Row: {
+          amount: number
           calendar_id: string
           calorie: number
           created_at: string
@@ -59,8 +63,10 @@ export type Database = {
           id: string
           name: string
           nutritions: Json
+          serving_size: string
         }
         Insert: {
+          amount: number
           calendar_id?: string
           calorie: number
           created_at?: string
@@ -68,8 +74,10 @@ export type Database = {
           id?: string
           name: string
           nutritions: Json
+          serving_size: string
         }
         Update: {
+          amount?: number
           calendar_id?: string
           calorie?: number
           created_at?: string
@@ -77,6 +85,7 @@ export type Database = {
           id?: string
           name?: string
           nutritions?: Json
+          serving_size?: string
         }
         Relationships: [
           {
