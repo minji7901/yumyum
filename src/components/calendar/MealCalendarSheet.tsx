@@ -1,19 +1,22 @@
 "use client"
 import { CalendarDay, genDays } from '@/utils/genCalendarDays';
-import { useCallback, useContext } from 'react';
+import { useContext } from 'react';
 import { SelectedDateContext } from './CalendarDateContext';
-import Link from 'next/link';
 
 interface MealCalendarWeekProps {
   weekInfo: CalendarDay[];
 }
 const MealCalendarWeek = ({ weekInfo }: MealCalendarWeekProps) => {
   const dateContext = useContext(SelectedDateContext);
-  const { handleSelectedDate } = dateContext;
+  const { handleSelectedDate, handleModalVisibility } = dateContext;
 
-  const handleOnDayClick = useCallback((day: number) => {
+  const handleOnDayClick = (day: number) => {
     handleSelectedDate({ day });
-  }, []); //useCallback은 필요한가
+  }; //useCallback은 필요없다
+
+  const handleOnModalOpen = ()=>{
+    handleModalVisibility(true);
+  }
 
   return (
     <div className="h-20 grid grid-cols-7">
@@ -31,18 +34,18 @@ const MealCalendarWeek = ({ weekInfo }: MealCalendarWeekProps) => {
             {day && (
               <div
                 className="h-full m-1 relative hover:bg-slate-200 z-[5] hover:cursor-pointer"
-                onClick={() => {
+                onClick={(e) => {
                   handleOnDayClick(day);
+                  if (e.target instanceof HTMLElement && e.target.tagName !== "BUTTON") {
+                    alert('날짜가 선택되었습니다')
+                  };
                 }}
               >
                 <div className={`${textColor}`}>{day}</div>
                 <div className="text-center text-xs">{kcal}kcal</div>
-                <Link
-                  href="/calendar/dailyNutrition/1048385"
-                  className="absolute bold bottom-0 right-0 z-10 hover:text-red-500"
-                >
+                <button className="absolute bold bottom-0 right-0 z-10 hover:text-red-500" onClick={handleOnModalOpen}>
                   +
-                </Link>
+                </button>
               </div>
             )}
           </div>
