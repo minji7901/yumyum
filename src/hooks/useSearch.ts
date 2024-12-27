@@ -23,7 +23,8 @@ export const useSearch = ({ keyword }: SearchProps) => {
       const data: ResultType = await res.json();
       return data;
     },
-    getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextPage : undefined)
+    getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextPage : undefined),
+    enabled: !!keyword
   });
 
   return { data, fetchNextPage, hasNextPage, isPending, isError };
