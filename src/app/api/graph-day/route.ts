@@ -7,21 +7,17 @@ export async function GET(request: Request): Promise<NextResponse> {
     const today = new Date();
 
     const { searchParams } = new URL(request.url);
-    // const year = parseInt(searchParams.get('year') || today.getFullYear().toString());
-    // const month = parseInt(searchParams.get('month') || (today.getMonth() + 1).toString());
-    // const day = parseInt(searchParams.get('day') || today.getDate().toString());
-    const startDay = searchParams.get('startDay');
-    const endDay = searchParams.get('endDay');
-
-    console.log('startDay', startDay);
-    console.log('endDay', endDay);
+    const year = parseInt(searchParams.get('year') || today.getFullYear().toString());
+    const month = parseInt(searchParams.get('month') || (today.getMonth() + 1).toString());
+    const day = parseInt(searchParams.get('day') || today.getDate().toString());
     
     const { data, error } = await supabase
       .from('calendars') // calendars table 조회
       .select('total_nutritions')
       // .eq('user_id', id)
-      .gte('date', endDay)
-      .lte('date', startDay);
+      .eq('year', year)
+      .eq('month', month)
+      .eq('day', day)
 
     // 데이터 조회 실패
     if (error) {

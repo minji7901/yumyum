@@ -11,10 +11,13 @@ import Loading from '@/app/loading';
 import { useEffect, useState } from 'react';
 
 export const Graph = () => {
-  const { data, isPending, isError } = useGraph();
   const [height, setHeight] = useState<string>('');
   const [weight, setWeight] = useState<string>('');
   const [ratioData, setRatioData] = useState<SumNutrients | null>(null);
+  const [isMonthSelected, setIsMonthSelected] = useState<boolean>(true); // (true: 월 선택, false: 일 선택)
+
+  // supabase 데이터 호출
+  const { data, isPending, isError } = useGraph(isMonthSelected);
   const days: number = data?.length || 0;
 
   // 선택한 날짜의 입력한 데이터가 있는지 확인
@@ -71,7 +74,7 @@ export const Graph = () => {
       );
       setRatioData(updatedRatioData);
     }
-  }, [height, weight, days]);
+  }, [height, weight, days, isMonthSelected]);
 
   if (ratioData) {
     Object.keys(chartConfig).forEach((key) => {
@@ -82,6 +85,16 @@ export const Graph = () => {
       }
     });
   }
+
+  // 월 버튼 클릭 시 처리
+  const handleMonthClick = () => {
+    setIsMonthSelected(true); // 월 선택
+  };
+
+  // 일 버튼 클릭 시 처리
+  const handleDayClick = () => {
+    setIsMonthSelected(false); // 일 선택
+  };
 
   if (isPending) {
     return <Loading />;
@@ -98,101 +111,141 @@ export const Graph = () => {
 
   if (isEmptyData) {
     return (
-      <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-28 my-14">
-        <div className="text-lg text-[#666666]">달력에 식단 데이터를 추가해 보세요.</div>
-      </div>
+      <>
+        <div className="w-[full] flex justify-start gap-2 mb-2 mt-20">
+          <button
+            onClick={handleMonthClick}
+            className={`px-8 py-1 font-bold rounded-3xl border-2 ${
+              isMonthSelected ? 'bg-primary text-white border-primary' : 'bg-white text-primary border-primary'
+            }`}
+          >
+            월
+          </button>
+          <button
+            onClick={handleDayClick}
+            className={`px-8 py-1 font-bold rounded-3xl border-2 ${
+              !isMonthSelected ? 'bg-primary text-white border-primary' : 'bg-white text-primary border-primary'
+            }`}
+          >
+            일
+          </button>
+        </div>
+        <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-40 mb-14">
+          <div className="text-lg text-[#666666]">달력에 식단 데이터를 추가해 보세요.</div>
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-40 my-14">
-      <h1 className="text-2xl text-[#333333] font-bold mb-8">지난 30일간 기록한 영양소</h1>
-      <div className="w-full">
-        <Card>
-          <CardHeader>
-            <CardTitle>하루 평균 칼로리</CardTitle>
-            <CardDescription>{ratioData?.calories} kcal</CardDescription>
-          </CardHeader>
+    <>
+      <div className="w-[full] flex justify-start gap-2 mb-2 mt-20">
+        <button
+          onClick={handleMonthClick}
+          className={`px-8 py-1 font-bold rounded-3xl border-2 ${
+            isMonthSelected ? 'bg-primary text-white border-primary' : 'bg-white text-primary border-primary'
+          }`}
+        >
+          월
+        </button>
+        <button
+          onClick={handleDayClick}
+          className={`px-8 py-1 font-bold rounded-3xl border-2 ${
+            !isMonthSelected ? 'bg-primary text-white border-primary' : 'bg-white text-primary border-primary'
+          }`}
+        >
+          일
+        </button>
+      </div>
+      <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-40 mb-14">
+        <h1 className="text-2xl text-[#333333] font-bold mb-8">지난 30일간 기록한 영양소</h1>
+        <div className="w-full">
+          <Card>
+            <CardHeader>
+              <CardTitle>하루 평균 칼로리</CardTitle>
+              <CardDescription>{ratioData?.calories} kcal</CardDescription>
+            </CardHeader>
 
-          <CardContent>
-            <ChartContainer config={chartConfig}>
-              <BarChart
-                accessibilityLayer
-                data={chartData}
-                layout="vertical"
-                margin={{
-                  left: 50,
-                  right: 50
-                }}
-              >
-                <YAxis
-                  dataKey="nutrient"
-                  type="category"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
-                />
-                <XAxis dataKey="intakeRatio" type="number" hide />
-                <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                <Bar dataKey="intakeRatio" layout="vertical" radius={5} barSize={65} />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-
-          <CardFooter className="flex-col items-start gap-2 text-sm px-20">
-            <div className="flex gap-2 font-medium leading-none mb-10">
-              <span className="p-2 bg-[#E8C468]" /> 미달
-              <span className="p-2 ml-2 bg-[#65AC53]" /> 적정
-              <span className="p-2 ml-2 bg-[#E76E50]" /> 초과
-            </div>
-
-            {/** 설명란 */}
-            <GraphExplain ratioData={ratioData as SumNutrients}/>
-
-            <div className="flex flex-col w-full">
-              <div className="flex w-full justify-center space-x-4 p-4">
-                <div className="flex flex-col md:flex-row items-center w-1/2 space-y-2 sm:space-y-0">
-                  <label htmlFor="height" className="sm:mr-2 w-full sm:w-auto text-center sm:text-left">
-                    키 (cm)
-                  </label>
-                  <input
-                    id="height"
-                    type="number"
-                    value={height}
-                    onChange={(e) => setHeight(e.target.value)}
-                    className="px-2 py-2 border rounded-lg w-full sm:w-[70%]"
-                    min="60"
-                    max="300"
+            <CardContent>
+              <ChartContainer config={chartConfig}>
+                <BarChart
+                  accessibilityLayer
+                  data={chartData}
+                  layout="vertical"
+                  margin={{
+                    left: 50,
+                    right: 50
+                  }}
+                >
+                  <YAxis
+                    dataKey="nutrient"
+                    type="category"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
                   />
-                </div>
-                <div className="flex flex-col md:flex-row items-center w-1/2 space-y-2 sm:space-y-0">
-                  <label htmlFor="weight" className="sm:mr-2 w-full sm:w-auto text-center sm:text-left">
-                    몸무게 (kg)
-                  </label>
-                  <input
-                    id="weight"
-                    type="number"
-                    value={weight}
-                    onChange={(e) => setWeight(e.target.value)}
-                    className="px-2 py-2 border rounded-lg w-full sm:w-[70%]"
-                    min="30"
-                    max="500"
-                  />
-                </div>
-                {/* <button onClick={handleSubmit} className="common-btn px-4 py-2">
+                  <XAxis dataKey="intakeRatio" type="number" hide />
+                  <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                  <Bar dataKey="intakeRatio" layout="vertical" radius={5} barSize={65} />
+                </BarChart>
+              </ChartContainer>
+            </CardContent>
+
+            <CardFooter className="flex-col items-start gap-2 text-sm px-20">
+              <div className="flex gap-2 font-medium leading-none mb-10">
+                <span className="p-2 bg-[#E8C468]" /> 미달
+                <span className="p-2 ml-2 bg-[#65AC53]" /> 적정
+                <span className="p-2 ml-2 bg-[#E76E50]" /> 초과
+              </div>
+
+              {/** 설명란 */}
+              <GraphExplain ratioData={ratioData as SumNutrients} />
+
+              <div className="flex flex-col w-full">
+                <div className="flex w-full justify-center space-x-4 p-4">
+                  <div className="flex flex-col md:flex-row items-center w-1/2 space-y-2 sm:space-y-0">
+                    <label htmlFor="height" className="sm:mr-2 w-full sm:w-auto text-center sm:text-left">
+                      키 (cm)
+                    </label>
+                    <input
+                      id="height"
+                      type="number"
+                      value={height}
+                      onChange={(e) => setHeight(e.target.value)}
+                      className="px-2 py-2 border rounded-lg w-full sm:w-[70%]"
+                      min="60"
+                      max="300"
+                    />
+                  </div>
+                  <div className="flex flex-col md:flex-row items-center w-1/2 space-y-2 sm:space-y-0">
+                    <label htmlFor="weight" className="sm:mr-2 w-full sm:w-auto text-center sm:text-left">
+                      몸무게 (kg)
+                    </label>
+                    <input
+                      id="weight"
+                      type="number"
+                      value={weight}
+                      onChange={(e) => setWeight(e.target.value)}
+                      className="px-2 py-2 border rounded-lg w-full sm:w-[70%]"
+                      min="30"
+                      max="500"
+                    />
+                  </div>
+                  {/* <button onClick={handleSubmit} className="common-btn px-4 py-2">
                   등록
                 </button> */}
+                </div>
+                <div className="w-full flex justify-center">
+                  <span className="text-xs text-gray-400">
+                    ※ 키와 몸무게를 입력하지 않은 경우, 평균값을 기준으로 계산합니다.
+                  </span>
+                </div>
               </div>
-              <div className="w-full flex justify-center">
-                <span className="text-xs text-gray-400">
-                  ※ 키와 몸무게를 입력하지 않은 경우, 평균값을 기준으로 계산합니다.
-                </span>
-              </div>
-            </div>
-          </CardFooter>
-        </Card>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
