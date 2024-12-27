@@ -32,7 +32,7 @@ const useAuthStore = create(
               .single();
 
             if (error) {
-              console.error('Failed to fetch user data:', error.message);
+              console.error(error.message);
               set({ user: null, isLogin: false });
               return;
             }
@@ -42,7 +42,7 @@ const useAuthStore = create(
             set({ user: null, isLogin: false });
           }
         } catch (error) {
-          console.error('Error setting user:', error);
+          console.error(error);
           set({ user: null, isLogin: false });
         }
       },
