@@ -12,9 +12,8 @@ import MyPageModal from './mypage/MyPageModal';
 import useAuthStore from '@/store/authStore';
 
 const Header = () => {
-  const { user, isLogin, logout } = useAuthStore();
+  const { isLogin, logout } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(user);
 
   const router = useRouter();
 
