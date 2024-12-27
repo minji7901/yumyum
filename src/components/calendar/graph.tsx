@@ -8,23 +8,55 @@ import { calculateRatioNutrients, calculateTotalNutrients, getLabelColor, SumNut
 import { useGraph } from '@/hooks/useGraph';
 import { GraphExplain } from './GraphExplain';
 import Loading from '@/app/loading';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { SelectedDateContext } from './CalendarDateContext';
 
 export const Graph = () => {
   const [height, setHeight] = useState<string>('');
   const [weight, setWeight] = useState<string>('');
   const [ratioData, setRatioData] = useState<SumNutrients | null>(null);
   const [isMonthSelected, setIsMonthSelected] = useState<boolean>(true); // (true: 월 선택, false: 일 선택)
+  const [isEmptyData, setIsEmptyData] = useState<boolean>(true);
+
+  const dateContext = useContext(SelectedDateContext);
+  const { selectedDate } = dateContext;
+  const { year, month, day } = selectedDate;
 
   // supabase 데이터 호출
   const { data, isPending, isError } = useGraph(isMonthSelected);
-  const days: number = data?.length || 0;
 
-  // 선택한 날짜의 입력한 데이터가 있는지 확인
-  const isEmptyData = Array.isArray(data) && data.length === 0;
+  // 월 버튼 클릭 시 처리
+  const handleMonthClick = () => {
+    setIsMonthSelected(true); // 월 선택
+  };
 
-  // 데이터가 있을 때 계산
-  const totalData = data && !isEmptyData ? calculateTotalNutrients(data) : null;
+  // 일 버튼 클릭 시 처리
+  const handleDayClick = () => {
+    setIsMonthSelected(false); // 일 선택
+  };
+
+  // 키와 몸무게 변경 시 비율 데이터 업데이트
+  useEffect(() => {
+    if (!data || data.length === 0) {
+      setIsEmptyData(true);
+      return;
+    } else {
+      setIsEmptyData(false);
+    }
+
+    const days: number = data?.length || 1;
+    const totalData = data && !isEmptyData ? calculateTotalNutrients(data) : null;
+
+    if (totalData) {
+      const updatedRatioData = calculateRatioNutrients(
+        totalData,
+        days,
+        height ? Number(height) : undefined,
+        weight ? Number(weight) : undefined
+      );
+      setRatioData(updatedRatioData);
+    }
+  }, [data, height, weight, isMonthSelected]);
 
   // 차트 데이터 생성
   const chartData = ratioData
@@ -63,19 +95,6 @@ export const Graph = () => {
     }
   } satisfies ChartConfig;
 
-  // 키와 몸무게 변경 시 비율 데이터 업데이트
-  useEffect(() => {
-    if (totalData) {
-      const updatedRatioData = calculateRatioNutrients(
-        totalData,
-        days,
-        height ? Number(height) : undefined,
-        weight ? Number(weight) : undefined
-      );
-      setRatioData(updatedRatioData);
-    }
-  }, [height, weight, days, isMonthSelected]);
-
   if (ratioData) {
     Object.keys(chartConfig).forEach((key) => {
       if (key !== 'intakeRatio') {
@@ -85,16 +104,6 @@ export const Graph = () => {
       }
     });
   }
-
-  // 월 버튼 클릭 시 처리
-  const handleMonthClick = () => {
-    setIsMonthSelected(true); // 월 선택
-  };
-
-  // 일 버튼 클릭 시 처리
-  const handleDayClick = () => {
-    setIsMonthSelected(false); // 일 선택
-  };
 
   if (isPending) {
     return <Loading />;
@@ -109,7 +118,7 @@ export const Graph = () => {
     );
   }
 
-  if (isEmptyData) {
+  if (isEmptyData || !ratioData) {
     return (
       <>
         <div className="w-[full] flex justify-start gap-2 mb-2 mt-20">
@@ -158,11 +167,16 @@ export const Graph = () => {
         </button>
       </div>
       <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-40 mb-14">
-        <h1 className="text-2xl text-[#333333] font-bold mb-8">지난 30일간 기록한 영양소</h1>
+        {isMonthSelected ? ( 
+          <><h1 className="text-2xl text-[#333333] font-bold mb-2">지난 30일간 영양소 평균 섭취율</h1>
+          <span className="text-sm text-gray-400 mb-4">{`(${year}년 ${month}월 ${day}일 기준)`}</span></>
+        ) : (
+          <h1 className="text-2xl text-[#333333] font-bold mb-8">{`${year}년 ${month}월 ${day}일`} 섭취한 영양소</h1>
+        )}
         <div className="w-full">
           <Card>
             <CardHeader>
-              <CardTitle>하루 평균 칼로리</CardTitle>
+              {isMonthSelected ? <CardTitle>하루 평균 칼로리</CardTitle> : <CardTitle>하루 중 섭취한 칼로리</CardTitle>}
               <CardDescription>{ratioData?.calories} kcal</CardDescription>
             </CardHeader>
 
