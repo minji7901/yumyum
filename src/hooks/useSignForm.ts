@@ -2,7 +2,7 @@ import { z } from 'zod';
 import Swal from 'sweetalert2';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useLoginContext } from '@/context/LoginProvider';
+import useAuthStore from '@/store/authStore';
 
 // 로그인/회원가입 스키마 정의
 const signinSchema = z.object({
@@ -27,7 +27,8 @@ interface UseSignFormProps {
 
 const useSignForm = ({ isLoginMode, onSuccess }: UseSignFormProps) => {
   const schema = isLoginMode ? signinSchema : signupSchema;
-  const { login } = useLoginContext();
+
+  const authStore = useAuthStore();
 
   const {
     register,
@@ -69,9 +70,11 @@ const useSignForm = ({ isLoginMode, onSuccess }: UseSignFormProps) => {
         title: isLoginMode ? '로그인 성공' : '회원가입 성공',
         text: isLoginMode ? '로그인되었습니다.' : '회원가입되었습니다.'
       });
+
       if (isLoginMode) {
-        login();
+        authStore.setUser();
       }
+      
       onSuccess();
     } catch (error) {
       Swal.fire({

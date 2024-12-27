@@ -2,23 +2,23 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Swal from 'sweetalert2';
 import { MdOutlinePersonOutline } from 'react-icons/md';
 import { IoMdLogIn } from 'react-icons/io';
 import { RiLogoutCircleLine } from 'react-icons/ri';
-import { useUser } from '@/hooks/useUser';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import Loading from '@/app/loading';
-import Swal from 'sweetalert2';
-import { useLoginContext } from '@/context/LoginProvider';
 import MyPageModal from './mypage/MyPageModal';
+import useAuthStore from '@/store/authStore';
 
 const Header = () => {
-  const { logout } = useLoginContext();
-  const { loading, user } = useUser();
+  const { user, isLogin, logout } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(user);
 
   const router = useRouter();
+
+  const supabase = createClient();
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -29,20 +29,27 @@ const Header = () => {
       confirmButtonText: '로그아웃',
       cancelButtonText: '취소'
     });
+
     if (result.isConfirmed) {
-      const supabase = createClient();
-      await supabase.auth.signOut();
-      Swal.fire({
-        icon: 'success',
-        title: '로그아웃 성공',
-        text: '로그아웃 되었습니다'
-      });
-      logout();
-      router.push('/');
+      try {
+        await supabase.auth.signOut();
+        logout();
+        Swal.fire({
+          icon: 'success',
+          title: '로그아웃 성공',
+          text: '로그아웃 되었습니다'
+        });
+        router.push('/');
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: '로그아웃 실패',
+          text: '로그아웃이 실패하였습니다.'
+        });
+        console.error(error);
+      }
     }
   };
-
-  if (loading) return <Loading />;
 
   return (
     <header className="bg-white shadow-md py-4">
@@ -56,7 +63,7 @@ const Header = () => {
         </nav>
 
         {/* 로그인 안한 유저 */}
-        {!user ? (
+        {!isLogin ? (
           <Link href="/signin" className="flex items-center gap-2">
             <IoMdLogIn className="mb-[2px]" />
             로그인
