@@ -1,7 +1,8 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
+import Swal from 'sweetalert2';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import useAuthStore from '@/store/authStore';
 
 // 로그인/회원가입 스키마 정의
 const signinSchema = z.object({
@@ -20,13 +21,14 @@ const signupSchema = signinSchema
   });
 
 interface UseSignFormProps {
-  isLogin: boolean;
+  isLoginMode: boolean;
   onSuccess: () => void;
 }
 
-const useSignForm = ({ isLogin, onSuccess }: UseSignFormProps) => {
-  const schema = isLogin ? signinSchema : signupSchema;
-  const router = useRouter();
+const useSignForm = ({ isLoginMode, onSuccess }: UseSignFormProps) => {
+  const schema = isLoginMode ? signinSchema : signupSchema;
+
+  const authStore = useAuthStore();
 
   const {
     register,
@@ -44,7 +46,7 @@ const useSignForm = ({ isLogin, onSuccess }: UseSignFormProps) => {
   });
 
   const onSubmit: SubmitHandler<typeof schema._type> = async (data) => {
-    const apiUrl = isLogin ? '/api/signin' : '/api/signup';
+    const apiUrl = isLoginMode ? '/api/signin' : '/api/signup';
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -55,14 +57,31 @@ const useSignForm = ({ isLogin, onSuccess }: UseSignFormProps) => {
       }).then((res) => res.json());
 
       if (response.errorMsg) {
-        alert(response.errorMsg);
+        Swal.fire({
+          icon: 'error',
+          title: isLoginMode ? '로그인 실패' : '회원가입 실패',
+          text: response.errorMsg
+        });
         return;
       }
 
-      alert(isLogin ? '로그인 성공' : '회원가입 성공');
+      Swal.fire({
+        icon: 'success',
+        title: isLoginMode ? '로그인 성공' : '회원가입 성공',
+        text: isLoginMode ? '로그인되었습니다.' : '회원가입되었습니다.'
+      });
+
+      if (isLoginMode) {
+        authStore.setUser();
+      }
+      
       onSuccess();
     } catch (error) {
-      alert('오류가 발생했습니다. 다시 시도해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '오류',
+        text: '오류가 발생했습니다. 다시 시도해주세요.'
+      });
     }
   };
 
