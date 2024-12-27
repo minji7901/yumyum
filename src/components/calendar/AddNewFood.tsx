@@ -23,8 +23,9 @@ const AddFoodForm = ()=>{
         </label>
         <span> x </span>
         <input
-          type="text"
-          maxLength={2}
+          type="number"
+          min={1}
+          max={30}
           name="selectedFoodAmount"
           id="selectedFoodAmount"
           defaultValue="1"

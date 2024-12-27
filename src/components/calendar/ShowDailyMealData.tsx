@@ -5,6 +5,8 @@ import { useContext } from 'react';
 import { SelectedDateContext } from './CalendarDateContext';
 import useFetchDailyFoodConsumption from '@/hooks/useFetchDailyFoodConsumption';
 import useFetchFoodTagData from '@/hooks/useFetchFoodTagData';
+import { NutrientsJson } from '@/types/NutrientsJson';
+import useDeleteFoodTag from '@/hooks/useDeleteFoodTag';
 
 const FoodUnselected = () => {
   return (
@@ -20,16 +22,13 @@ interface FoodInfoBoxProps {
 interface NutritionNamesType {
   [name: string]: string;
 }
-type NutritionsJson = {
-  fat: number;
-  carb: number;
-  sugar: number;
-  natrium: number;
-  protein: number;
-  calories: number;
-};
 const FoodInfoBox = ({ selectedFood }: FoodInfoBoxProps) => {
-  const { name, amount, nutritions, serving_size: servingSize } = selectedFood;
+  const dateContext = useContext(SelectedDateContext);
+  const { selectedDate } = dateContext;
+  const { year, month, day } = selectedDate;
+  const { id: tagId, name, amount, nutritions, serving_size: servingSize } = selectedFood;
+
+  const deleteTag = useDeleteFoodTag({ year, month, day, tagId });
   const nutritionsKRName: NutritionNamesType = {
     fat: '지방',
     carb: '탄수화물',
@@ -38,7 +37,7 @@ const FoodInfoBox = ({ selectedFood }: FoodInfoBoxProps) => {
     protein: '단백질'
   };
 
-  const nutritionInfo = { ...(nutritions as NutritionsJson) };
+  const nutritionInfo = { ...(nutritions as NutrientsJson) };
   const nutritionsArr = Object.entries(nutritionInfo);
   const calories = nutritionsArr.pop() ?? ['calories', 0];
 
@@ -58,15 +57,21 @@ const FoodInfoBox = ({ selectedFood }: FoodInfoBoxProps) => {
             return (
               <tr key={nutrition}>
                 <td className="text-right">{nutritionsKRName[nutrition]}</td>
-                <td className="px-4 text-left">{`${quantity}`}</td>
+                <td className="px-4 text-left">{`${quantity * amount}`}</td>
               </tr>
             );
           })}
         </tbody>
       </table>
-        <button type="button" className="m-auto common-btn px-2 py-1 block">
-          삭제
-        </button>
+      <button
+        type="button"
+        className="m-auto common-btn px-2 py-1 block"
+        onClick={() => {
+          deleteTag();
+        }}
+      >
+        삭제
+      </button>
     </>
   );
 };
@@ -76,7 +81,7 @@ interface FoodInfoProps {
 }
 const FoodInfo = ({ selectedFoodTag }: FoodInfoProps) => {
   const { data: selectedFood, isPending, isError } = useFetchFoodTagData(selectedFoodTag);
-  if (selectedFoodTag==='') return <FoodUnselected />;
+  if (selectedFoodTag === '') return <FoodUnselected />;
 
   if (isPending) return <div>Loading...</div>;
   if (isError) return <div>Error!</div>;
@@ -92,7 +97,7 @@ const ShowDailyMealData = ({ selectedFoodTag }: ShowDailyMealDataProps) => {
   const { selectedDate } = dateContext;
   const { year, month, day } = selectedDate;
 
-  const { foodConsumption, isPending, isError } = useFetchDailyFoodConsumption({ year, month, day });
+  const { data: foodConsumption, isPending, isError } = useFetchDailyFoodConsumption({ year, month, day });
 
   if (isPending) return <div>Loading...</div>;
   if (isError) return <div>Error!</div>;
