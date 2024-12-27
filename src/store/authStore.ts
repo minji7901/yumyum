@@ -7,7 +7,7 @@ type User = Tables<'users'>;
 interface AuthStore {
   user: User | null;
   isLogin: boolean;
-  setUser: () => Promise<void>;
+  setUser: (user: User | null) => void;
   logout: () => void;
 }
 
