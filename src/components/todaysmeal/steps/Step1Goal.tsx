@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import NextButton from '../buttons/NextButton';
 import PreviousButton from '../buttons/PreviousButton';
-import Option from '../options/Option';
+import TodaysmealOption from '../todaysmeal_option/TodaysmealOption';
 
 interface Step1GoalProps {
   data?: string;
@@ -30,17 +30,24 @@ const Step1Goal = ({ onNext, onPrev, data }: Step1GoalProps) => {
     <div className="relative w-2/3 h-auto flex flex-col justify-center items-center overflow-hidden py-10">
       {/* 제목 및 설명 */}
       <div className="w-full text-center mb-6">
-        <h2 className="text-2xl font-bold text-center mb-6">목표를 알려주세요.</h2>
-
+        <div className="text-2xl font-bold text-center mb-4">목표를 알려주세요.</div>
+        <div className="text-sm font-medium text-gray-500 mb-10">
+          궁극적으로 이루고 싶은 체중 목표에 따라 하루 중 추천 칼로리가 달라집니다.
+        </div>
         {/* 목표 옵션 목록 */}
         <div className=" w-full flex flex-col space-y-4">
           {goals.map((goal) => (
-            <Option key={goal} label={goal} isSelected={selectedGoal === goal} onClick={() => handleGoalSelect(goal)} />
+            <TodaysmealOption
+              key={goal}
+              label={goal}
+              isSelected={selectedGoal === goal}
+              onClick={() => handleGoalSelect(goal)}
+            />
           ))}
         </div>
 
         {/* 이전, 다음 버튼 */}
-        <div className="flex justify-between w-full mt-6">
+        <div className="flex justify-between w-full mt-10">
           <PreviousButton onClick={onPrev} />
           <NextButton onClick={handleNextClick} disabled={!selectedGoal} />
         </div>

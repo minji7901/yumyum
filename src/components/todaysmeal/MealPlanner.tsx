@@ -10,16 +10,7 @@ import Step3HeightWeight from '@/components/todaysmeal/steps/Step3HeightWeight';
 import Step4GenderAge from '@/components/todaysmeal/steps/Step4GenderAge';
 import Step5Activity from '@/components/todaysmeal/steps/Step5Activity';
 import Step6Recommendation from '@/components/todaysmeal/steps/Step6Recommendation';
-
-interface MealPlanData {
-  goal?: string;
-  meals?: string[];
-  height?: number;
-  weight?: number;
-  gender?: string;
-  age?: number;
-  activity?: string;
-}
+import MealPlanData from '@/types/MealPlanData';
 
 const MealPlanner = () => {
   const { Funnel, Step, next, prev, currentStep } = useFunnel('시작');
@@ -39,7 +30,9 @@ const MealPlanner = () => {
 
   return (
     <div className="flex justify-center items-center flex-col bg-white shadow-lg rounded-lg max-w-[1200px] mx-auto border-primary border-2 h-auto p-6">
-      {currentStep !== '시작' && <ProgressIndicator steps={steps} currentStepIndex={steps.indexOf(currentStep)} />}
+      {currentStep !== '시작' && currentStep !== '추천식단' && (
+        <ProgressIndicator steps={steps} currentStepIndex={steps.indexOf(currentStep)} />
+      )}
 
       <Funnel>
         {/* Step 0: 시작 */}
@@ -97,7 +90,7 @@ const MealPlanner = () => {
 
         {/* Step 6: 추천식단 */}
         <Step name="추천식단">
-          <Step6Recommendation data={mealPlanData} onPrev={() => handlePrev('활동량')} />
+          <Step6Recommendation data={mealPlanData} />
         </Step>
       </Funnel>
     </div>
