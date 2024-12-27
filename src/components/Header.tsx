@@ -1,20 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { MdOutlinePersonOutline } from 'react-icons/md';
 import { IoMdLogIn } from 'react-icons/io';
 import { RiLogoutCircleLine } from 'react-icons/ri';
-import MyPageModal from './MyPageModal';
 import { useUser } from '@/hooks/useUser';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import Loading from '@/app/loading';
 import Swal from 'sweetalert2';
 import { useLoginContext } from '@/context/LoginProvider';
+import MyPageModal from './mypage/MyPageModal';
 
 const Header = () => {
-  const { logout, isLogin } = useLoginContext();
+  const { logout } = useLoginContext();
   const { loading, user } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
