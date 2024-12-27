@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import InputField from './InputField';
-import useSignForm from '@/app/hooks/useAuthForm';
+import useSignForm from '@/hooks/useSignForm';
 import { useRouter } from 'next/navigation';
 
 interface SignFormProps {
