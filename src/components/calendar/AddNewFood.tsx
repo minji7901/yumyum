@@ -1,12 +1,14 @@
 'use client';
 
-import { FormEvent } from "react";
+import { FormEvent, useState } from 'react';
+import SearchBar from '../search/SearchBar';
+import FoodList from '../search/FoodList';
 
 interface AddNewFoodProps {
   onModalModeSwitch: () => void;
 }
 
-const AddFoodForm = ()=>{
+const AddFoodForm = () => {
   const onFoodSubmit = (e: FormEvent<HTMLFormElement>) => {
     console.log(e);
   };
@@ -35,16 +37,29 @@ const AddFoodForm = ()=>{
       <button className="m-auto common-btn px-2 py-1">추가</button>
     </form>
   );
-}
+};
 
 const AddNewFood = ({ onModalModeSwitch }: AddNewFoodProps) => {
+  const [keyword, setKeyword] = useState<string>('');
+
+  /* 검색 */
+  const handleSubmit = (value: string) => {
+    setKeyword(value);
+  };
+
   return (
     <>
       <button type="button" onClick={onModalModeSwitch} className="text-bold hover:text-primary">
         {'<<'}
       </button>
+      <div className="m-auto w-[90%]">
+        <SearchBar handleSubmit={handleSubmit} />
+        <div className="h-[18rem] hide-scroll-y">
+          <FoodList keyword={keyword} isInModal={true} />
+        </div>
+      </div>
       <div className="border-t">
-        <AddFoodForm/>
+        <AddFoodForm />
       </div>
     </>
   );

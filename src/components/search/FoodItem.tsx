@@ -4,9 +4,10 @@ import { formatNutrients } from '@/utils/formatNutrients';
 
 interface FoodItemProps {
   data: FoodType;
+  isInModal: boolean;
 }
 
-const FoodItem = ({ data }: FoodItemProps) => {
+const FoodItem = ({ data, isInModal }: FoodItemProps) => {
   const amount = `${parseInt(data.Z10500)}g`;
   const kcal = `${Math.floor((parseInt(data.Z10500) / 100) * parseInt(data.AMT_NUM1))}kcal`;
 
@@ -24,6 +25,7 @@ const FoodItem = ({ data }: FoodItemProps) => {
             )
         )}
       </div>
+      {isInModal && <button type="button" className='common-btn'>선택</button> }
     </div>
   );
 };

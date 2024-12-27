@@ -6,10 +6,12 @@ import { useEffect, useRef } from 'react';
 
 interface FoodListProps {
   keyword: string;
+  isInModal?: boolean;
 }
 
-const FoodList = ({ keyword }: FoodListProps) => {
+const FoodList = ({ keyword, isInModal }: FoodListProps) => {
   const observerRef = useRef(null);
+  const isModal = isInModal ? true : false;
 
   const { data, fetchNextPage, hasNextPage, isPending, isError } = useSearch({ keyword });
 
@@ -43,7 +45,7 @@ const FoodList = ({ keyword }: FoodListProps) => {
       {data?.pages.map((page, index) => (
         <div key={index}>
           {page.data.map((food: FoodType) => (
-            <FoodItem key={food.FOOD_CD} data={food} />
+            <FoodItem key={food.FOOD_CD} data={food} isInModal={isModal} />
           ))}
         </div>
       ))}
