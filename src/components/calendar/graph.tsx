@@ -83,11 +83,6 @@ export const Graph = () => {
     });
   }
 
-  // const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault(); // 기본 동작 방지
-  //   // 로직 추가 필요?
-  // };
-
   if (isPending) {
     return <Loading />;
   }
@@ -111,7 +106,7 @@ export const Graph = () => {
 
   return (
     <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-40 my-14">
-      <h1 className="text-2xl text-[#333333] font-bold mb-8">지난 30일간 섭취한 영양소</h1>
+      <h1 className="text-2xl text-[#333333] font-bold mb-8">지난 30일간 기록한 영양소</h1>
       <div className="w-full">
         <Card>
           <CardHeader>
@@ -157,8 +152,8 @@ export const Graph = () => {
 
             <div className="flex flex-col w-full">
               <div className="flex w-full justify-center space-x-4 p-4">
-                <div className="flex flex-row items-center">
-                  <label htmlFor="height" className="mr-2">
+                <div className="flex flex-col md:flex-row items-center w-1/2 space-y-2 sm:space-y-0">
+                  <label htmlFor="height" className="sm:mr-2 w-full sm:w-auto text-center sm:text-left">
                     키 (cm)
                   </label>
                   <input
@@ -166,13 +161,13 @@ export const Graph = () => {
                     type="number"
                     value={height}
                     onChange={(e) => setHeight(e.target.value)}
-                    className="px-2 py-2 border rounded-lg w-[70%]"
+                    className="px-2 py-2 border rounded-lg w-full sm:w-[70%]"
                     min="60"
                     max="300"
                   />
                 </div>
-                <div className="flex flex-row items-center">
-                  <label htmlFor="weight" className="mr-2">
+                <div className="flex flex-col md:flex-row items-center w-1/2 space-y-2 sm:space-y-0">
+                  <label htmlFor="weight" className="sm:mr-2 w-full sm:w-auto text-center sm:text-left">
                     몸무게 (kg)
                   </label>
                   <input
@@ -180,7 +175,7 @@ export const Graph = () => {
                     type="number"
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
-                    className="px-2 py-2 border rounded-lg w-[70%]"
+                    className="px-2 py-2 border rounded-lg w-full sm:w-[70%]"
                     min="30"
                     max="500"
                   />

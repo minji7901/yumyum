@@ -6,7 +6,7 @@ export const GraphExplain = () => {
   return (
     <>
       <div className="w-full bg-[#ECF9E3] rounded-2xl p-8">
-        <div className="flex flex-col items-start space-y-6 pl-10">
+        <div className="flex flex-col items-start space-y-6 pl-[6%]">
           <div className="flex items-start space-x-2">
             <div className="w-5 h-5 bg-[#E8C468] rounded-full"></div>
             <span>설명 1ddddddddddd</span>
