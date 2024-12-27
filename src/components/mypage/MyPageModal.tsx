@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { CiEdit } from 'react-icons/ci';
 import { FaCheck } from 'react-icons/fa6';
-import Loading from '@/app/loading';
-import { useUser } from '@/hooks/useUser';
-import { createClient } from '../utils/supabase/client';
 import Swal from 'sweetalert2';
+import { createClient } from '@/utils/supabase/client';
+import useAuthStore from '@/store/authStore';
 
 interface MyPageModalProps {
   isOpen: boolean;
@@ -13,11 +12,10 @@ interface MyPageModalProps {
 }
 
 const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
-  const { user, loading } = useUser();
+  const { user } = useAuthStore();
   const [newNickname, setNewNickname] = useState<string>('');
   const [isEditingNickname, setIsEditingNickname] = useState<boolean>(false);
 
-  if (loading) return <Loading />;
   if (!isOpen || !user) return null;
 
   const supabase = createClient();
@@ -34,7 +32,7 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
     }
 
     try {
-      const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', user.id);
+      const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', user?.id);
 
       if (error) {
         console.error(error.message);
@@ -67,26 +65,40 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
   const handleDeleteAccount = async () => {
     if (!user?.id) return;
 
-    const { error } = await supabase.auth.admin.deleteUser(user.id);
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: '정말로 탈퇴하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonColor: '#7EB369',
+      confirmButtonText: '탈퇴',
+      cancelButtonText: '취소'
+    });
 
-    if (error) {
-      console.error(error.message);
-    } else {
-      const result = await Swal.fire({
-        icon: 'warning',
-        title: '정말로 탈퇴하시겠습니까?',
-        showCancelButton: true,
-        confirmButtonColor: '#7EB369',
-        confirmButtonText: '탈퇴',
-        cancelButtonText: '취소'
-      });
-      if (result.isConfirmed) {
+    if (!result.isConfirmed) return;
+    try {
+      const { error } = await supabase.auth.admin.deleteUser(user.id);
+      if (error) {
+        console.error(error.message);
+        Swal.fire({
+          icon: 'error',
+          title: '회원탈퇴 실패',
+          text: '회원탈퇴 중 문제가 발생했습니다'
+        });
+      } else {
         Swal.fire({
           icon: 'success',
-          title: '회원탈퇴',
-          text: '탈퇴 되었습니다'
+          title: '회원 탈퇴',
+          text: '회원 탈퇴되었습니다'
         });
+        onClose();
       }
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: '회원 탈퇴 실패',
+        text: '오류가 발생했습니다.'
+      });
     }
   };
 

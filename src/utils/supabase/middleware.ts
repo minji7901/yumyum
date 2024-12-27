@@ -15,6 +15,10 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value));
+          supabaseResponse = NextResponse.next({
+            request
+          });
           cookiesToSet.forEach(({ name, value, options }) => {
             request.cookies.set(name, value);
             supabaseResponse.cookies.set(name, value, options);
@@ -28,14 +32,17 @@ export async function updateSession(request: NextRequest) {
     data: { user }
   } = await supabase.auth.getUser();
 
-  if (!user && (request.nextUrl.pathname.startsWith('/signin') || request.nextUrl.pathname.startsWith('/signup'))) {
-    return supabaseResponse;
+  if (user && (request.nextUrl.pathname.startsWith('/signin') || request.nextUrl.pathname.startsWith('/signup'))) {
+    return NextResponse.redirect(request.nextUrl.origin);
   }
 
-  if (user && (request.nextUrl.pathname.startsWith('/signin') || request.nextUrl.pathname.startsWith('/signup'))) {
+  if (
+    !user &&
+    (request.nextUrl.pathname.startsWith('/calendar') || request.nextUrl.pathname.startsWith('/todaysmeal'))
+  ) {
     const url = request.nextUrl.clone();
-    url.pathname = '/'; 
-    return NextResponse.redirect(url);
+    url.pathname = '/';
+    return NextResponse.redirect(new URL('/signin', request.url));
   }
 
   return supabaseResponse;
