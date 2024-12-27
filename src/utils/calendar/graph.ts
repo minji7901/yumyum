@@ -1,63 +1,60 @@
-export const calculateTotalNutrients = (data) => {
-  const total =  data.reduce((sum, item) => {
-    // 1인분 기준량 (g) 가져오기
-    const servingSize = parseFloat(item.Z10500) || 100;
-    const amount = item.amount || 1;
+export interface SumNutrients {
+  fat: number;
+  carb: number;
+  sugar: number;
+  natrium: number;
+  protein: number;
+  calories: number;
+}
 
-    // 실제 섭취량 (g)
-    const consumedWeight = servingSize * amount;
-
-    // 각 영양소를 계산
-    Object.keys(item).forEach((key) => {
-      if (key.startsWith("AMT_NUM")) {
-        const nutrientPer100g = parseFloat(item[key]) || 0;
-        const totalNutrient = (nutrientPer100g / 100) * consumedWeight;
-
-        // 기존 값과 합산
-        sum[key] = (sum[key] || 0) + totalNutrient;
+export const calculateTotalNutrients = (data: { total_nutritions: SumNutrients }[]): SumNutrients => {
+  return data.reduce((acc, curr) => {
+    const currentNutrients = curr.total_nutritions;
+    // 현재 객체의 total_nutritions 내 항목을 순회하여 합산
+    for (const key in currentNutrients) {
+      if (currentNutrients.hasOwnProperty(key)) {
+        acc[key as keyof SumNutrients] =
+          (acc[key as keyof SumNutrients] || 0) + currentNutrients[key as keyof SumNutrients];
       }
-    });
-    return sum;
-  }, {});
-  return total;
+    }
+    return acc;
+  }, {} as SumNutrients);
 };
 
-export const calculateRatioNutrients = (data) => {
-  const calculateValue = (key, value) => {
+export const calculateRatioNutrients = (data: SumNutrients, days: number, height?: number, weight?: number) => {
+  const calculateValue = (key: keyof SumNutrients, value: number) => {
     switch (key) {
-      case 'AMT_NUM1': // 칼로리는 그대로 반환
-        return value;
-      case 'AMT_NUM3': // 탄수화물 300g
-        return Number((value / 300 * 100).toFixed(1));
-      case 'AMT_NUM4': // 단백질 55g
-        return Number((value / 55 * 100).toFixed(1));
-      case 'AMT_NUM7': // 지방 50g
-        return Number((value / 50 * 100).toFixed(1));
-      case 'AMT_NUM8': // 당류 75g
-        return Number((value / 75 * 100).toFixed(1));
-      case 'AMT_NUM14': // 나트륨(mg) 2000mg
-        return Number((value / 2000 * 100).toFixed(1));
+      case 'carb': // 탄수화물(g)=몸무게 (kg)×1g
+        return Number(((value / (weight || 65)) * 1 * 100 * days).toFixed(1));
+      case 'protein': // 단백질 (g)=몸무게 (kg)×0.8g
+        return Number(((value / (weight || 65)) * 0.8 * 100 * days).toFixed(1));
+      case 'fat': // 지방 (g)=몸무게 (kg)×0.8g
+        return Number(((value / (weight || 65)) * 0.8 * 100 * days).toFixed(1));
+      case 'sugar': // 당류 (g)=50g
+        return Number(((value / 50) * 100 * days).toFixed(1));
+      case 'natrium': // 나트륨(mg) 2g 기준 %
+        return Number(((value / 2) * 100 * days).toFixed(1));
       default:
         return value;
     }
   };
 
   const ratioValue = Object.keys(data).reduce((result, key) => {
-    result[key] = calculateValue(key, data[key]);
+    const typedKey = key as keyof SumNutrients;
+    result[typedKey] = calculateValue(typedKey, data[typedKey]);
     return result;
-  }, {});
+  }, {} as Record<keyof SumNutrients, number>);
 
   return ratioValue;
-}
+};
 
-export const getLabelColor = (data) => {
+export const getLabelColor = (data: number) => {
   const color = 'hsl(var(--chart-2))';
-  if(data > 100) {
+  if (data > 100) {
     return 'hsl(var(--chart-1))';
-  }else if( data < 70) {
+  } else if (data < 70) {
     return 'hsl(var(--chart-4))';
-  }else{
+  } else {
     return color;
   }
-  
-}
+};
