@@ -6,7 +6,7 @@ import useFetchDailyFoodTags from '@/hooks/useFetchDailyFoodTags';
 interface FoodTagBoxProps {
   modalMode: string;
   onModalModeSwitch: () => void;
-  setSelectedFoodTag: (id: string | null) => void;
+  setSelectedFoodTag: (id: string) => void;
 }
 const FoodTagBox = ({ modalMode, onModalModeSwitch, setSelectedFoodTag }: FoodTagBoxProps) => {
   const dateContext = useContext(SelectedDateContext);

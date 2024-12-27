@@ -64,7 +64,7 @@ const FoodInfoBox = ({ selectedFood }: FoodInfoBoxProps) => {
           })}
         </tbody>
       </table>
-        <button type="button" className="m-auto common-btn px-2 py-1">
+        <button type="button" className="m-auto common-btn px-2 py-1 block">
           삭제
         </button>
     </>
@@ -72,12 +72,11 @@ const FoodInfoBox = ({ selectedFood }: FoodInfoBoxProps) => {
 };
 
 interface FoodInfoProps {
-  selectedFoodTag: string | null;
+  selectedFoodTag: string;
 }
 const FoodInfo = ({ selectedFoodTag }: FoodInfoProps) => {
-  if (!selectedFoodTag) return <FoodUnselected />;
-
   const { data: selectedFood, isPending, isError } = useFetchFoodTagData(selectedFoodTag);
+  if (selectedFoodTag==='') return <FoodUnselected />;
 
   if (isPending) return <div>Loading...</div>;
   if (isError) return <div>Error!</div>;
@@ -86,7 +85,7 @@ const FoodInfo = ({ selectedFoodTag }: FoodInfoProps) => {
 };
 
 interface ShowDailyMealDataProps {
-  selectedFoodTag: string | null;
+  selectedFoodTag: string;
 }
 const ShowDailyMealData = ({ selectedFoodTag }: ShowDailyMealDataProps) => {
   const dateContext = useContext(SelectedDateContext);
