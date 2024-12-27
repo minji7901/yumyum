@@ -6,11 +6,12 @@ import PreviousButton from '../buttons/PreviousButton';
 import Option from '../options/Option';
 
 interface Step5ActivityProps {
+  activityData?: string;
   onNext: (activityLevel: string) => void;
   onPrev: () => void;
 }
 
-const Step5Activity = ({ onNext, onPrev }: Step5ActivityProps) => {
+const Step5Activity = ({ onNext, onPrev, activityData }: Step5ActivityProps) => {
   const activities = [
     '활동이 거의 없고, 운동을 하지 않는다',
     '가벼운 운동 (일주일 기준 1~3회 정도)',
@@ -19,7 +20,7 @@ const Step5Activity = ({ onNext, onPrev }: Step5ActivityProps) => {
     '운동선수 & 강도 높은 운동을 한다'
   ];
 
-  const [selectedActivity, setSelectedActivity] = useState<string | null>(null); //선택한 활동 옵션 상태 관리리
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(activityData ?? null); //선택한 활동 옵션 상태 관리리
 
   const handleActivitySelect = (activity: string) => {
     setSelectedActivity(activity);

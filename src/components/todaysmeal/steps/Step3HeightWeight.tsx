@@ -6,6 +6,8 @@ import NextButton from '../buttons/NextButton';
 import PreviousButton from '../buttons/PreviousButton';
 
 interface Step3HeightWeightProps {
+  heightData?: number;
+  weightData?: number;
   onNext: (data: { height: number; weight: number }) => void;
   onPrev: () => void;
 }
@@ -15,13 +17,18 @@ type FormData = {
   weight: number;
 };
 
-const Step3HeightWeight = ({ onNext, onPrev }: Step3HeightWeightProps) => {
+const Step3HeightWeight = ({ onNext, onPrev, heightData, weightData }: Step3HeightWeightProps) => {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    defaultValues: {
+      height: heightData || undefined, 
+      weight: weightData || undefined 
+    }
+  });
 
   const height = useWatch({ control, name: 'height' }); // height 값 감지
   const weight = useWatch({ control, name: 'weight' }); // weight 값 감지

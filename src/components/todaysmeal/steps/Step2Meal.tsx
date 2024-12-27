@@ -6,18 +6,19 @@ import PreviousButton from '../buttons/PreviousButton';
 import Option from '../options/Option';
 
 interface Step2MealProps {
+  data?: string[];
   onNext: (selectedMeals: string[]) => void;
   onPrev: () => void;
 }
 
-const Step2Meal = ({ onNext, onPrev }: Step2MealProps) => {
+const Step2Meal = ({ onNext, onPrev, data }: Step2MealProps) => {
   const meals = ['아침', '점심', '저녁'];
 
-  const [selectedMeals, setSelectedMeals] = useState<string[]>([]); // 복수 선택 상태관리
+  const [selectedMeals, setSelectedMeals] = useState<string[]>(data ?? []); // 복수 선택 상태관리
 
   const handleMealToggle = (meal: string) => {
     setSelectedMeals((prev) => (prev.includes(meal) ? prev.filter((m) => m !== meal) : [...prev, meal]));
-    // 선택한 게 이미 선택 리스트에 있으면 빼버리고, 없으면 추가가
+    // 선택한 게 이미 선택 리스트에 있으면 빼버리고, 없으면 추가
   };
 
   const handleNextClick = () => {

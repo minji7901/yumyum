@@ -4,21 +4,21 @@ import React from 'react';
 
 interface ProgressIndicatorProps {
   steps: string[];
-  currentStep: number;
+  currentStepIndex: number;
 }
 
-const ProgressIndicator = ({ steps, currentStep }: ProgressIndicatorProps) => {
+const ProgressIndicator = ({ steps, currentStepIndex }: ProgressIndicatorProps) => {
   return (
     <div className="w-full flex flex-col items-center mt-6">
       <div className="flex w-full max-w-4xl justify-between items-center">
         {steps.map((step, index) => (
           <div key={step} className={`flex items-center ${index === steps.length - 1 ? '' : 'flex-1'}`}>
-            {/* 마지막은 사이 선 넣을 공간 없애기기*/}
+            {/* 마지막은 사이 선 넣을 공간 없애기*/}
             <div
               className={`w-10 h-10 flex justify-center items-center rounded-full font-bold text-sm sm:text-base md:text-lg lg:text-xl ${
-                index < currentStep
+                index < currentStepIndex
                   ? 'bg-hover text-white'
-                  : index === currentStep
+                  : index === currentStepIndex
                   ? 'bg-primary text-white'
                   : 'bg-gray-200 text-gray-500'
               }`}
@@ -29,7 +29,7 @@ const ProgressIndicator = ({ steps, currentStep }: ProgressIndicatorProps) => {
             </div>
 
             {index < steps.length - 1 && (
-              <div className={`flex-1 h-[2px] mx-2 ${index < currentStep ? 'bg-primary' : 'bg-gray-300'}`}></div>
+              <div className={`flex-1 h-[2px] mx-2 ${index < currentStepIndex ? 'bg-primary' : 'bg-gray-300'}`}></div>
             )}
             {/* 마지막은 사이 선 만들 필요 없음 */}
           </div>

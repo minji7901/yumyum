@@ -6,14 +6,15 @@ import PreviousButton from '../buttons/PreviousButton';
 import Option from '../options/Option';
 
 interface Step1GoalProps {
+  data?: string;
   onNext: (goal: string) => void;
   onPrev: () => void;
 }
 
-const Step1Goal = ({ onNext, onPrev }: Step1GoalProps) => {
+const Step1Goal = ({ onNext, onPrev, data }: Step1GoalProps) => {
   const goals = ['확실한 체중 감량', '적당한 체중 감량', '체중 유지', '적당한 체중 증량', '확실한 체중 증량'];
 
-  const [selectedGoal, setSelectedGoal] = useState<string | null>(null); // 선택 옵션 상태관리
+  const [selectedGoal, setSelectedGoal] = useState<string | null>(data ?? null); // 선택 옵션 상태관리
 
   const handleGoalSelect = (goal: string) => {
     setSelectedGoal(goal); // 선택한 목표 저장

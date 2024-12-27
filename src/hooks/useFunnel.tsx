@@ -4,7 +4,7 @@ import React, { useState, ReactNode } from 'react';
 // ReactNode: 렌더링 가능한 노드를 표현하는 타입 ===> children을 위한 타입을 위해 사용함.
 
 interface StepProps {
-  name: string; 
+  name: string; //일단 여기서 쓰이지는 않지만, MealPlanner에서 step 명시 목적으로 name 표시함.
   children: ReactNode; // 각 Step 컴포넌트가 렌더링할 자식 요소
 }
 
