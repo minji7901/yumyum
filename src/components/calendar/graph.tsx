@@ -111,7 +111,7 @@ export const Graph = () => {
         <Card>
           <CardHeader>
             <CardTitle>하루 평균 칼로리</CardTitle>
-            <CardDescription>{Math.round((ratioData?.calories ?? 0) / (data?.length || 1))} kcal</CardDescription>
+            <CardDescription>{ratioData?.calories} kcal</CardDescription>
           </CardHeader>
 
           <CardContent>
@@ -148,7 +148,7 @@ export const Graph = () => {
             </div>
 
             {/** 설명란 */}
-            <GraphExplain />
+            <GraphExplain ratioData={ratioData as SumNutrients}/>
 
             <div className="flex flex-col w-full">
               <div className="flex w-full justify-center space-x-4 p-4">

@@ -35,7 +35,7 @@ export const calculateRatioNutrients = (data: SumNutrients, days: number, height
       case 'natrium': // 나트륨(mg) 2g 기준 %
         return Number((value / (2 * days) * 100).toFixed(1));
       default:
-        return value;
+        return Math.round(value / days);
     }
   };
 
