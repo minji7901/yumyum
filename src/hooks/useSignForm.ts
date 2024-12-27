@@ -27,7 +27,7 @@ interface UseSignFormProps {
 
 const useSignForm = ({ isLoginMode, onSuccess }: UseSignFormProps) => {
   const schema = isLoginMode ? signinSchema : signupSchema;
-  const { login, isLogin } = useLoginContext();
+  const { login } = useLoginContext();
 
   const {
     register,
@@ -71,7 +71,6 @@ const useSignForm = ({ isLoginMode, onSuccess }: UseSignFormProps) => {
       });
       if (isLoginMode) {
         login();
-        console.log(isLogin)
       }
       onSuccess();
     } catch (error) {
