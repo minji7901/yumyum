@@ -1,4 +1,3 @@
-import useAuthStore from '@/store/authStore';
 import { createClient } from '@/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
