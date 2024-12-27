@@ -38,31 +38,27 @@ const FoodList = ({ keyword }: FoodListProps) => {
 
   if (isError) return <div>Error...</div>;
 
+  /* 검색어를 입력하지 않은 경우 */
+  if (!data) {
+    return (
+      <div className="flex flex-col items-center justify-center h-40">
+        <p>다양한 음식들의 영양 성분을 확인해보세요!</p>
+      </div>
+    );
+  }
+
+  /* 검색어를 입력했지만 데이터가 존재하지 않는 경우 */
+  if (!data.pages[0].data) {
+    return (
+      <div className="flex flex-col items-center justify-center h-40">
+        <p>찾으시는 음식 데이터가 존재하지 않습니다.</p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      {/* 검색어를 입력했고 데이터도 존재하는 경우 */}
-      {data &&
-        data.pages.map(
-          (page) => page.data && page.data.map((food: FoodType) => <FoodItem key={food.FOOD_CD} data={food} />)
-        )}
-
-      {/* 검색어를 입력했지만 데이터가 존재하지 않는 경우 */}
-      {data &&
-        data.pages.map(
-          (page, index) =>
-            !page.data && (
-              <div key={index} className="flex flex-col items-center justify-center h-40">
-                <p>찾으시는 음식 데이터가 존재하지 않습니다.</p>
-              </div>
-            )
-        )}
-
-      {/* 검색어를 입력하지 않은 경우 */}
-      {!data && (
-        <div className="flex flex-col items-center justify-center h-40">
-          <p>다양한 음식들의 영양 성분을 확인해보세요!</p>
-        </div>
-      )}
+      {data.pages.map((page) => page.data.map((food: FoodType) => <FoodItem key={food.FOOD_CD} data={food} />))}
 
       {hasNextPage && (
         <div ref={observerRef} className="flex flex-col items-center justify-center h-40">
