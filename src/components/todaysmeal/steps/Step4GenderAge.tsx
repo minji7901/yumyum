@@ -7,6 +7,8 @@ import PreviousButton from '../buttons/PreviousButton';
 import Option from '../options/Option';
 
 interface Step4GenderAgeProps {
+  genderData?: string;
+  ageData?: number;
   onNext: (data: { gender: string; age: number }) => void;
   onPrev: () => void;
 }
@@ -15,15 +17,19 @@ type FormData = {
   age: number;
 };
 
-const Step4GenderAge = ({ onNext, onPrev }: Step4GenderAgeProps) => {
-  const [gender, setGender] = React.useState<string | null>(null);
+const Step4GenderAge = ({ onNext, onPrev, genderData, ageData }: Step4GenderAgeProps) => {
+  const [gender, setGender] = React.useState<string | null>(genderData ?? null);
 
   const {
     register,
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    defaultValues: {
+      age: ageData || undefined
+    }
+  });
 
   const age = useWatch({ control, name: 'age' });
 
@@ -52,11 +58,11 @@ const Step4GenderAge = ({ onNext, onPrev }: Step4GenderAgeProps) => {
           <input
             type="number"
             placeholder="나이"
-            min={1}
+            min={10}
             max={130}
             {...register('age', {
               required: '나이를 입력해주세요.',
-              min: { value: 1, message: '나이는 1세 이상이어야 합니다.' },
+              min: { value: 10, message: '나이는 10세 이상이어야 합니다.' },
               max: { value: 130, message: '나이는 130세 이하여야 합니다.' }
             })}
             className="border-2 rounded-md px-4 py-3 text-center w-full border-primary"
