@@ -1,25 +1,20 @@
 import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
     const supabase = createClient();
-    const today = new Date();
-
+   
     const { searchParams } = new URL(request.url);
-    // const year = parseInt(searchParams.get('year') || today.getFullYear().toString());
-    // const month = parseInt(searchParams.get('month') || (today.getMonth() + 1).toString());
-    // const day = parseInt(searchParams.get('day') || today.getDate().toString());
     const startDay = searchParams.get('startDay');
     const endDay = searchParams.get('endDay');
+    const userId = searchParams.get('userId');
 
-    console.log('startDay', startDay);
-    console.log('endDay', endDay);
-    
     const { data, error } = await supabase
-      .from('calendars') // calendars table 조회
+      .from('calendars') 
       .select('total_nutritions')
-      // .eq('user_id', id)
+      .eq('user_id', userId)
       .gte('date', endDay)
       .lte('date', startDay);
 
