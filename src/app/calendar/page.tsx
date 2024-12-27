@@ -1,6 +1,6 @@
 //import CalendarDateContext from '@/components/calendar/CalendarDateContext';
+import { Graph } from '@/components/calendar/Graph';
 import MealCalendarSection from '@/components/calendar/MealCalendarSection';
-import { Graph } from '@/components/calendar/graph';
 import React from 'react';
 
 const Calendar = () => {
