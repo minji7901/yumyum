@@ -1,41 +1,27 @@
 'use client';
 
-import { Tables } from '@/types/supabase';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { SelectedDateContext } from './CalendarDateContext';
-import { getFoodTags } from '@/utils/calendar/getFoodTags';
-
+import useFetchDailyFoodTags from '@/hooks/useFetchDailyFoodTags';
 interface FoodTagBoxProps {
   modalMode: string;
   onModalModeSwitch: () => void;
-  setSelectedFoodTag: (id: string | null) => void;
+  setSelectedFoodTag: (id: string) => void;
 }
 const FoodTagBox = ({ modalMode, onModalModeSwitch, setSelectedFoodTag }: FoodTagBoxProps) => {
-  //스크롤 넣기
   const dateContext = useContext(SelectedDateContext);
   const { selectedDate } = dateContext;
   const { year, month, day } = selectedDate;
-  const userId = '19411c9c-bffa-4992-8f55-2c831d9cc941';
-  const [tagData, setTagData] = useState<Tables<'consumed_foods'>[]>([]);
+  const { data: tagData, isPending, isError } = useFetchDailyFoodTags({ year, month, day });
 
-  useEffect(() => {
-    const getTagData = async () => {
-      try {
-        const data = await getFoodTags({ year, month, day, userId });
-        if (data) setTagData(data);
-      } catch {
-        return;//데이터가 단지 null일때에는 에러 메세지 안뜨게
-      }
-    };
-    getTagData();
-  }, []);
-  //tanstack query로 최적화, 로딩일때 표시하기
+  if (isPending) return <div>Loading...</div>;
+  if (isError) return <div>Error!</div>;
 
   return (
     <section className="border-b">
       <div className="relative m-auto mb-4 w-4/5 h-28 border border-primary rounded-xl hide-scroll-y">
         <div className="p-4 flex flex-wrap gap-2">
-          {tagData.length ? (
+          {tagData && tagData.length ? (
             tagData.map(({ id, name, amount }) => {
               const tagName = amount > 1 ? `${name} x${amount}` : name;
               return (
