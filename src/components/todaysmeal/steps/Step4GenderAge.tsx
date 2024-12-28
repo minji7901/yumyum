@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler, useWatch } from 'react-hook-form';
 import NextButton from '../buttons/NextButton';
 import PreviousButton from '../buttons/PreviousButton';
-import TodaysmealOption from '../todaysmeal_option/TodaysmealOption';
+import TodaysmealOption from '../todaysmeal-option/TodaysmealOption';
 
 interface Step4GenderAgeProps {
   genderData?: string;

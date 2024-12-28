@@ -7,6 +7,7 @@ interface PreviousButtonProps {
 const PreviousButton = ({ onClick }: PreviousButtonProps) => {
   return (
     <button
+      type="button" // 버튼타입 버튼.
       className="bg-gray-500 text-white w-1/3 rounded-md p-4 flex items-center justify-center space-x-2"
       onClick={onClick}
     >

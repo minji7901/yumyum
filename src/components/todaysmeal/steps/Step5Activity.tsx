@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import NextButton from '../buttons/NextButton';
 import PreviousButton from '../buttons/PreviousButton';
-import TodaysmealOption from '../todaysmeal_option/TodaysmealOption';
+import TodaysmealOption from '../todaysmeal-option/TodaysmealOption';
 
 interface Step5ActivityProps {
   activityData?: string;

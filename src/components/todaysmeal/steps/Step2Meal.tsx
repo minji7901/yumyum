@@ -3,18 +3,18 @@
 import React, { useState } from 'react';
 import NextButton from '../buttons/NextButton';
 import PreviousButton from '../buttons/PreviousButton';
-import TodaysmealOption from '../todaysmeal_option/TodaysmealOption';
+import TodaysmealOption from '../todaysmeal-option/TodaysmealOption';
 
 interface Step2MealProps {
-  data?: string[];
+  mealData?: string[];
   onNext: (selectedMeals: string[]) => void;
   onPrev: () => void;
 }
 
-const Step2Meal = ({ onNext, onPrev, data }: Step2MealProps) => {
+const Step2Meal = ({ onNext, onPrev, mealData }: Step2MealProps) => {
   const meals = ['아침', '점심', '저녁'];
 
-  const [selectedMeals, setSelectedMeals] = useState<string[]>(data ?? []); // 복수 선택 상태관리
+  const [selectedMeals, setSelectedMeals] = useState<string[]>(mealData ?? []); // 복수 선택 상태관리
 
   const handleMealToggle = (meal: string) => {
     setSelectedMeals((prev) => (prev.includes(meal) ? prev.filter((m) => m !== meal) : [...prev, meal]));

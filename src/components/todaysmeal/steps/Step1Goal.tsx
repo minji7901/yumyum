@@ -3,18 +3,18 @@
 import React, { useState } from 'react';
 import NextButton from '../buttons/NextButton';
 import PreviousButton from '../buttons/PreviousButton';
-import TodaysmealOption from '../todaysmeal_option/TodaysmealOption';
+import TodaysmealOption from '../todaysmeal-option/TodaysmealOption';
 
 interface Step1GoalProps {
-  data?: string;
+  goalData?: string;
   onNext: (goal: string) => void;
   onPrev: () => void;
 }
 
-const Step1Goal = ({ onNext, onPrev, data }: Step1GoalProps) => {
+const Step1Goal = ({ onNext, onPrev, goalData }: Step1GoalProps) => {
   const goals = ['확실한 체중 감량', '적당한 체중 감량', '체중 유지', '적당한 체중 증량', '확실한 체중 증량'];
 
-  const [selectedGoal, setSelectedGoal] = useState<string | null>(data ?? null); // 선택 옵션 상태관리
+  const [selectedGoal, setSelectedGoal] = useState<string | null>(goalData ?? null); // 선택 옵션 상태관리
 
   const handleGoalSelect = (goal: string) => {
     setSelectedGoal(goal); // 선택한 목표 저장

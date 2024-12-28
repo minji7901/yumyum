@@ -1,5 +1,5 @@
-import MealPlanData from '@/types/MealPlanData';
-import NutritionRecommendation from '@/types/NutritionRecommendation';
+import MealPlanData from '@/components/todaysmeal/types/MealPlanData';
+import NutritionRecommendation from '@/components/todaysmeal/types/NutritionRecommendation';
 
 export const calculateCalories = (data: MealPlanData): NutritionRecommendation | string => {
   const { height, weight, age, gender, activity, goal } = data;
@@ -72,10 +72,9 @@ export const calculateCalories = (data: MealPlanData): NutritionRecommendation |
   }
 
   // g 단위 계산 - 사용하려는 api의 탄단지 정보가 g으로 표시됨
-  // 하루에 3끼를 먹는 가정하에 추천하는 것임으로 각각 3으로 나눔
-  const carbsGrams = Math.round((recommendedCalories * (macrosPercentage.carbs / 100)) / 4 / 3);
-  const proteinGrams = Math.round((recommendedCalories * (macrosPercentage.protein / 100)) / 4 / 3);
-  const fatGrams = Math.round((recommendedCalories * (macrosPercentage.fat / 100)) / 9 / 3);
+  const carbsGrams = Math.round((recommendedCalories * (macrosPercentage.carbs / 100)) / 4);
+  const proteinGrams = Math.round((recommendedCalories * (macrosPercentage.protein / 100)) / 4);
+  const fatGrams = Math.round((recommendedCalories * (macrosPercentage.fat / 100)) / 9);
 
   return {
     calories: recommendedCalories,
