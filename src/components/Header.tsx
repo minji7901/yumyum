@@ -10,11 +10,11 @@ import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import MyPageModal from './mypage/MyPageModal';
 import useAuthStore from '@/store/authStore';
+import useAuthListener from '@/hooks/useAuthListener';
 
 const Header = () => {
-  const { user, isLogin, logout } = useAuthStore();
+  const { isLogin, logout } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(user);
 
   const router = useRouter();
 
@@ -32,7 +32,12 @@ const Header = () => {
 
     if (result.isConfirmed) {
       try {
-        await supabase.auth.signOut();
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          console.error('Supabase 로그아웃 오류:', error);
+          throw error;
+        }
+        console.log('로그아웃 성공');
         logout();
         Swal.fire({
           icon: 'success',
@@ -41,25 +46,25 @@ const Header = () => {
         });
         router.push('/');
       } catch (error) {
+        console.error('로그아웃 실패:', error);
         Swal.fire({
           icon: 'error',
           title: '로그아웃 실패',
           text: '로그아웃이 실패하였습니다.'
         });
-        console.error(error);
       }
     }
   };
-
+  useAuthListener();
   return (
-    <header className="bg-white shadow-md py-4">
+    <header className="sticky top-0 bg-white shadow-md py-4 z-50">
       <div className="flex items-center justify-between mx-auto max-w-[1200px] font-bold">
         <Link href="/">
-          <img src="/logo.svg" className="max-w-10" alt="냠냠로그 로고" />
+          <img src="/img/logo.svg" className="max-w-10" alt="냠냠로그 로고" />
         </Link>
         <nav className="flex gap-5">
-          <Link href="/todaysmeal">오늘의 식단</Link>
           <Link href="/calendar">나의 식단달력</Link>
+          <Link href="/todaysmeal">오늘의 식단</Link>
         </nav>
 
         {/* 로그인 안한 유저 */}
