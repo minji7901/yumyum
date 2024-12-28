@@ -1,16 +1,14 @@
-export const formatNutrients = (nutrient: string) => {
-  switch (nutrient) {
-    case 'AMT_NUM3':
-      return { name: '단백질', unit: 'g' };
-    case 'AMT_NUM4':
-      return { name: '지방', unit: 'g' };
-    case 'AMT_NUM7':
-      return { name: '탄수화물', unit: 'g' };
-    case 'AMT_NUM8':
-      return { name: '당류', unit: 'g' };
-    case 'AMT_NUM14':
-      return { name: '나트륨', unit: 'mg' };
-    default:
-      return { name: '', unit: '' };
-  }
+interface FormattedNutrientsType {
+  [key: string]: {
+    name: string;
+    unit: string;
+  };
+}
+
+export const FORMATTED_NUTRIENTS: FormattedNutrientsType = {
+  AMT_NUM3: { name: '단백질', unit: 'g' },
+  AMT_NUM4: { name: '지방', unit: 'g' },
+  AMT_NUM7: { name: '탄수화물', unit: 'g' },
+  AMT_NUM8: { name: '당류', unit: 'g' },
+  AMT_NUM14: { name: '나트륨', unit: 'mg' }
 };

@@ -16,8 +16,7 @@ export const Graph = () => {
   const [weight, setWeight] = useState<string>('');
   const [ratioData, setRatioData] = useState<SumNutrients | null>(null);
   const [isMonthSelected, setIsMonthSelected] = useState<boolean>(true); // (true: 월 선택, false: 일 선택)
-  const [isEmptyData, setIsEmptyData] = useState<boolean>(true);
-
+  
   const dateContext = useContext(SelectedDateContext);
   const { selectedDate } = dateContext;
   const { year, month, day } = selectedDate;
@@ -35,15 +34,10 @@ export const Graph = () => {
     setIsMonthSelected(false); // 일 선택
   };
 
+  const isEmptyData = !data || data.length === 0 || (typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length === 0);
+
   // 키와 몸무게 변경 시 비율 데이터 업데이트
   useEffect(() => {
-    if (!data || data.length === 0) {
-      setIsEmptyData(true);
-      return;
-    } else {
-      setIsEmptyData(false);
-    }
-
     const days: number = data?.length || 1;
     const totalData = data && !isEmptyData ? calculateTotalNutrients(data) : null;
 
@@ -56,7 +50,7 @@ export const Graph = () => {
       );
       setRatioData(updatedRatioData);
     }
-  }, [data, height, weight, isMonthSelected]);
+  }, [data, weight, isMonthSelected]);
 
   // 차트 데이터 생성
   const chartData = ratioData
