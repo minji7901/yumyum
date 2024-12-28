@@ -25,9 +25,10 @@ const Step3HeightWeight = ({ onNext, onPrev, heightData, weightData }: Step3Heig
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
-      height: heightData || undefined, 
-      weight: weightData || undefined 
-    }
+      height: heightData || undefined,
+      weight: weightData || undefined
+    },
+    mode: 'onChange'
   });
 
   const height = useWatch({ control, name: 'height' }); // height 값 감지
@@ -40,7 +41,10 @@ const Step3HeightWeight = ({ onNext, onPrev, heightData, weightData }: Step3Heig
   return (
     <div className="relative w-2/3 h-auto flex flex-col justify-center items-center overflow-hidden py-10">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full text-center">
-        <h2 className="text-2xl font-bold text-center mb-6">키와 체중을 입력하세요.</h2>
+        <div className="text-2xl font-bold text-center mb-4">키와 체중을 입력하세요.</div>
+        <div className="text-sm font-medium text-gray-500 mb-10">
+          기초 대사량 산출을 위해 사용자의 키와 체중 정보가 필요합니다.
+        </div>
 
         {/* 입력 필드 */}
         <div className="w-full flex flex-col space-y-6">
@@ -62,7 +66,9 @@ const Step3HeightWeight = ({ onNext, onPrev, heightData, weightData }: Step3Heig
               })}
               className="border-2 rounded-md px-4 py-3 text-center w-full border-primary"
             />
-            {errors.height && <p className="text-red-500 text-sm mt-1">{errors.height.message}</p>}
+            {height?.toString().length > 0 && errors.height && (
+              <p className="text-red-500 text-sm mt-1">{errors.height.message}</p>
+            )}
           </div>
 
           {/* 체중 입력 */}
@@ -83,12 +89,14 @@ const Step3HeightWeight = ({ onNext, onPrev, heightData, weightData }: Step3Heig
               })}
               className="border-2 rounded-md px-4 py-3 text-center w-full  border-primary"
             />
-            {errors.weight && <p className="text-red-500 text-sm mt-1">{errors.weight.message}</p>}
+            {weight?.toString().length > 0 && errors.weight && (
+              <p className="text-red-500 text-sm mt-1">{errors.weight.message}</p>
+            )}
           </div>
         </div>
 
         {/* 이전, 다음 버튼 */}
-        <div className="flex justify-between w-full mt-6">
+        <div className="flex justify-between w-full mt-10">
           <PreviousButton onClick={onPrev} />
           <NextButton
             onClick={handleSubmit(onSubmit)}
