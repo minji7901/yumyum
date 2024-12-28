@@ -16,11 +16,11 @@ export const metadata: Metadata = {
   description: '식품 영양 성분 검색 및 식단 관리 사이트'
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html lang="ko">
       <body className={`${nanumGothic.className} antialiased`}>
@@ -32,4 +32,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;
