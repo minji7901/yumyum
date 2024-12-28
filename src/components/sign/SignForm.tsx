@@ -23,10 +23,7 @@ const SignForm = ({ isLoginMode }: SignFormProps) => {
   const { register, handleSubmit, errors, isValid, onSubmit } = useSignForm({ isLoginMode, onSuccess });
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-[450px] mx-auto border border-softly rounded-xl p-[30px] shadow-md"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <InputField
         id="email"
         label="이메일"

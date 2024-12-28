@@ -1,6 +1,6 @@
 'use client';
 import { FoodType } from '@/types/Food';
-import { formatNutrients } from '@/utils/formatNutrients';
+import { FORMATTED_NUTRIENTS } from '@/utils/formatNutrients';
 
 interface FoodItemProps {
   data: FoodType;
@@ -19,8 +19,8 @@ const FoodItem = ({ data }: FoodItemProps) => {
       <div className="flex flex-wrap gap-x-4 gap-y-2">
         {Object.entries(data).map(
           ([key, value]) =>
-            formatNutrients(key).name && (
-              <p key={key}>{`${formatNutrients(key).name} ${value}${formatNutrients(key).unit}`}</p>
+            key in FORMATTED_NUTRIENTS && (
+              <p key={key}>{`${FORMATTED_NUTRIENTS[key].name} ${value}${FORMATTED_NUTRIENTS[key].unit}`}</p>
             )
         )}
       </div>

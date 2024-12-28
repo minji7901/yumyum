@@ -20,7 +20,6 @@ export async function updateSession(request: NextRequest) {
             request
           });
           cookiesToSet.forEach(({ name, value, options }) => {
-            request.cookies.set(name, value);
             supabaseResponse.cookies.set(name, value, options);
           });
         }
@@ -41,8 +40,8 @@ export async function updateSession(request: NextRequest) {
     (request.nextUrl.pathname.startsWith('/calendar') || request.nextUrl.pathname.startsWith('/todaysmeal'))
   ) {
     const url = request.nextUrl.clone();
-    url.pathname = '/';
-    return NextResponse.redirect(new URL('/signin', request.url));
+    url.pathname = '/signin';
+    return NextResponse.redirect(url);
   }
 
   return supabaseResponse;
