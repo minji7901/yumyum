@@ -10,6 +10,7 @@ import { GraphExplain } from './GraphExplain';
 import Loading from '@/app/loading';
 import { useContext, useEffect, useState } from 'react';
 import { SelectedDateContext } from './CalendarDateContext';
+import useAuthStore from '@/store/authStore';
 
 export const Graph = () => {
   const [height, setHeight] = useState<string>('');
@@ -20,9 +21,10 @@ export const Graph = () => {
   const dateContext = useContext(SelectedDateContext);
   const { selectedDate } = dateContext;
   const { year, month, day } = selectedDate;
+  const { user } = useAuthStore();
 
   // supabase 데이터 호출
-  const { data, isPending, isError } = useGraph(isMonthSelected);
+  const { data, isPending, isError } = user?.id ? useGraph(true) : { data: null, isPending: false, isError: false };
 
   // 월 버튼 클릭 시 처리
   const handleMonthClick = () => {
@@ -34,7 +36,7 @@ export const Graph = () => {
     setIsMonthSelected(false); // 일 선택
   };
 
-  const isEmptyData = !data || data.length === 0 || (typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length === 0);
+  const isEmptyData = !data || data?.length === 0 || (typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length === 0);
 
   // 키와 몸무게 변경 시 비율 데이터 업데이트
   useEffect(() => {
