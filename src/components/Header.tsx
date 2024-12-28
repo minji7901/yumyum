@@ -32,7 +32,12 @@ const Header = () => {
 
     if (result.isConfirmed) {
       try {
-        await supabase.auth.signOut();
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          console.error('Supabase 로그아웃 오류:', error);
+          throw error;
+        }
+        console.log('로그아웃 성공');
         logout();
         Swal.fire({
           icon: 'success',
@@ -41,12 +46,12 @@ const Header = () => {
         });
         router.push('/');
       } catch (error) {
+        console.error('로그아웃 실패:', error);
         Swal.fire({
           icon: 'error',
           title: '로그아웃 실패',
           text: '로그아웃이 실패하였습니다.'
         });
-        console.error(error);
       }
     }
   };
