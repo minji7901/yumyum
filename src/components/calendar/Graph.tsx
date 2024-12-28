@@ -13,7 +13,6 @@ import { SelectedDateContext } from './CalendarDateContext';
 import useAuthStore from '@/store/authStore';
 
 export const Graph = () => {
-  const [height, setHeight] = useState<string>('');
   const [weight, setWeight] = useState<string>('');
   const [ratioData, setRatioData] = useState<SumNutrients | null>(null);
   const [isMonthSelected, setIsMonthSelected] = useState<boolean>(true); // (true: 월 선택, false: 일 선택)
@@ -48,7 +47,6 @@ export const Graph = () => {
       const updatedRatioData = calculateRatioNutrients(
         totalData,
         days,
-        height ? Number(height) : undefined,
         weight ? Number(weight) : undefined
       );
       setRatioData(updatedRatioData);
@@ -216,20 +214,6 @@ export const Graph = () => {
               <div className="flex flex-col w-full">
                 <div className="flex w-full justify-center space-x-4 p-4">
                   <div className="flex flex-col md:flex-row items-center w-1/2 space-y-2 sm:space-y-0">
-                    <label htmlFor="height" className="sm:mr-2 w-full sm:w-auto text-center sm:text-left">
-                      키 (cm)
-                    </label>
-                    <input
-                      id="height"
-                      type="number"
-                      value={height}
-                      onChange={(e) => setHeight(e.target.value)}
-                      className="px-2 py-2 border rounded-lg w-full sm:w-[70%]"
-                      min="60"
-                      max="300"
-                    />
-                  </div>
-                  <div className="flex flex-col md:flex-row items-center w-1/2 space-y-2 sm:space-y-0">
                     <label htmlFor="weight" className="sm:mr-2 w-full sm:w-auto text-center sm:text-left">
                       몸무게 (kg)
                     </label>
@@ -249,7 +233,7 @@ export const Graph = () => {
                 </div>
                 <div className="w-full flex justify-center">
                   <span className="text-xs text-gray-400">
-                    ※ 키와 몸무게를 입력하지 않은 경우, 평균값을 기준으로 계산합니다.
+                    ※ 몸무게를 입력하지 않은 경우, 평균값(65kg)을 기준으로 계산합니다.
                   </span>
                 </div>
               </div>
