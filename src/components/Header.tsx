@@ -10,7 +10,6 @@ import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import MyPageModal from './mypage/MyPageModal';
 import useAuthStore from '@/store/authStore';
-import useAuthListener from '@/hooks/useAuthListener';
 
 const Header = () => {
   const { isLogin, logout } = useAuthStore();
@@ -32,12 +31,7 @@ const Header = () => {
 
     if (result.isConfirmed) {
       try {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-          console.error('Supabase 로그아웃 오류:', error);
-          throw error;
-        }
-        console.log('로그아웃 성공');
+        await supabase.auth.signOut();
         logout();
         Swal.fire({
           icon: 'success',
@@ -55,7 +49,6 @@ const Header = () => {
       }
     }
   };
-  useAuthListener();
   return (
     <header className="sticky top-0 bg-white shadow-md py-4 z-50">
       <div className="flex items-center justify-between mx-auto max-w-[1200px] font-bold">
