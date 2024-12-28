@@ -1,17 +1,24 @@
 import { UseFormRegister } from 'react-hook-form';
 
+interface FormData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  nickname: string;
+}
+
 interface InputFieldProps {
-  id: string;
+  id: keyof FormData;
   label: string;
   type?: string;
   placeholder: string;
-  register: UseFormRegister<any>;
+  register: UseFormRegister<FormData>;
   error?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({ id, label, type = 'text', placeholder, register, error }) => (
   <div className="mb-5">
-    <label htmlFor={id} className="font-bold">
+    <label htmlFor={id as string} className="font-bold">
       {label}
     </label>
     <input

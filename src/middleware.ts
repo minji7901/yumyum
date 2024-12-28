@@ -1,18 +1,18 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 //import { updateSession } from './utils/supabase/middleware';
 
-export async function middleware(request: NextRequest) {
-  // const publicPaths = ['/api']; 
+export async function middleware() {
+  // const publicPaths = ['/api'];
   // const isPublicPath =
-  //   request.nextUrl.pathname === '/' || 
+  //   request.nextUrl.pathname === '/' ||
   //   publicPaths.some((path) => request.nextUrl.pathname.startsWith(path));
 
   // if (isPublicPath) {
-    return NextResponse.next(); 
-//   }
+  return NextResponse.next();
+  //   }
 
-//   return await updateSession(request);
-// }
+  //   return await updateSession(request);
+  // }
 }
 
 export const config = {
