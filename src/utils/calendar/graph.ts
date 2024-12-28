@@ -24,7 +24,7 @@ export const calculateTotalNutrients = (data: { total_nutritions: SumNutrients }
   return totalNutrients;
 };
 
-export const calculateRatioNutrients = (data: SumNutrients, days: number, height?: number, weight?: number) => {
+export const calculateRatioNutrients = (data: SumNutrients, days: number, weight?: number) => {
   const calculateValue = (key: keyof SumNutrients, value: number) => {
     switch (key) {
       case 'carb': // 탄수화물(g)=몸무게 (kg)×4~6g
