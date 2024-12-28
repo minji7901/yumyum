@@ -28,7 +28,7 @@ const FoodInfoBox = ({ selectedFood }: FoodInfoBoxProps) => {
   const { year, month, day } = selectedDate;
   const { id: tagId, name, amount, nutritions, serving_size: servingSize } = selectedFood;
 
-  const deleteTag = useDeleteFoodTag({ year, month, day, tagId });
+  const deleteTag = useDeleteFoodTag({ year, month, day, tagId, consumedAmount : amount });
   const nutritionsKRName: NutritionNamesType = {
     fat: '지방',
     carb: '탄수화물',

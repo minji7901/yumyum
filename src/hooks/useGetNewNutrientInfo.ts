@@ -10,10 +10,11 @@ interface GetNewNutrientInfoParams {
   day: number;
   tagId: string;
   mode: mode;
+  consumedAmount: number;
 }
-const useGetNewNutrientInfo = ({ year, month, day, tagId, mode }: GetNewNutrientInfoParams) => {
+const useGetNewNutrientInfo = ({ year, month, day, tagId, consumedAmount, mode }: GetNewNutrientInfoParams) => {
   const [newTotalCalories, setNewTotalCalories] = useState<number | null>(null);
-  const [newNutrientInfo, setNewNutrientInfo] = useState<NutrientsJson|null>(null);
+  const [newNutrientInfo, setNewNutrientInfo] = useState<NutrientsJson | null>(null);
 
   // 하루 섭취 영양 정보, 태그 영양 정보 가져오기
   const { data: foodConsumption } = useFetchDailyFoodConsumption({ year, month, day });
@@ -23,23 +24,23 @@ const useGetNewNutrientInfo = ({ year, month, day, tagId, mode }: GetNewNutrient
     if (foodConsumption && tagData) {
       const { total_calories: totalCalories, total_nutritions: totalNutritions } = foodConsumption;
       const { nutritions, calorie } = tagData;
-      
+
       let newTotalCalories = null;
       const nutrientsInfo = { ...(nutritions as NutrientsJson) };
       const totalNutrients = { ...(totalNutritions as NutrientsJson) };
       const nutrientsInfoEntries = Object.entries(nutrientsInfo) as [keyof NutrientsJson, number][];
-      
+
       // 바뀐 total nutrition과 total carlories를 계산한다.
-      if(mode==='delete') {
-        newTotalCalories = totalCalories - calorie;
+      if (mode === 'delete') {
+        newTotalCalories = totalCalories - calorie * consumedAmount;
         nutrientsInfoEntries.forEach(([nutrient, amount]) => {
-          totalNutrients[nutrient] -= amount;
+          totalNutrients[nutrient] -= amount * consumedAmount;
         });
       }
-      if(mode==='update') {
-        newTotalCalories = totalCalories + calorie;
+      if (mode === 'update') {
+        newTotalCalories = totalCalories + calorie * consumedAmount;
         nutrientsInfoEntries.forEach(([nutrient, amount]) => {
-          totalNutrients[nutrient] += amount;
+          totalNutrients[nutrient] += amount * consumedAmount;
         });
       }
 

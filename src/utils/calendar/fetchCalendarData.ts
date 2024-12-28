@@ -94,10 +94,9 @@ export async function updateCalendarNutrientInfo({
 }: UpdateCalendarParams) {
   try {
     const supabase = createClient();
-    const newNutrientJson = JSON.stringify(newNutrientInfo);
     await supabase
       .from('calendars')
-      .update({ total_calories: newTotalCalories, total_nutritions: newNutrientJson })
+      .update({ total_calories: newTotalCalories, total_nutritions: newNutrientInfo })
       .eq('user_id', userId)
       .eq('year', year)
       .eq('month', month)
