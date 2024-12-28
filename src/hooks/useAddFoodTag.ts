@@ -1,7 +1,7 @@
 import useAuthStore from '@/store/authStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import useGetNewNutrientInfo from './useGetNewNutrientInfo';
-import { deleteTagAndUpdateCalendar } from '@/utils/calendar/fetchCalendarData';
+//import useGetNewNutrientInfo from './useGetNewNutrientInfo';
+//import { deleteTagAndUpdateCalendar } from '@/utils/calendar/fetchCalendarData';
 
 interface DeleteFoodTagParams {
   year: number;
@@ -9,23 +9,22 @@ interface DeleteFoodTagParams {
   day: number;
   tagId: string;
 }
-const useDeleteFoodTag = ({ year, month, day, tagId }: DeleteFoodTagParams) => {
+const useAddFoodTag = ({ year, month, day }: DeleteFoodTagParams) => {
   const queryClient = useQueryClient();
   const { user } = useAuthStore((state) => state);
   const userId = user?.id;
 
-  const { newTotalCalories, newNutrientInfo } = useGetNewNutrientInfo({ year, month, day, tagId, mode: 'delete' });
+  //업데이트는 태그를 사용할 수 없다.
+  //함수 분리하자
+  //const { newTotalCalories, newNutrientInfo } = useGetNewNutrientInfo({ year, month, day, mode: 'delete' });
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      deleteTagAndUpdateCalendar({ year, month, day, userId, tagId, newTotalCalories, newNutrientInfo });
+      
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`${year}-${month}-${day}-${userId}`] });
       queryClient.invalidateQueries({ queryKey: [`tags-${year}-${month}-${day}-${userId}`] });
-      //queryClient.invalidateQueries({ queryKey: [`tag-${tagId}-${userId}`] });
-      queryClient.removeQueries({ queryKey: [`tag-${tagId}-${userId}`]});
-      // 아니면 initial state 주고 reset?
       queryClient.invalidateQueries({ queryKey: [`monthlyData-${year}-${month}-${userId}`] });
     }
   });
@@ -33,4 +32,4 @@ const useDeleteFoodTag = ({ year, month, day, tagId }: DeleteFoodTagParams) => {
   return mutate;
 };
 
-export default useDeleteFoodTag;
+export default useAddFoodTag;

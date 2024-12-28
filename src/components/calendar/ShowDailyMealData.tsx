@@ -86,7 +86,7 @@ const FoodInfo = ({ selectedFoodTag }: FoodInfoProps) => {
   if (isPending) return <div>Loading...</div>;
   if (isError) return <div>Error!</div>;
 
-  return <>{selectedFood ? <FoodInfoBox selectedFood={selectedFood} /> : <div>데이터를 가져올 수 없습니다</div>}</>;
+  return <>{selectedFood ? <FoodInfoBox selectedFood={selectedFood} /> : <div>태그가 성공적으로 삭제되었어요</div>}</>;
 };
 
 interface ShowDailyMealDataProps {
