@@ -1,4 +1,3 @@
-import useAuthStore from '@/store/authStore';
 import { createClient } from '@/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
@@ -11,15 +10,17 @@ export async function GET(request: Request): Promise<NextResponse> {
     const year = parseInt(searchParams.get('year') || today.getFullYear().toString());
     const month = parseInt(searchParams.get('month') || (today.getMonth() + 1).toString());
     const day = parseInt(searchParams.get('day') || today.getDate().toString());
-    const userId = searchParams.get('userId');
 
+    const {
+      data: { session }
+    } = await supabase.auth.getSession();
     const { data, error } = await supabase
-      .from('calendars') 
+      .from('calendars')
       .select('total_nutritions')
-      .eq('user_id', userId)
+      .eq('user_id', session?.user.id)
       .eq('year', year)
       .eq('month', month)
-      .eq('day', day)
+      .eq('day', day);
 
     // 데이터 조회 실패
     if (error) {
