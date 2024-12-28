@@ -1,13 +1,12 @@
-// components/InputField.tsx
-import React from 'react';
+import { UseFormRegister } from 'react-hook-form';
 
 interface InputFieldProps {
-  id: string; 
-  label: string; 
-  type?: string; 
-  placeholder: string; 
-  register: any; 
-  error?: string; 
+  id: string;
+  label: string;
+  type?: string;
+  placeholder: string;
+  register: UseFormRegister<any>;
+  error?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({ id, label, type = 'text', placeholder, register, error }) => (
@@ -20,7 +19,7 @@ const InputField: React.FC<InputFieldProps> = ({ id, label, type = 'text', place
       type={type}
       placeholder={placeholder}
       className="border-softly border rounded-md block mt-2 px-2 py-1 w-full focus:outline-primary"
-      {...register(id)} 
+      {...register(id)}
     />
     {error && <p className="text-red-500">{error}</p>}
   </div>

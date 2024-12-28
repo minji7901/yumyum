@@ -72,7 +72,8 @@ const useSignForm = ({ isLoginMode, onSuccess }: UseSignFormProps) => {
       });
 
       if (isLoginMode) {
-        authStore.setUser();
+        const { user } = response;
+        authStore.setUser(user);
       }
       
       onSuccess();
