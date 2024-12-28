@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/client';
 
 const useSocialLogin = () => {
   const supabase = createClient();
+  
   const handleGoogleLogin = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
