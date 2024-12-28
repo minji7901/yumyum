@@ -212,8 +212,8 @@ export const Graph = () => {
               <GraphExplain ratioData={ratioData as SumNutrients} />
 
               <div className="flex flex-col w-full">
-                <div className="flex w-full justify-center space-x-4 p-4">
-                  <div className="flex flex-col md:flex-row items-center w-1/2 space-y-2 sm:space-y-0">
+                <div className="flex w-full justify-center p-4">
+                  <div className="flex flex-col md:flex-row items-center w-[80%] max-w-[300px] space-y-2 sm:space-y-0">
                     <label htmlFor="weight" className="sm:mr-2 w-full sm:w-auto text-center sm:text-left">
                       몸무게 (kg)
                     </label>
@@ -227,9 +227,6 @@ export const Graph = () => {
                       max="500"
                     />
                   </div>
-                  {/* <button onClick={handleSubmit} className="common-btn px-4 py-2">
-                  등록
-                </button> */}
                 </div>
                 <div className="w-full flex justify-center">
                   <span className="text-xs text-gray-400">
