@@ -24,7 +24,8 @@ export const Graph = () => {
   const { user } = useAuthStore();
 
   // supabase 데이터 호출
-  const { data, isPending, isError } = user?.id ? useGraph(true) : { data: null, isPending: false, isError: false };
+  const { data, isPending, isError } = useGraph(isMonthSelected);
+
 
   // 월 버튼 클릭 시 처리
   const handleMonthClick = () => {
@@ -105,7 +106,7 @@ export const Graph = () => {
     return <Loading />;
   }
 
-  if (isError) {
+  if (isError || !user) {
     return (
       <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-8 px-6 my-14 bg-[#f8f9fa] text-[#333] text-center">
         <h2 className="text-xl font-semibold mb-4">오류 발생</h2>
