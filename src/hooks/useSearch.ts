@@ -1,24 +1,22 @@
-import { FoodType } from '@/types/Food';
-import { PageProps, PaginationType } from '@/types/Pagination';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { SearchType } from '@/types/Search';
+import { useQuery } from '@tanstack/react-query';
 
 interface SearchProps {
   keyword: string;
 }
 
 export const useSearch = ({ keyword }: SearchProps) => {
-  const fetchData = async ({ pageParam = 1 }: PageProps) => {
-    const res = await fetch(`/api/search?page=${pageParam}&keyword=${encodeURIComponent(keyword)}`);
-    const data: PaginationType<FoodType> = await res.json();
+  const fetchData = async () => {
+    const res = await fetch(`/api/search?keyword=${encodeURIComponent(keyword)}`);
+    const data: SearchType = await res.json();
     return data;
   };
 
-  const { data, fetchNextPage, hasNextPage, isPending, isError } = useInfiniteQuery<PaginationType<FoodType>, Error>({
+  const { data, isPending, isError } = useQuery({
     queryKey: ['search', keyword],
     queryFn: fetchData,
-    getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextPage : undefined),
     enabled: !!keyword
   });
 
-  return { data, fetchNextPage, hasNextPage, isPending, isError };
+  return { data, isPending, isError };
 };
