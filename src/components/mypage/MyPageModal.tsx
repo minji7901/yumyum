@@ -12,7 +12,7 @@ interface MyPageModalProps {
 }
 
 const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const [newNickname, setNewNickname] = useState<string>('');
   const [isEditingNickname, setIsEditingNickname] = useState<boolean>(false);
 
@@ -28,11 +28,10 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
         title: '닉네임 변경 실패',
         text: '닉네임을 입력해주세요.'
       });
-      return;
     }
 
     try {
-      const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', user?.id);
+      const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', user.id);
 
       if (error) {
         console.error(error.message);
@@ -41,16 +40,17 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
           title: '닉네임 변경 실패',
           text: '닉네임 변경 중 문제가 발생했습니다.'
         });
-      } else {
-        Swal.fire({
-          icon: 'success',
-          title: '닉네임 변경 성공',
-          text: '닉네임이 변경되었습니다.'
-        });
-        setIsEditingNickname(false);
-
-        user.nickname = newNickname;
       }
+
+      Swal.fire({
+        icon: 'success',
+        title: '닉네임 변경 성공',
+        text: '닉네임이 변경되었습니다.'
+      });
+
+      setIsEditingNickname(false);
+
+      user.nickname = newNickname;
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -75,23 +75,36 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
     });
 
     if (!result.isConfirmed) return;
+
     try {
-      const { error } = await supabase.auth.admin.deleteUser(user.id);
-      if (error) {
-        console.error(error.message);
+      const response = await fetch('/api/delete-user', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: user.id })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
         Swal.fire({
           icon: 'error',
           title: '회원탈퇴 실패',
-          text: '회원탈퇴 중 문제가 발생했습니다'
+          text: errorData.error
         });
-      } else {
-        Swal.fire({
-          icon: 'success',
-          title: '회원 탈퇴',
-          text: '회원 탈퇴되었습니다'
-        });
-        onClose();
+        return;
       }
+
+      const responseData = await response.json();
+      Swal.fire({
+        icon: 'success',
+        title: '회원 탈퇴',
+        text: responseData.message
+      });
+
+      await supabase.auth.signOut();
+      setUser(null);
+      onClose();
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -124,7 +137,7 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
             </>
           ) : (
             <>
-              <strong className="text-xl">{user.nickname}</strong>
+              <strong className="text-xl">{user.nickname === null ? '사용자님' : user.nickname}</strong>
               <button
                 type="button"
                 className="text-xl"
