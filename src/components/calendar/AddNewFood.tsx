@@ -15,13 +15,14 @@ interface AddFoodFormProps {
 const AddFoodForm = ({ searchedFood }: AddFoodFormProps) => {
   const dateContext = useContext(SelectedDateContext);
   const { selectedDate } = dateContext;
-  const { year, month, day } = selectedDate;
+  //const { year, month, day } = selectedDate;
 
   const onFoodSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchedFood) {
-      const amount = e.target.selectedFoodAmount.value;
-      const foodTagData = { ...searchedFood, amount, year, month, day };
+      console.log(selectedDate);
+      //const amount = e.target.selectedFoodAmount.value;
+      //const foodTagData = { ...searchedFood, amount, year, month, day };
       //여기서 mutate를 사용해 db에 데이터를 추가하도록 하자.
     };
   };

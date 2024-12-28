@@ -23,9 +23,7 @@ const useDeleteFoodTag = ({ year, month, day, tagId }: DeleteFoodTagParams) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`${year}-${month}-${day}-${userId}`] });
       queryClient.invalidateQueries({ queryKey: [`tags-${year}-${month}-${day}-${userId}`] });
-      //queryClient.invalidateQueries({ queryKey: [`tag-${tagId}-${userId}`] });
       queryClient.removeQueries({ queryKey: [`tag-${tagId}-${userId}`]});
-      // 아니면 initial state 주고 reset?
       queryClient.invalidateQueries({ queryKey: [`monthlyData-${year}-${month}-${userId}`] });
     }
   });
