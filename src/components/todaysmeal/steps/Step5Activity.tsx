@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import NextButton from '../buttons/NextButton';
 import PreviousButton from '../buttons/PreviousButton';
-import Option from '../options/Option';
+import TodaysmealOption from '../todaysmeal-option/TodaysmealOption';
 
 interface Step5ActivityProps {
   activityData?: string;
@@ -20,7 +20,7 @@ const Step5Activity = ({ onNext, onPrev, activityData }: Step5ActivityProps) => 
     '운동선수 & 강도 높은 운동을 한다'
   ];
 
-  const [selectedActivity, setSelectedActivity] = useState<string | null>(activityData ?? null); //선택한 활동 옵션 상태 관리리
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(activityData ?? null); //선택한 활동 옵션 상태 관리
 
   const handleActivitySelect = (activity: string) => {
     setSelectedActivity(activity);
@@ -35,12 +35,15 @@ const Step5Activity = ({ onNext, onPrev, activityData }: Step5ActivityProps) => 
   return (
     <div className="relative w-2/3 h-auto flex flex-col justify-center items-center overflow-hidden py-10">
       <div className="w-full text-center mb-6">
-        <h2 className="text-2xl font-bold text-center mb-6">하루 활동량을 알려주세요.</h2>
+        <div className="text-2xl font-bold text-center mb-4">하루 활동량을 알려주세요.</div>
+        <div className="text-sm font-medium text-gray-500 mb-10">
+          운동량에 따른 활동 대사량 산출을 위한 정보가 필요합니다.
+        </div>
 
         {/* 활동량 옵션 */}
         <div className="w-full flex flex-col space-y-4">
           {activities.map((activity) => (
-            <Option
+            <TodaysmealOption
               key={activity}
               label={activity}
               isSelected={selectedActivity === activity}
@@ -50,7 +53,7 @@ const Step5Activity = ({ onNext, onPrev, activityData }: Step5ActivityProps) => 
         </div>
 
         {/* 이전, 다음 버튼 */}
-        <div className="flex justify-between w-full mt-6">
+        <div className="flex justify-between w-full mt-10">
           <PreviousButton onClick={onPrev} />
           <NextButton onClick={handleNextClick} disabled={!selectedActivity} />
         </div>

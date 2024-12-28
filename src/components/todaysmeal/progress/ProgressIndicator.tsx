@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { GiHotMeal } from 'react-icons/gi';
 
 interface ProgressIndicatorProps {
   steps: string[];
@@ -24,7 +25,12 @@ const ProgressIndicator = ({ steps, currentStepIndex }: ProgressIndicatorProps) 
               }`}
             >
               {/* index가 현재 step 보다 작은 경우 bg-hover 주고, index가 현재 step과 같은 경우 bg-primary, index가 현재 step보다 큰 경우 아직 완료되지 않은 상태임으로 회색배경줌.  */}
-              {index + 1}
+
+              {index === steps.length - 1 ? (
+                <GiHotMeal size={24} className="text-black" /> // 마지막 단계는 요리 아이콘으로 대체함.
+              ) : (
+                index + 1 // 그 외 단계는 숫자 표시
+              )}
               {/* index는 0부터 시작 됨으로 +1 */}
             </div>
 
