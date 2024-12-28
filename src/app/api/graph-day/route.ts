@@ -14,6 +14,11 @@ export async function GET(request: Request): Promise<NextResponse> {
     const {
       data: { session }
     } = await supabase.auth.getSession();
+
+    if (!session?.user.id) {
+      throw new Error('User ID is required'); // User ID가 없을 경우 에러를 발생시킴
+    }
+
     const { data, error } = await supabase
       .from('calendars')
       .select('total_nutritions')
@@ -30,6 +35,6 @@ export async function GET(request: Request): Promise<NextResponse> {
     // 데이터를 반환
     return NextResponse.json(data || [], { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json( {error: `graph-day server error : ${error}`}, { status: 500 });
   }
 }
