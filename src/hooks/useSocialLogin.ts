@@ -4,7 +4,7 @@ const useSocialLogin = () => {
   const supabase = createClient();
   const handleGoogleLogin = async () => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/callback`,
@@ -24,7 +24,7 @@ const useSocialLogin = () => {
 
   const handleGithubLogin = async () => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
           redirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/callback`,
