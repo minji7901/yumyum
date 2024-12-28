@@ -3,13 +3,18 @@ import { useSearch } from '@/hooks/useSearch';
 import FoodItem from './FoodItem';
 import { FoodType } from '@/types/Food';
 import { useEffect, useRef } from 'react';
+import { SelectedFoodInfo } from '@/types/SelectedFoodInfo';
 
 interface FoodListProps {
   keyword: string;
+  isInModal?: boolean;
+  onSelectFoodHandler?: (selectedFood: SelectedFoodInfo) => void;
 }
 
-const FoodList = ({ keyword }: FoodListProps) => {
+const FoodList = ({ keyword, isInModal, onSelectFoodHandler }: FoodListProps) => {
   const observerRef = useRef(null);
+  const isModal = isInModal ? true : false;
+  const onSelectFood = onSelectFoodHandler ? onSelectFoodHandler : null;
 
   const { data, fetchNextPage, hasNextPage, isPending, isError } = useSearch({ keyword });
 
@@ -58,7 +63,11 @@ const FoodList = ({ keyword }: FoodListProps) => {
 
   return (
     <div>
-      {data.pages.map((page) => page.data.map((food: FoodType) => <FoodItem key={food.FOOD_CD} data={food} />))}
+      {data.pages.map((page) =>
+        page.data.map((food: FoodType) => (
+          <FoodItem key={food.FOOD_CD} data={food} isInModal={isModal} onSelectFoodHandler={onSelectFood} />
+        ))
+      )}
 
       {hasNextPage && (
         <div ref={observerRef} className="flex flex-col items-center justify-center h-40">

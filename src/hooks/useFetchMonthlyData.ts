@@ -1,4 +1,5 @@
-import { getCalendarDate, getCalendarMonth } from '@/utils/calendar/getCalendarData';
+import useAuthStore from '@/store/authStore';
+import { getCalendarMonth } from '@/utils/calendar/fetchCalendarData';
 import { genDays } from '@/utils/genCalendarDays';
 import { useQuery } from '@tanstack/react-query';
 
@@ -7,7 +8,8 @@ interface FetchCaloriesPerDayParams {
   month: number;
 }
 const useFetchMonthlyData = ({ year, month }: FetchCaloriesPerDayParams) => {
-  const userId = '19411c9c-bffa-4992-8f55-2c831d9cc941'; // 임시 유저 아이디
+  const { user } = useAuthStore((state) => state);
+  const userId = user?.id;
 
   const { data, isPending, isError } = useQuery({
     queryKey: [`monthlyData-${year}-${month}-${userId}`],

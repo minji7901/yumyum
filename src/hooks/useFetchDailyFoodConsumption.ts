@@ -1,4 +1,5 @@
-import { getCalendarDate } from '@/utils/calendar/getCalendarData';
+import useAuthStore from '@/store/authStore';
+import { getCalendarDate } from '@/utils/calendar/fetchCalendarData';
 import { useQuery } from '@tanstack/react-query';
 
 interface FetchCaloriesPerDayParams {
@@ -7,7 +8,8 @@ interface FetchCaloriesPerDayParams {
   day: number;
 }
 const useFetchDailyFoodConsumption = ({ year, month, day }: FetchCaloriesPerDayParams) => {
-  const userId = '19411c9c-bffa-4992-8f55-2c831d9cc941'; // 임시 유저 아이디
+  const { user } = useAuthStore((state) => state);
+  const userId = user?.id;
 
   const { data, isPending, isError } = useQuery({
     queryKey: [`${year}-${month}-${day}-${userId}`],
@@ -16,7 +18,7 @@ const useFetchDailyFoodConsumption = ({ year, month, day }: FetchCaloriesPerDayP
     }
   });
 
-  return { foodConsumption: data, isPending, isError };
+  return { data, isPending, isError };
 };
 
 export default useFetchDailyFoodConsumption;
