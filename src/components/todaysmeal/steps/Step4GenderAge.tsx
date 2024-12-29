@@ -54,13 +54,13 @@ const Step4GenderAge = ({ onNext, onPrev, genderData, ageData }: Step4GenderAgeP
             label="남성"
             isSelected={gender === 'male'}
             onClick={() => setGender('male')}
-            className="w-1/3"
+            className="w-1/3 px-6 py-3"
           />
           <TodaysmealOption
             label="여성"
             isSelected={gender === 'female'}
             onClick={() => setGender('female')}
-            className="w-1/3"
+            className="w-1/3 px-6 py-3"
           />
         </div>
 
