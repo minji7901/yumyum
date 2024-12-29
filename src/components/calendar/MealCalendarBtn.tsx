@@ -2,6 +2,8 @@
 
 import { useContext } from "react";
 import { SelectedDateContext } from "./CalendarDateContext";
+import { IoIosArrowBack } from 'react-icons/io';
+import { IoIosArrowForward } from 'react-icons/io';
 
 const MealCalendarBtn = () => {
   const dateContext = useContext(SelectedDateContext);
@@ -23,10 +25,10 @@ const MealCalendarBtn = () => {
   return (
     <>
       <button type="button" onClick={onPrevMonthClick}>
-        {'<'}
+        <IoIosArrowBack className="text-3xl text-primary" />
       </button>
       <button type="button" onClick={onNextMonthClick}>
-        {'>'}
+        <IoIosArrowForward className="text-3xl text-primary" />
       </button>
     </>
   );

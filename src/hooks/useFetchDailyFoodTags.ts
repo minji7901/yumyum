@@ -13,8 +13,8 @@ const useFetchDailyFoodTags = ({ year, month, day }: FetchCaloriesPerDayParams) 
 
   const { data, isPending, isError } = useQuery({
     queryKey: [`tags-${year}-${month}-${day}-${userId}`],
-    queryFn: () => {
-      return getFoodTags({ year, month, day, userId });
+    queryFn: async () => {
+      return await getFoodTags({ year, month, day, userId });
     }
   });
 

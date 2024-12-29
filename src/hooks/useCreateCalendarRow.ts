@@ -1,29 +1,21 @@
+import { AddFoodTagParams } from '@/hooks/useAddFoodTag';
 import useAuthStore from '@/store/authStore';
+import { createFirstTag } from '@/utils/calendar/fetchCalendarData';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createTagAndUpdateCalendar } from '@/utils/calendar/fetchCalendarData';
-import { FoodTagDataType } from '@/types/SelectedFoodInfo';
 
-export interface AddFoodTagParams {
-  foodTagData: FoodTagDataType;
-  consumedAmount: number;
-}
-const useAddFoodTag = ({ foodTagData, consumedAmount }: AddFoodTagParams) => {
+const useCreateCalendarRow = ({ foodTagData, consumedAmount }: AddFoodTagParams) => {
   const queryClient = useQueryClient();
   const { user } = useAuthStore((state) => state);
-  const userId = (user?.id) ? user?.id : '';
-
+  const userId = user?.id ? user.id : '';
   const { year, month, day } = foodTagData;
 
   const { mutate } = useMutation({
-    mutationFn: async (calendarId: string) => {
-      await createTagAndUpdateCalendar({
-        calendarId,
-        userId,
-        foodTagData,
-        amount: consumedAmount
-      });
+    mutationFn: async () => {
+      createFirstTag({ userId, year, month, day, foodTagData, amount: consumedAmount });
+      return;
     },
     onSuccess: () => {
+      console.log('success!', `tags-${year}-${month}-${day}-${userId}`);
       queryClient.invalidateQueries({ queryKey: [`${year}-${month}-${day}-${userId}`] });
       queryClient.invalidateQueries({ queryKey: [`tags-${year}-${month}-${day}-${userId}`] });
       queryClient.invalidateQueries({ queryKey: [`monthlyData-${year}-${month}-${userId}`] });
@@ -33,4 +25,4 @@ const useAddFoodTag = ({ foodTagData, consumedAmount }: AddFoodTagParams) => {
   return mutate;
 };
 
-export default useAddFoodTag;
+export default useCreateCalendarRow;

@@ -1,6 +1,6 @@
 import useAuthStore from '@/store/authStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import useGetNewNutrientInfo from './useGetNewNutrientInfo';
+import useGetNewNutrientInfoByTag from './useGetNewNutrientInfoByTag';
 import { deleteTagAndUpdateCalendar } from '@/utils/calendar/fetchCalendarData';
 
 interface DeleteFoodTagParams {
@@ -8,13 +8,21 @@ interface DeleteFoodTagParams {
   month: number;
   day: number;
   tagId: string;
+  consumedAmount: number;
 }
-const useDeleteFoodTag = ({ year, month, day, tagId }: DeleteFoodTagParams) => {
+const useDeleteFoodTag = ({ year, month, day, tagId, consumedAmount }: DeleteFoodTagParams) => {
   const queryClient = useQueryClient();
   const { user } = useAuthStore((state) => state);
   const userId = user?.id;
 
-  const { newTotalCalories, newNutrientInfo } = useGetNewNutrientInfo({ year, month, day, tagId, mode: 'delete' });
+  const { newTotalCalories, newNutrientInfo } = useGetNewNutrientInfoByTag({
+    year,
+    month,
+    day,
+    tagId,
+    consumedAmount,
+    mode: 'delete'
+  });
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -23,7 +31,7 @@ const useDeleteFoodTag = ({ year, month, day, tagId }: DeleteFoodTagParams) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`${year}-${month}-${day}-${userId}`] });
       queryClient.invalidateQueries({ queryKey: [`tags-${year}-${month}-${day}-${userId}`] });
-      queryClient.removeQueries({ queryKey: [`tag-${tagId}-${userId}`]});
+      queryClient.removeQueries({ queryKey: [`tag-${tagId}-${userId}`] });
       queryClient.invalidateQueries({ queryKey: [`monthlyData-${year}-${month}-${userId}`] });
     }
   });

@@ -16,8 +16,8 @@ const MealCalendarSection = () => {
         <h4 className="text-center mb-2 font-bold text-lg">{year}년</h4>
         <h5 className="text-center font-bold text-lg">{month}월</h5>
       </div>
-      <div className="w-[50rem] m-auto relative">
-        <div className="w-[35rem] h-[30rem] m-auto grid">
+      <div className="w-full m-auto relative">
+        <div className="w-10/12 m-auto">
           <MealCalendarSheet />
         </div>
         <div className="w-full h-full absolute top-0 flex justify-between items-center">
