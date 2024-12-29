@@ -9,7 +9,7 @@ import ResultAnimation from '../todaysmeal-lottie/ResultAnimation';
 import FoodNutrition from '@/types/FoodNutrition';
 import FoodDetails from '../foodDetails/FoodDetails';
 import Recommend from '../types/Recommend';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import NutritionRecommendation from '../types/NutritionRecommendation';
 
 interface Step7RecommendationProps {
@@ -19,7 +19,7 @@ interface Step7RecommendationProps {
 const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
   const [selectedFood, setSelectedFood] = useState<FoodNutrition | null>(null); // 선택된 요리 상세 정보 상태 관리
   const [recommendations, setRecommendations] = useState<Recommend | null>(null);
-  const router = useRouter();
+  // const router = useRouter();
   const { goal, height, weight, gender, age, activity, preferredFoods } = data;
 
   // 활동 대사량 및 탄단지 비율 계산
@@ -176,24 +176,27 @@ const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
         </div>
       </div>
 
+      
       {/* 버튼 그룹 */}
-      <div className="flex justify-center gap-4 mt-8">
+      {/* <div className="flex justify-center gap-4 mt-8"> */}
         {/* 재생성 버튼 */}
-        <button
+        {/* <button
           onClick={handleReset}
           className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
         >
           재생성
-        </button>
+        </button> */}
 
         {/* 홈으로 버튼 */}
-        <button
+        {/* <button
           onClick={() => router.push('/')} // router를 사용하여 홈으로 이동
           className="bg-primary hover:bg-hover text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-center"
         >
           홈으로
         </button>
-      </div>
+      </div> */}
+
+
       {/* 상세 정보 모달 */}
       {selectedFood && <FoodDetails food={selectedFood} onClose={closeFoodDetails} />}
     </div>
