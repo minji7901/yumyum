@@ -74,6 +74,7 @@ const useSignForm = ({ isLoginMode, onSuccess }: UseSignFormProps) => {
       if (isLoginMode) {
         const { user } = response;
         authStore.setUser(user);
+        window.location.href = '/';
       }
 
       onSuccess();
