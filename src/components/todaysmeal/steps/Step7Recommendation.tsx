@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react';
 import useRecommend from '@/hooks/useRecommend';
 import MealPlanData from '@/components/todaysmeal/types/MealPlanData';
 import { calculateCalories } from '@/lib/calculateCalories';
-import ProgressLoadingAnimation from '../todaysmeal-lottie/ProgressLoadingAnimation';
-import ResultAnimation from '../todaysmeal-lottie/ResultAnimation';
+// import ProgressLoadingAnimation from '../todaysmeal-lottie/ProgressLoadingAnimation';
+// import ResultAnimation from '../todaysmeal-lottie/ResultAnimation';
 import FoodNutrition from '@/types/FoodNutrition';
 import FoodDetails from '../foodDetails/FoodDetails';
 import Recommend from '../types/Recommend';
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import NutritionRecommendation from '../types/NutritionRecommendation';
 
 interface Step7RecommendationProps {
@@ -19,7 +19,7 @@ interface Step7RecommendationProps {
 const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
   const [selectedFood, setSelectedFood] = useState<FoodNutrition | null>(null); // 선택된 요리 상세 정보 상태 관리
   const [recommendations, setRecommendations] = useState<Recommend | null>(null);
-  // const router = useRouter();
+  const router = useRouter();
   const { goal, height, weight, gender, age, activity, preferredFoods } = data;
 
   // 활동 대사량 및 탄단지 비율 계산
@@ -61,7 +61,7 @@ const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
   if (isPending) {
     return (
       <div className="w-2/3 flex flex-col justify-center items-center gap-5 min-h-screen">
-        <ProgressLoadingAnimation></ProgressLoadingAnimation>
+        {/* <ProgressLoadingAnimation></ProgressLoadingAnimation> */}
         {/* lottie 애니메이션 활용함 */}
         <div className="font-bold text-primary text-2xl">건강하고 맛있는 밥상 차리는 중....</div>
       </div>
@@ -95,7 +95,7 @@ const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
           모든 식단은 사라지고 처음 페이지로 이동합니다.)
         </div>
       </div>
-      <ResultAnimation></ResultAnimation>
+      {/* <ResultAnimation></ResultAnimation> */}
 
       {/* 추천 식단 */}
       <div className="max-w-xl lg:max-w-2xl mx-auto mt-8">
@@ -178,23 +178,23 @@ const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
 
       
       {/* 버튼 그룹 */}
-      {/* <div className="flex justify-center gap-4 mt-8"> */}
+      <div className="flex justify-center gap-4 mt-8">
         {/* 재생성 버튼 */}
-        {/* <button
+        <button
           onClick={handleReset}
           className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
         >
           재생성
-        </button> */}
+        </button>
 
         {/* 홈으로 버튼 */}
-        {/* <button
+        <button
           onClick={() => router.push('/')} // router를 사용하여 홈으로 이동
           className="bg-primary hover:bg-hover text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out text-center"
         >
           홈으로
         </button>
-      </div> */}
+      </div>
 
 
       {/* 상세 정보 모달 */}
