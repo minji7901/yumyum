@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { SelectedDateContext } from './CalendarDateContext';
 import useFetchMonthlyData from '@/hooks/useFetchMonthlyData';
 import { FaPlus } from 'react-icons/fa6';
+import Swal from 'sweetalert2';
 
 interface MealCalendarWeekProps {
   weekInfo: CalendarDay[];
@@ -35,11 +36,14 @@ const MealCalendarWeek = ({ weekInfo }: MealCalendarWeekProps) => {
           <div key={key} className="h-full border-b-2 border-gray-200">
             {day && (
               <div
-                className="h-full p-2 m-1 relative hover:bg-slate-200 z-[5] hover:cursor-pointer"
+                className="h-[92%] p-2 m-1 relative hover:bg-slate-200 z-[5] hover:cursor-pointer"
                 onClick={(e) => {
                   handleOnDayClick(day);
                   if (e.target instanceof HTMLElement && e.target.tagName !== 'BUTTON') {
-                    alert('날짜가 선택되었습니다');
+                    Swal.fire({
+                      icon: 'success',
+                      text: '날짜가 선택되었습니다'
+                    });
                   }
                 }}
               >
@@ -61,7 +65,6 @@ const MealCalendarWeek = ({ weekInfo }: MealCalendarWeekProps) => {
 };
 
 const MealCalendarSheet = () => {
-  //요일란은 row가 스타일이 다름
   const dateContext = useContext(SelectedDateContext);
   const { selectedDate } = dateContext;
   const { year, month } = selectedDate;

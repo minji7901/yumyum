@@ -29,5 +29,3 @@ const MealCalendarSection = () => {
 };
 
 export default MealCalendarSection;
-
-//스타일 정리 : 경계 그려주기, 좌우 버튼 아이콘 고르기

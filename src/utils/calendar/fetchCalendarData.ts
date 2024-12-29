@@ -77,14 +77,6 @@ export async function getFoodTagById(id: string): Promise<Tables<'consumed_foods
   return data;
 }
 
-//interface InsertToCalendarType {
-//  user_id: string | undefined;
-//  year: number;
-//  month: number;
-//  day: number;
-//  total_calories?: number;
-//  total_nutritions?: NutrientsJson;
-//}
 interface CalendarRowParams extends FoodTagMeta {
   totalCalories?: number;
   totalNutritions?: NutrientsJson;
@@ -103,7 +95,6 @@ export async function createCalendarRow({ userId, year, month, day }: CalendarRo
       })
       .select()
       .single();
-      console.log('create calendar row', year, month, day);
     return data;
   } catch (error) {
     throw new Error(`${error}`);

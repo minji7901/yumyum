@@ -11,7 +11,6 @@ import useCreateCalendarRow from '@/hooks/useCreateCalendarRow';
 import useAddFoodTag from '@/hooks/useAddFoodTag';
 import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md';
 
-//useAddFoodTag에 똑같은 것 있음
 interface getCalendarIdQueryData {
   [dataName: string]: string;
 }

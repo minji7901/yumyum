@@ -15,7 +15,6 @@ const useCreateCalendarRow = ({ foodTagData, consumedAmount }: AddFoodTagParams)
       return;
     },
     onSuccess: () => {
-      console.log('success!', `tags-${year}-${month}-${day}-${userId}`);
       queryClient.invalidateQueries({ queryKey: [`${year}-${month}-${day}-${userId}`] });
       queryClient.invalidateQueries({ queryKey: [`tags-${year}-${month}-${day}-${userId}`] });
       queryClient.invalidateQueries({ queryKey: [`monthlyData-${year}-${month}-${userId}`] });
