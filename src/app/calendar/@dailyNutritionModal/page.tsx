@@ -13,7 +13,7 @@ const Modal = () => {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [modalMode, setModalMode] = useState<ModalModeType>('showData');
 
-  //태그 데이터 갯수로 캘린더 없음인가, 캘린더 있음인가를 판단할 수 있으므로 분기를 기록하는 state를 여기 둔다.
+  //태그 데이터 갯수로 캘린더 없음과 있음을을 판단할 수 있다.
   const [howManyTags, setHowManyTags] = useState<number>(0);
 
   const [selectedFoodTag, setSelectedFoodTag] = useState<string>('');
@@ -22,6 +22,7 @@ const Modal = () => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       handleModalVisibility(false);
       setSelectedFoodTag('');
+      setHowManyTags(0);
     }
   };
 
@@ -51,7 +52,11 @@ const Modal = () => {
           {modalMode === 'showData' ? (
             <ShowDailyMealData selectedFoodTag={selectedFoodTag} howManyTags={howManyTags} />
           ) : (
-            <AddNewFood onModalModeSwitch={onModalModeSwitch} howManyTags={howManyTags} />
+            <AddNewFood
+              onModalModeSwitch={onModalModeSwitch}
+              howManyTags={howManyTags}
+              setHowManyTags={setHowManyTags}
+            />
           )}
         </div>
       </div>

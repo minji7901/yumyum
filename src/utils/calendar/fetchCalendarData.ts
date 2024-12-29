@@ -104,7 +104,7 @@ export async function createCalendarRow({ userId, year, month, day }: CalendarRo
       })
       .select()
       .single();
-      console.log('create calendar row', day);
+      console.log('create calendar row', year, month, day);
     return data;
   } catch (error) {
     throw new Error(`${error}`);
@@ -164,11 +164,15 @@ export async function updateCalendarNutrientInfo({
 }
 
 interface DeleteCalendarRowParams {
-  calendarId: string;
+  userId: string;
+  year: number;
+  month: number;
+  day: number;
 }
-export async function deleteCalendarRow({ calendarId }: DeleteCalendarRowParams) {
+export async function deleteCalendarRow({ userId, year, month, day }: DeleteCalendarRowParams) {
   try {
     const supabase = createClient();
+    const { id: calendarId } = await getCalendarDate({ userId, year, month, day });
     await supabase.from('calendars').delete().eq('id', calendarId);
   } catch (error) {
     throw new Error(`${error}`);

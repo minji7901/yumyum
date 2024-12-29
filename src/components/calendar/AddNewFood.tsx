@@ -17,9 +17,10 @@ interface getCalendarIdQueryData {
 interface AddFoodFormProps {
   searchedFood: SearchedFood | null;
   howManyTags: number;
+  setHowManyTags: (num: number) => void;
 }
 
-const AddFoodForm = ({ searchedFood, howManyTags }: AddFoodFormProps) => {
+const AddFoodForm = ({ searchedFood, howManyTags, setHowManyTags }: AddFoodFormProps) => {
   const queryClient = useQueryClient();
   const { selectedDate } = useContext(SelectedDateContext);
   const { year, month, day } = selectedDate;
@@ -46,10 +47,10 @@ const AddFoodForm = ({ searchedFood, howManyTags }: AddFoodFormProps) => {
   const foodTagData = { ...searchedFoodObj, amount: consumedAmount, year, month, day };
 
   //mutate 생성
-  const createFirstTag = useCreateCalendarRow({ year, month, day, foodTagData, consumedAmount });
+  const createFirstTag = useCreateCalendarRow({ foodTagData, consumedAmount });
   const addFoodTag = useAddFoodTag({ foodTagData, consumedAmount });
 
-  //amount 값 업데이트트
+  //amount 값 업데이트
   const onAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     const amount = e.target.selectedFoodAmount.value;
     setConsumedAmount(amount);
@@ -61,10 +62,12 @@ const AddFoodForm = ({ searchedFood, howManyTags }: AddFoodFormProps) => {
       if (howManyTags === 0) {
         // 기존에 존재하는 태그가 없다면 캘린더 생성, 새로운 태그 생성
         createFirstTag();
+        setHowManyTags(howManyTags + 1);
         return;
       }
       // 기존에 존재하는 태그가 있다면 새로운 태그만 생성
       addFoodTag(calendarId);
+      setHowManyTags(howManyTags + 1);
     }
   };
   return (
@@ -100,8 +103,9 @@ const AddFoodForm = ({ searchedFood, howManyTags }: AddFoodFormProps) => {
 interface AddNewFoodProps {
   onModalModeSwitch: () => void;
   howManyTags: number;
+  setHowManyTags: (num:number)=>void;
 }
-const AddNewFood = ({ onModalModeSwitch, howManyTags }: AddNewFoodProps) => {
+const AddNewFood = ({ onModalModeSwitch, howManyTags, setHowManyTags }: AddNewFoodProps) => {
   const [keyword, setKeyword] = useState<string>('');
   const [searchedFood, setSearchedFood] = useState<SearchedFood | null>(null);
 
@@ -136,7 +140,7 @@ const AddNewFood = ({ onModalModeSwitch, howManyTags }: AddNewFoodProps) => {
         </div>
       </div>
       <div className="border-t">
-        <AddFoodForm searchedFood={searchedFood} howManyTags={howManyTags} />
+        <AddFoodForm searchedFood={searchedFood} howManyTags={howManyTags} setHowManyTags={setHowManyTags} />
       </div>
     </>
   );

@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { SelectedDateContext } from "./CalendarDateContext";
 import { Tables } from "@/types/supabase";
 import { NutrientsJson } from "@/types/NutrientsJson";
+import useDeleteCalendarRow from "@/hooks/useDeleteCalendarRow";
 
 interface FoodInfoBoxProps {
   selectedFood: Tables<'consumed_foods'>;
@@ -15,11 +16,12 @@ const FoodInfoBox = ({ selectedFood, howManyTags }: FoodInfoBoxProps) => {
   const { selectedDate } = useContext(SelectedDateContext);
   const { year, month, day } = selectedDate;
   const { id: tagId, name, amount, nutritions, serving_size: servingSize } = selectedFood;
+  const deleteCalendarRow = useDeleteCalendarRow({ year, month, day });
 
   const deleteTag = useDeleteFoodTag({ year, month, day, tagId, consumedAmount: amount });
   const onDeleteClick = ()=>{
     deleteTag();
-    if(howManyTags===1) {/*캘린더 삭제*/}
+    if(howManyTags===1) {deleteCalendarRow();}
   }
 
   const nutritionsKRName: NutritionNamesType = {
