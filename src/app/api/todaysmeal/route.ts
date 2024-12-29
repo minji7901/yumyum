@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import FoodNutrition from '@/types/FoodNutrition';
 
-// export const dynamic = 'force-dynamic';
-
 export async function GET(request: Request): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const foodLv3Cd = searchParams.get('foodLv3Cd') || '01'; // 기본값: 01 (밥류)
