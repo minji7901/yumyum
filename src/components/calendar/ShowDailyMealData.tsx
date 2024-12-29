@@ -8,17 +8,18 @@ import FoodInfoBox from './FoodInfoBox';
 
 const FoodUnselected = () => {
   return (
-    <>
-      <div>음식 태그를 클릭하시면 영양정보를 볼 수 있습니다</div>
-    </>
+    <div className="h-[16rem] flex justify-center items-center">
+      <span>음식 태그를 클릭하시면 영양정보를 볼 수 있습니다</span>
+    </div>
   );
 };
 
 interface FoodInfoProps {
   selectedFoodTag: string;
   howManyTags: number;
+  setHowManyTags: (num: number) => void;
 }
-const FoodInfo = ({ selectedFoodTag, howManyTags }: FoodInfoProps) => {
+const FoodInfo = ({ selectedFoodTag, howManyTags, setHowManyTags }: FoodInfoProps) => {
   const { data: selectedFood, isPending, isError } = useFetchFoodTagData(selectedFoodTag);
   if (selectedFoodTag === '') return <FoodUnselected />;
 
@@ -28,9 +29,11 @@ const FoodInfo = ({ selectedFoodTag, howManyTags }: FoodInfoProps) => {
   return (
     <>
       {selectedFood ? (
-        <FoodInfoBox selectedFood={selectedFood} howManyTags={howManyTags} />
+        <FoodInfoBox selectedFood={selectedFood} howManyTags={howManyTags} setHowManyTags={setHowManyTags} />
       ) : (
-        <div>태그가 성공적으로 삭제되었어요</div>
+        <div className="h-[16rem] flex justify-center items-center">
+          <span>태그가 성공적으로 삭제되었어요</span>
+        </div>
       )}
     </>
   );
@@ -39,8 +42,9 @@ const FoodInfo = ({ selectedFoodTag, howManyTags }: FoodInfoProps) => {
 interface ShowDailyMealDataProps {
   selectedFoodTag: string;
   howManyTags: number;
+  setHowManyTags: (num: number) => void;
 }
-const ShowDailyMealData = ({ selectedFoodTag, howManyTags }: ShowDailyMealDataProps) => {
+const ShowDailyMealData = ({ selectedFoodTag, howManyTags, setHowManyTags }: ShowDailyMealDataProps) => {
   const { selectedDate } = useContext(SelectedDateContext);
   const { year, month, day } = selectedDate;
 
@@ -54,11 +58,11 @@ const ShowDailyMealData = ({ selectedFoodTag, howManyTags }: ShowDailyMealDataPr
   return (
     <>
       <div className="py-6 border-b">
-        <FoodInfo selectedFoodTag={selectedFoodTag} howManyTags={howManyTags} />
+        <FoodInfo selectedFoodTag={selectedFoodTag} howManyTags={howManyTags} setHowManyTags={setHowManyTags} />
       </div>
       <div className="my-5 ">
-        <h3 className="mb-3 text-xl font-bold text-center">{`${year}년 ${month}월 ${day}일의 하루 섭취 영양`}</h3>
-        <div className="text-3xl font-bold text-center text-[#da6b5d]">{`${totalCalories}kcal`}</div>
+        <h3 className="mb-3 text-base font-bold text-center">{`${year}년 ${month}월 ${day}일의 하루 섭취 영양`}</h3>
+        <div className="text-xl font-bold text-center text-[#da6b5d]">{`${totalCalories}kcal`}</div>
       </div>
     </>
   );

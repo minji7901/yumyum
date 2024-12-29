@@ -38,9 +38,12 @@ const Modal = () => {
       onClick={(e) => {
         onClickOutside(e);
       }}
-      className="w-screen h-screen fixed flex justify-center top-0 left-0 bg-[rgba(0,0,0,0.6)] z-[15]"
+      className="w-screen h-screen fixed flex justify-center items-end top-0 left-0 bg-[rgba(0,0,0,0.6)] z-[15]"
     >
-      <div ref={modalRef} className="relative m-auto w-[40vw] h-[90vh] rounded-3xl bg-white z-[20]">
+      <div
+        ref={modalRef}
+        className="overflow-scroll relative my-6 max-w-[500px] w-[calc(100vw-48px)] h-[calc(100vh-128px)] rounded-3xl bg-white z-[20]"
+      >
         <div className="relative my-8 mx-4">
           <h2 className="mb-3 text-2xl font-bold text-center">식품 추가</h2>
           <FoodTagBox
@@ -50,7 +53,11 @@ const Modal = () => {
             setHowManyTags={setHowManyTags}
           />
           {modalMode === 'showData' ? (
-            <ShowDailyMealData selectedFoodTag={selectedFoodTag} howManyTags={howManyTags} />
+            <ShowDailyMealData
+              selectedFoodTag={selectedFoodTag}
+              howManyTags={howManyTags}
+              setHowManyTags={setHowManyTags}
+            />
           ) : (
             <AddNewFood
               onModalModeSwitch={onModalModeSwitch}

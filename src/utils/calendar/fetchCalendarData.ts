@@ -59,10 +59,9 @@ export async function getFoodTags({
     const supabase = createClient();
 
     const { id } = await getCalendarDate({ year, month, day, userId });
-    if (id === null) return null;
-
-    const { data } = await supabase.from('consumed_foods').select().eq('calendar_id', id);
-
+    const { data, error } = await supabase.from('consumed_foods').select().eq('calendar_id', id);
+    if(error) console.error(error);
+    
     return data;
   } catch {
     return null;

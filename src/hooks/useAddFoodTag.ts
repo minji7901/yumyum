@@ -16,7 +16,7 @@ const useAddFoodTag = ({ foodTagData, consumedAmount }: AddFoodTagParams) => {
 
   const { mutate } = useMutation({
     mutationFn: async (calendarId: string) => {
-      createTagAndUpdateCalendar({
+      await createTagAndUpdateCalendar({
         calendarId,
         userId,
         foodTagData,

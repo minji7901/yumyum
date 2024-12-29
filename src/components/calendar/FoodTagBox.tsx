@@ -4,6 +4,7 @@ import { useContext, useEffect } from 'react';
 import { SelectedDateContext } from './CalendarDateContext';
 import useFetchDailyFoodTags from '@/hooks/useFetchDailyFoodTags';
 import { Json } from '@/types/supabase';
+import { FaPlus } from 'react-icons/fa6';
 
 interface FoodTagBoxBtnProps {
   modalMode: 'showData' | 'addData';
@@ -13,7 +14,7 @@ const FoodTagBoxBtn = ({ modalMode, onModalModeSwitch }: FoodTagBoxBtnProps) => 
   const btnMode = {
     showData: {
       onBtnClickFn: onModalModeSwitch,
-      btnIcon: '+'
+      btnIcon: <FaPlus />
     },
     addData: { onBtnClickFn: () => {}, btnIcon: '...' }
   };
@@ -21,7 +22,7 @@ const FoodTagBoxBtn = ({ modalMode, onModalModeSwitch }: FoodTagBoxBtnProps) => 
 
   return (
     <button onClick={onBtnClickFn} type="button" className="absolute top-[80%] left-[95%] text-bold hover:text-primary">
-      <span className="fixed">{btnIcon}</span>
+      <span className="fixed text-sm">{btnIcon}</span>
     </button>
   );
 };
@@ -79,7 +80,7 @@ const FoodTagBox = ({ modalMode, onModalModeSwitch, setSelectedFoodTag, setHowMa
   const { data: tagData, isPending, isError } = useFetchDailyFoodTags({ year, month, day });
 
   useEffect(() => {
-    if (tagData) setHowManyTags(tagData.length);//태그데이터가 없다고 뜬다
+    if (tagData) setHowManyTags(tagData.length);//태그데이터가 없다고 뜬다. 리렌더링은 된다.
   }, [tagData]);
 
   if (isPending) return <div>Loading...</div>;
@@ -87,7 +88,7 @@ const FoodTagBox = ({ modalMode, onModalModeSwitch, setSelectedFoodTag, setHowMa
 
   return (
     <section className="border-b">
-      <div className="relative m-auto mb-4 w-4/5 h-28 border border-primary rounded-xl hide-scroll-y">
+      <div className="relative m-auto mb-4 w-4/5 h-24 border border-primary rounded-xl hide-scroll-y">
         <div className="p-4 flex flex-wrap gap-2">
           {tagData && tagData.length ? (
             <FoodTagItem tagData={tagData} setSelectedFoodTag={setSelectedFoodTag} />

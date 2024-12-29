@@ -9,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import useAuthStore from '@/store/authStore';
 import useCreateCalendarRow from '@/hooks/useCreateCalendarRow';
 import useAddFoodTag from '@/hooks/useAddFoodTag';
+import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md';
 
 //useAddFoodTag에 똑같은 것 있음
 interface getCalendarIdQueryData {
@@ -52,7 +53,7 @@ const AddFoodForm = ({ searchedFood, howManyTags, setHowManyTags }: AddFoodFormP
 
   //amount 값 업데이트
   const onAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const amount = e.target.selectedFoodAmount.value;
+    const amount = parseInt(e.target.value);
     setConsumedAmount(amount);
   };
 
@@ -131,11 +132,11 @@ const AddNewFood = ({ onModalModeSwitch, howManyTags, setHowManyTags }: AddNewFo
   return (
     <>
       <button type="button" onClick={onModalModeSwitch} className="text-bold hover:text-primary">
-        {'<<'}
+        <MdOutlineKeyboardDoubleArrowLeft />
       </button>
       <div className="m-auto w-[90%]">
         <SearchBar handleSubmit={handleSubmit} />
-        <div className="h-[18rem] hide-scroll-y">
+        <div className="h-[16rem] hide-scroll-y">
           <FoodList keyword={keyword} isInModal={true} onSelectFoodHandler={onSelectFoodHandler} />
         </div>
       </div>

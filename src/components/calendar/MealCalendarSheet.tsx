@@ -3,6 +3,7 @@ import { CalendarDay } from '@/utils/genCalendarDays';
 import { useContext } from 'react';
 import { SelectedDateContext } from './CalendarDateContext';
 import useFetchMonthlyData from '@/hooks/useFetchMonthlyData';
+import { FaPlus } from 'react-icons/fa6';
 
 interface MealCalendarWeekProps {
   weekInfo: CalendarDay[];
@@ -31,10 +32,10 @@ const MealCalendarWeek = ({ weekInfo }: MealCalendarWeekProps) => {
         if (i === 6) textColor = 'text-blue-600';
 
         return (
-          <div key={key} className="h-full">
+          <div key={key} className="h-full border-b-2 border-gray-200">
             {day && (
               <div
-                className="h-full m-1 relative hover:bg-slate-200 z-[5] hover:cursor-pointer"
+                className="h-full p-2 m-1 relative hover:bg-slate-200 z-[5] hover:cursor-pointer"
                 onClick={(e) => {
                   handleOnDayClick(day);
                   if (e.target instanceof HTMLElement && e.target.tagName !== 'BUTTON') {
@@ -44,8 +45,11 @@ const MealCalendarWeek = ({ weekInfo }: MealCalendarWeekProps) => {
               >
                 <div className={`${textColor}`}>{day}</div>
                 <div className="text-center text-xs">{kcal && `${kcal}kcal`}</div>
-                <button className="absolute bold bottom-0 right-0 z-10 hover:text-red-500" onClick={handleOnModalOpen}>
-                  +
+                <button
+                  className="absolute bottom-2 right-2 z-10 text-xs hover:text-red-500"
+                  onClick={handleOnModalOpen}
+                >
+                  <FaPlus />
                 </button>
               </div>
             )}
@@ -65,7 +69,7 @@ const MealCalendarSheet = () => {
   
   const { data: weeks, isPending, isError } = useFetchMonthlyData({ year, month });
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending) return <div className="h-[20vh] flex justify-center items-center">로딩중입니다...</div>;
   if (isError) return <div>Error!</div>;
 
   return (

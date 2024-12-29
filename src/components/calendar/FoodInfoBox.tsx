@@ -8,21 +8,25 @@ import useDeleteCalendarRow from "@/hooks/useDeleteCalendarRow";
 interface FoodInfoBoxProps {
   selectedFood: Tables<'consumed_foods'>;
   howManyTags: number;
+  setHowManyTags: (num:number)=>void;
 }
 interface NutritionNamesType {
   [name: string]: string;
 }
-const FoodInfoBox = ({ selectedFood, howManyTags }: FoodInfoBoxProps) => {
+const FoodInfoBox = ({ selectedFood, howManyTags, setHowManyTags }: FoodInfoBoxProps) => {
   const { selectedDate } = useContext(SelectedDateContext);
   const { year, month, day } = selectedDate;
   const { id: tagId, name, amount, nutritions, serving_size: servingSize } = selectedFood;
   const deleteCalendarRow = useDeleteCalendarRow({ year, month, day });
 
   const deleteTag = useDeleteFoodTag({ year, month, day, tagId, consumedAmount: amount });
-  const onDeleteClick = ()=>{
+  const onDeleteClick = () => {
     deleteTag();
-    if(howManyTags===1) {deleteCalendarRow();}
-  }
+    if (howManyTags === 1) {
+      deleteCalendarRow();
+      setHowManyTags(0);
+    }
+  };
 
   const nutritionsKRName: NutritionNamesType = {
     fat: '지방',
@@ -41,8 +45,8 @@ const FoodInfoBox = ({ selectedFood, howManyTags }: FoodInfoBoxProps) => {
   return (
     <>
       <div>
-        <h3 className="mb-1 text-xl font-bold text-center">{foodName}</h3>
-        <h4 className="text-lg font-bold text-center text-gray-400">{`${foddCalories}kcal`}</h4>
+        <h3 className="mb-1 text-lg font-bold text-center">{foodName}</h3>
+        <h4 className="text-base font-bold text-center text-gray-400">{`${foddCalories}kcal`}</h4>
         <h4 className="text-xs font-bold text-center text-gray-400">{`1인분 ${servingSize}`}</h4>
       </div>
       <table className="m-auto mt-3 mb-6">
@@ -50,14 +54,14 @@ const FoodInfoBox = ({ selectedFood, howManyTags }: FoodInfoBoxProps) => {
           {nutritionsArr.map(([nutrition, quantity]) => {
             return (
               <tr key={nutrition}>
-                <td className="text-right">{nutritionsKRName[nutrition]}</td>
-                <td className="px-4 text-left">{`${quantity * amount}`}</td>
+                <td className="text-sm text-right">{nutritionsKRName[nutrition]}</td>
+                <td className="px-4 text-left text-sm">{`${quantity * amount}`}</td>
               </tr>
             );
           })}
         </tbody>
       </table>
-      <button type="button" className="m-auto common-btn px-2 py-1 block" onClick={onDeleteClick}>
+      <button type="button" className="m-auto common-btn px-2 py-[0.17rem] block" onClick={onDeleteClick}>
         삭제
       </button>
     </>
