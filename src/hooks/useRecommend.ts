@@ -4,7 +4,7 @@ import FoodNutrition from '@/types/FoodNutrition';
 import { SelectedFoods } from '@/components/todaysmeal/types/MealPlanData';
 import Recommend from '@/components/todaysmeal/types/Recommend';
 
-const useRecommend = (preferredFoods: SelectedFoods, recommendedCalories: number)=> {
+const useRecommend = (preferredFoods: SelectedFoods, recommendedCalories: number) => {
   const mealKeys = Object.keys(preferredFoods); //meal 키들만 모음. 즉, 아침, 점심, 저녁
 
   // 끼니별 기준 칼로리 계산 (하루 추천 칼로리를 3으로 나눔)
