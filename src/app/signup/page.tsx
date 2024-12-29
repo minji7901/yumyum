@@ -2,9 +2,9 @@ import SignForm from '@/components/sign/SignForm';
 
 const Signup = () => {
   return (
-    <div className="flex flex-col justify-center h-[calc(100vh-142px)]">
+    <div className="h-[calc(100vh-166px)] flex flex-col justify-center md:h-[calc(100vh-142px)]">
       <h1 className="common-title">회원가입</h1>
-      <div className="max-w-[500px] w-full mx-auto border border-softly rounded-xl p-[30px] shadow-md">
+      <div className="md:max-w-[500px] md:w-full md:mx-auto border border-softly rounded-xl p-[30px] mx-5 shadow-md">
         <SignForm isLoginMode={false} />
       </div>
     </div>

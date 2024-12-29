@@ -10,29 +10,29 @@ export async function updateSession(request: NextRequest) {
     {
       cookies: {
         getAll: () => request.cookies.getAll(),
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            supabaseResponse.cookies.set(name, value, options);
-          });
-        },
-      },
+        setAll: (cookiesToSet) => {
+          cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options));
+        }
+      }
     }
   );
 
   const {
     data: { user }
   } = await supabase.auth.getUser();
- 
+
   if (!user) {
-    if (!['/signin', '/signup'].includes(request.nextUrl.pathname)) {
+    if (request.nextUrl.pathname.startsWith('/calendar') || request.nextUrl.pathname.startsWith('/todaysmeal')) {
       const url = request.nextUrl.clone();
       url.pathname = '/signin';
       return NextResponse.redirect(url);
     }
-  }
-
-  if (user && ['/signin', '/signup'].includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(request.nextUrl.origin);
+  } else {
+    if (['/signin', '/signup'].includes(request.nextUrl.pathname)) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    return NextResponse.next();
+ 
   }
 
   return supabaseResponse;

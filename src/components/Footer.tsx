@@ -2,8 +2,8 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="border-softly border-t bg-[#FAFAFA] py-5">
-      <div className="max-w-[1200px] mx-auto flex justify-between">
+    <footer className=" border-softly border-t bg-[#FAFAFA] p-5 md:px-0">
+      <div className="max-w-[1200px] mx-auto flex justify-between flex-col md:flex-row">
         <p className="text-gray-400">© 2024 냠냠로그. All rights reserved.</p>
         <ul className="flex space-x-3 text-gray-400">
           <li className='after:content-["|"] after:ml-[10px]'>김민지</li>

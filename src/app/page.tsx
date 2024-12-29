@@ -2,19 +2,20 @@ import SearchSection from '@/components/search/SearchSection';
 import Image from 'next/image';
 import { FaArrowDown } from 'react-icons/fa';
 
-const Home = () => {
+const Home = () => { 
   return (
     <>
       <div className="absolute top-0 left-0 w-screen h-screen overflow-hidden">
         <Image
-          src="/img/home/home_main.svg"
+          src="/img/home/home_main.webp"
           alt="home main image"
-          layout="fill" // 이미지를 부모 요소에 맞게 채움
+          fill={true} // 이미지를 부모 요소에 맞게 채움
           objectFit="cover" // 이미지를 화면에 꽉 차게 유지
           priority // 첫 화면에 바로 로드되도록 설정
+          className="brightness-[80%]"
         />
 
-        <div className="absolute top-40 flex flex-col gap-4 m-10 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">
+        <div className="mx-auto max-w-[1200px] mt-[200px] flex flex-col gap-4 drop-shadow-[0_2px_2px_rgba(0,0,0,1)] px-10">
           <div className="flex flex-wrap">
             <p className="text-5xl text-white font-bold mt-2">오늘의 한 끼,&nbsp;</p>
             <p className="text-5xl text-white font-bold mt-2">내일의 건강을 위해</p>

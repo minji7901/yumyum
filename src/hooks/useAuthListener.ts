@@ -1,3 +1,4 @@
+'use client';
 import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/store/authStore';
@@ -9,28 +10,26 @@ const useAuthListener = () => {
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        const { data, error } = await supabase.from('users').select('nickname').eq('id', session.user.id).single();
+      const { data: userData, error } = await supabase
+        .from('users')
+        .select('id, email, nickname, created_at')
+        .eq('id', session?.user.id)
+        .single();
 
-        if (error) {
-          console.error(error);
-        }
-
-        await setUser({
-          id: session.user.id,
-          email: session.user.email || '',
-          created_at: session.user.created_at || '',
-          nickname: data?.nickname || ''
-        });
-      } else {
-        await setUser(null);
+      if (error || !userData) {
+        console.error('사용자 데이터 조회 실패:', error);
+        return;
       }
+      setUser({
+        id: userData.id,
+        email: userData.email,
+        nickname: userData.nickname || '',
+        created_at: userData.created_at || ''
+      });
     });
 
     return () => {
-      if (authListener?.subscription) {
-        authListener.subscription.unsubscribe();
-      }
+      authListener?.subscription.unsubscribe();
     };
   }, [setUser]);
 };
