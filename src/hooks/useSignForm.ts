@@ -74,9 +74,16 @@ const useSignForm = ({ isLoginMode, onSuccess }: UseSignFormProps) => {
       if (isLoginMode) {
         const { user } = response;
         authStore.setUser(user);
+
+        // 강제로 로컬 스토리지 저장
+        const authState = JSON.parse(localStorage.getItem('auth-storage') || '{}');
+        authState.user = user;
+        authState.isLogin = true;
+        localStorage.setItem('auth-storage', JSON.stringify(authState));
+
+        // 새로고침
         window.location.href = '/';
       }
-
       onSuccess();
     } catch (error) {
       Swal.fire({

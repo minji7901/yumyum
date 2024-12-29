@@ -12,7 +12,7 @@ interface MyPageModalProps {
 }
 
 const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
-  const { user, setUser, logout } = useAuthStore();
+  const { user } = useAuthStore();
   const [newNickname, setNewNickname] = useState<string>('');
   const [isEditingNickname, setIsEditingNickname] = useState<boolean>(false);
 
@@ -101,8 +101,6 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
         title: '회원 탈퇴',
         text: responseData.message
       });
-      logout();
-      setUser(null);
       await supabase.auth.signOut();
       onClose();
     } catch (error) {
@@ -137,7 +135,7 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
             </>
           ) : (
             <>
-              <strong className="text-xl">{user.nickname === null ? '사용자님' : user.nickname}</strong>
+              <strong className="text-xl">{user.nickname === "" ? '사용자님' : user.nickname}</strong>
               <button
                 type="button"
                 className="text-xl"
