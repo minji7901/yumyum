@@ -21,8 +21,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     return NextResponse.json({
       data: searchData.items,
-      nextPage: searchData.pageNo + 1,
-      hasMore: searchData.pageNo * searchData.numOfRows < searchData.totalCount
+      nextPage: searchData.pageNo * searchData.numOfRows < searchData.totalCount ? searchData.pageNo + 1 : null
     });
   } catch (error) {
     console.log('error => ', error);
