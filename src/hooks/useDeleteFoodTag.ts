@@ -1,6 +1,6 @@
 import useAuthStore from '@/store/authStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import useGetNewNutrientInfo from './useGetNewNutrientInfo';
+import useGetNewNutrientInfoByTag from './useGetNewNutrientInfoByTag';
 import { deleteTagAndUpdateCalendar } from '@/utils/calendar/fetchCalendarData';
 
 interface DeleteFoodTagParams {
@@ -15,7 +15,7 @@ const useDeleteFoodTag = ({ year, month, day, tagId, consumedAmount }: DeleteFoo
   const { user } = useAuthStore((state) => state);
   const userId = user?.id;
 
-  const { newTotalCalories, newNutrientInfo } = useGetNewNutrientInfo({
+  const { newTotalCalories, newNutrientInfo } = useGetNewNutrientInfoByTag({
     year,
     month,
     day,

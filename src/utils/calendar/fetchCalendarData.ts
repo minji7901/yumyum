@@ -3,6 +3,7 @@
 import { Tables } from '@/types/supabase';
 import { createClient } from '../supabase/server';
 import { NutrientsJson } from '@/types/NutrientsJson';
+import { FoodTagDataType } from '@/types/SelectedFoodInfo';
 
 interface FoodTagMeta {
   year: number;
@@ -73,17 +74,77 @@ export async function getFoodTagById(id: string): Promise<Tables<'consumed_foods
 
   const { data, error } = await supabase.from('consumed_foods').select().eq('id', id).single();
   if (error) console.error('supabase error!', error);
-  // 음식 태그를 삭제하면 재렌더링 과정에서 여기서 에러가 발생한다. 
-  // 태그 아이디가 사라졌을 때는 초기 화면으로 돌아가도록 하자
 
   return data;
+}
+
+interface InsertToCalendarType {
+  user_id: string | undefined;
+  year: number;
+  month: number;
+  day: number;
+  total_calories?: number;
+  total_nutritions?: NutrientsJson;
+}
+interface CalendarRowParams extends FoodTagMeta {
+  totalCalories?: number;
+  totalNutritions?: NutrientsJson;
+}
+export async function createCalendarRow({
+  userId,
+  year,
+  month,
+  day,
+  totalCalories,
+  totalNutritions
+}: CalendarRowParams) {
+  try {
+    const supabase = createClient();
+    const toInsert: InsertToCalendarType = {
+      user_id: userId,
+      year,
+      month,
+      day
+    };
+    if (totalCalories) toInsert['total_calories'] = totalCalories;
+    if (totalNutritions) toInsert['total_nutritions'] = totalNutritions;
+
+    await supabase.from('calendars').insert(toInsert);
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}
+
+interface CreateConsumedFoodsParams {
+  calendarId: string;
+  name: string;
+  calorie: number;
+  nutritions: NutrientsJson;
+  servingSize: string;
+  amount: number;
+}
+export async function createConsumedFoods({
+  calendarId,
+  name,
+  calorie,
+  nutritions,
+  servingSize,
+  amount
+}: CreateConsumedFoodsParams) {
+  try {
+    const supabase = createClient();
+    await supabase
+      .from('consumed_foods')
+      .insert({ calendar_id: calendarId, name, calorie, nutritions, serving_size: servingSize, amount });
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
 }
 
 interface UpdateCalendarParams extends FoodTagMeta {
   newTotalCalories: number | null;
   newNutrientInfo: NutrientsJson | null;
 }
-
 export async function updateCalendarNutrientInfo({
   year,
   month,
@@ -103,6 +164,18 @@ export async function updateCalendarNutrientInfo({
       .eq('day', day);
   } catch (error) {
     throw console.error('supabase calendar update error!', error);
+  }
+}
+
+interface DeleteCalendarRowParams {
+  calendarId: string;
+}
+export async function deleteCalendarRow({ calendarId }: DeleteCalendarRowParams) {
+  try {
+    const supabase = createClient();
+    await supabase.from('calendars').delete().eq('id', calendarId);
+  } catch (error) {
+    throw new Error(`${error}`);
   }
 }
 
@@ -135,6 +208,40 @@ export async function deleteTagAndUpdateCalendar({
     await updateCalendarNutrientInfo({ year, month, day, userId, newTotalCalories, newNutrientInfo });
     // consumed_foods에서 tag를 지운다
     await deleteFoodTagData({ tagId });
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}
+
+interface createTagAndUpdateParams {
+  userId: string | undefined;
+  newTotalCalories: number | null;
+  newNutrientInfo: NutrientsJson | null;
+  calendarId: string;
+  foodTagData: FoodTagDataType;
+  amount: number;
+}
+export async function createTagAndUpdateCalendar({
+  calendarId,
+  userId,
+  foodTagData,
+  newTotalCalories,
+  newNutrientInfo,
+  amount
+}: createTagAndUpdateParams) {
+  try {
+    // calendar에 바뀐 total nutrition과 total carlories를 업데이트한다다.
+    const { year, month, day, name, calorie, nutritions, servingSize } = foodTagData;
+    await updateCalendarNutrientInfo({ year, month, day, userId, newTotalCalories, newNutrientInfo });
+    // consumed_foods에서 tag를 생성한다
+    await createConsumedFoods({
+      calendarId,
+      name,
+      calorie,
+      nutritions,
+      servingSize,
+      amount
+    });
   } catch (error) {
     throw new Error(`${error}`);
   }

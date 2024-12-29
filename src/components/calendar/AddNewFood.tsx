@@ -3,28 +3,53 @@
 import { FormEvent, useContext, useState } from 'react';
 import SearchBar from '../search/SearchBar';
 import FoodList from '../search/FoodList';
-import { SearchedFood, SelectedFoodInfo } from '@/types/SelectedFoodInfo';
+import { FoodTagDataType, SearchedFood, SelectedFoodInfo } from '@/types/SelectedFoodInfo';
 import { SelectedDateContext } from './CalendarDateContext';
+import { useQueryClient } from '@tanstack/react-query';
+import useAuthStore from '@/store/authStore';
+import useCreateCalendarRow from '@/hooks/useCreateCalendarRow';
+import useAddFoodTag from '@/hooks/useAddFoodTag';
 
-interface AddNewFoodProps {
-  onModalModeSwitch: () => void;
+//useAddFoodTag에 똑같은 것 있음
+interface getCalendarIdQueryData {
+  [dataName: string]: string;
 }
 interface AddFoodFormProps {
   searchedFood: SearchedFood | null;
+  howManyTags: number;
 }
-const AddFoodForm = ({ searchedFood }: AddFoodFormProps) => {
-  const dateContext = useContext(SelectedDateContext);
-  const { selectedDate } = dateContext;
-  //const { year, month, day } = selectedDate;
+
+const AddFoodForm = ({ searchedFood, howManyTags }: AddFoodFormProps) => {
+  const { selectedDate } = useContext(SelectedDateContext);
+  const { year, month, day } = selectedDate;
+
+  const { user } = useAuthStore((state) => state);
+  const userId = user?.id;
+  const queryClient = useQueryClient();
+  const createCalendarDay = useCreateCalendarRow({ year, month, day });
+
+  const [foodTagData, setFoodTagData] = useState<FoodTagDataType | null>(null);
+  const [consumedAmount, setConsumedAmount] = useState<number | null>(null);
+  //mutate 생성
+  const addFoodTag = useAddFoodTag({ foodTagData, consumedAmount });
 
   const onFoodSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchedFood) {
-      console.log(selectedDate);
-      //const amount = e.target.selectedFoodAmount.value;
-      //const foodTagData = { ...searchedFood, amount, year, month, day };
-      //여기서 mutate를 사용해 db에 데이터를 추가하도록 하자.
-    };
+      const amount = e.target.selectedFoodAmount.value;
+      const foodTagData = { ...searchedFood, amount, year, month, day };
+
+      // 분기처리
+      if (howManyTags === 0) {
+        /*캘린더 생성, query자체는 있으니까 mutate로*/
+        createCalendarDay();
+      }
+      const { id } = queryClient.getQueryData([`${year}-${month}-${day}-${userId}`]) as getCalendarIdQueryData;
+      // 여기서 mutate를 사용해 db에 데이터를 추가하도록 하자.
+      setFoodTagData(foodTagData);
+      setConsumedAmount(amount);
+      
+    }
   };
   return (
     <form
@@ -53,7 +78,11 @@ const AddFoodForm = ({ searchedFood }: AddFoodFormProps) => {
   );
 };
 
-const AddNewFood = ({ onModalModeSwitch }: AddNewFoodProps) => {
+interface AddNewFoodProps {
+  onModalModeSwitch: () => void;
+  howManyTags: number;
+}
+const AddNewFood = ({ onModalModeSwitch, howManyTags }: AddNewFoodProps) => {
   const [keyword, setKeyword] = useState<string>('');
   const [searchedFood, setSearchedFood] = useState<SearchedFood | null>(null);
 
@@ -68,9 +97,10 @@ const AddNewFood = ({ onModalModeSwitch }: AddNewFoodProps) => {
     const nutritions = {
       protein: parseInt(data.AMT_NUM3),
       fat: parseInt(data.AMT_NUM4),
-      carbs: parseInt(data.AMT_NUM7),
+      carb: parseInt(data.AMT_NUM7),
       sugar: parseInt(data.AMT_NUM8),
-      natrium: parseInt(data.AMT_NUM14)
+      natrium: parseInt(data.AMT_NUM14),
+      calories: calorie
     };
     setSearchedFood({ servingSize, calorie, name, nutritions });
   };
@@ -87,7 +117,7 @@ const AddNewFood = ({ onModalModeSwitch }: AddNewFoodProps) => {
         </div>
       </div>
       <div className="border-t">
-        <AddFoodForm searchedFood={searchedFood} />
+        <AddFoodForm searchedFood={searchedFood} howManyTags={howManyTags} />
       </div>
     </>
   );

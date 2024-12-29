@@ -6,11 +6,15 @@ import FoodTagBox from '@/components/calendar/FoodTagBox';
 import ShowDailyMealData from '@/components/calendar/ShowDailyMealData';
 import { useContext, useRef, useState } from 'react';
 
+type ModalModeType = 'showData' | 'addData';
+
 const Modal = () => {
-  const dateContext = useContext(SelectedDateContext);
-  const { modalVisibility, handleModalVisibility } = dateContext;
+  const { modalVisibility, handleModalVisibility } = useContext(SelectedDateContext);
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const [modalMode, setModalMode] = useState('ShowData');
+  const [modalMode, setModalMode] = useState<ModalModeType>('showData');
+
+  //태그 데이터 갯수로 캘린더 없음인가, 캘린더 있음인가를 판단할 수 있으므로 분기를 기록하는 state를 여기 둔다.
+  const [howManyTags, setHowManyTags] = useState<number>(0);
 
   const [selectedFoodTag, setSelectedFoodTag] = useState<string>('');
 
@@ -18,11 +22,11 @@ const Modal = () => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       handleModalVisibility(false);
       setSelectedFoodTag('');
-    };
+    }
   };
 
   const onModalModeSwitch = () => {
-    const switchTo = modalMode === 'ShowData' ? 'addData' : 'ShowData';
+    const switchTo = modalMode === 'showData' ? 'addData' : 'showData';
     setModalMode(switchTo);
   };
 
@@ -42,11 +46,12 @@ const Modal = () => {
             modalMode={modalMode}
             onModalModeSwitch={onModalModeSwitch}
             setSelectedFoodTag={setSelectedFoodTag}
+            setHowManyTags={setHowManyTags}
           />
-          {modalMode === 'ShowData' ? (
-            <ShowDailyMealData selectedFoodTag={selectedFoodTag} />
+          {modalMode === 'showData' ? (
+            <ShowDailyMealData selectedFoodTag={selectedFoodTag} howManyTags={howManyTags} />
           ) : (
-            <AddNewFood onModalModeSwitch={onModalModeSwitch} />
+            <AddNewFood onModalModeSwitch={onModalModeSwitch} howManyTags={howManyTags} />
           )}
         </div>
       </div>
