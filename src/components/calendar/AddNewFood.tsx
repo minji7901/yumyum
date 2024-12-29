@@ -1,30 +1,75 @@
 'use client';
 
-import { FormEvent, useContext, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import SearchBar from '../search/SearchBar';
 import FoodList from '../search/FoodList';
 import { SearchedFood, SelectedFoodInfo } from '@/types/SelectedFoodInfo';
 import { SelectedDateContext } from './CalendarDateContext';
+import { useQueryClient } from '@tanstack/react-query';
+import useAuthStore from '@/store/authStore';
+import useCreateCalendarRow from '@/hooks/useCreateCalendarRow';
+import useAddFoodTag from '@/hooks/useAddFoodTag';
+import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md';
 
-interface AddNewFoodProps {
-  onModalModeSwitch: () => void;
+//useAddFoodTag에 똑같은 것 있음
+interface getCalendarIdQueryData {
+  [dataName: string]: string;
 }
 interface AddFoodFormProps {
   searchedFood: SearchedFood | null;
+  howManyTags: number;
+  setHowManyTags: (num: number) => void;
 }
-const AddFoodForm = ({ searchedFood }: AddFoodFormProps) => {
-  const dateContext = useContext(SelectedDateContext);
-  const { selectedDate } = dateContext;
-  //const { year, month, day } = selectedDate;
+
+const AddFoodForm = ({ searchedFood, howManyTags, setHowManyTags }: AddFoodFormProps) => {
+  const queryClient = useQueryClient();
+  const { selectedDate } = useContext(SelectedDateContext);
+  const { year, month, day } = selectedDate;
+  const { user } = useAuthStore((state) => state);
+  const userId = user?.id;
+  const queryData = queryClient.getQueryData([`${year}-${month}-${day}-${userId}`]) as getCalendarIdQueryData;
+  const calendarId = queryData?.id ? queryData.id : '';
+
+  const [consumedAmount, setConsumedAmount] = useState<number>(1);
+  const searchedFoodDefault = {
+    nutritions: {
+      protein: 0,
+      fat: 0,
+      carb: 0,
+      sugar: 0,
+      natrium: 0,
+      calories: 0
+    },
+    servingSize: '',
+    calorie: 0,
+    name: ''
+  };
+  const searchedFoodObj = searchedFood ? searchedFood : searchedFoodDefault;
+  const foodTagData = { ...searchedFoodObj, amount: consumedAmount, year, month, day };
+
+  //mutate 생성
+  const createFirstTag = useCreateCalendarRow({ foodTagData, consumedAmount });
+  const addFoodTag = useAddFoodTag({ foodTagData, consumedAmount });
+
+  //amount 값 업데이트
+  const onAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const amount = parseInt(e.target.value);
+    setConsumedAmount(amount);
+  };
 
   const onFoodSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchedFood) {
-      console.log(selectedDate);
-      //const amount = e.target.selectedFoodAmount.value;
-      //const foodTagData = { ...searchedFood, amount, year, month, day };
-      //여기서 mutate를 사용해 db에 데이터를 추가하도록 하자.
-    };
+      if (howManyTags === 0) {
+        // 기존에 존재하는 태그가 없다면 캘린더 생성, 새로운 태그 생성
+        createFirstTag();
+        setHowManyTags(howManyTags + 1);
+        return;
+      }
+      // 기존에 존재하는 태그가 있다면 새로운 태그만 생성
+      addFoodTag(calendarId);
+      setHowManyTags(howManyTags + 1);
+    }
   };
   return (
     <form
@@ -46,6 +91,9 @@ const AddFoodForm = ({ searchedFood }: AddFoodFormProps) => {
           id="selectedFoodAmount"
           defaultValue="1"
           className="w-[3rem] h-[2rem] text-center border-2 border-gray-400 rounded"
+          onChange={(e) => {
+            onAmountChange(e);
+          }}
         />
       </div>
       <button className="m-auto common-btn px-2 py-1">추가</button>
@@ -53,7 +101,12 @@ const AddFoodForm = ({ searchedFood }: AddFoodFormProps) => {
   );
 };
 
-const AddNewFood = ({ onModalModeSwitch }: AddNewFoodProps) => {
+interface AddNewFoodProps {
+  onModalModeSwitch: () => void;
+  howManyTags: number;
+  setHowManyTags: (num:number)=>void;
+}
+const AddNewFood = ({ onModalModeSwitch, howManyTags, setHowManyTags }: AddNewFoodProps) => {
   const [keyword, setKeyword] = useState<string>('');
   const [searchedFood, setSearchedFood] = useState<SearchedFood | null>(null);
 
@@ -68,9 +121,10 @@ const AddNewFood = ({ onModalModeSwitch }: AddNewFoodProps) => {
     const nutritions = {
       protein: parseInt(data.AMT_NUM3),
       fat: parseInt(data.AMT_NUM4),
-      carbs: parseInt(data.AMT_NUM7),
+      carb: parseInt(data.AMT_NUM7),
       sugar: parseInt(data.AMT_NUM8),
-      natrium: parseInt(data.AMT_NUM14)
+      natrium: parseInt(data.AMT_NUM14),
+      calories: calorie
     };
     setSearchedFood({ servingSize, calorie, name, nutritions });
   };
@@ -78,16 +132,16 @@ const AddNewFood = ({ onModalModeSwitch }: AddNewFoodProps) => {
   return (
     <>
       <button type="button" onClick={onModalModeSwitch} className="text-bold hover:text-primary">
-        {'<<'}
+        <MdOutlineKeyboardDoubleArrowLeft />
       </button>
       <div className="m-auto w-[90%]">
         <SearchBar handleSubmit={handleSubmit} />
-        <div className="h-[18rem] hide-scroll-y">
+        <div className="h-[16rem] hide-scroll-y">
           <FoodList keyword={keyword} isInModal={true} onSelectFoodHandler={onSelectFoodHandler} />
         </div>
       </div>
       <div className="border-t">
-        <AddFoodForm searchedFood={searchedFood} />
+        <AddFoodForm searchedFood={searchedFood} howManyTags={howManyTags} setHowManyTags={setHowManyTags} />
       </div>
     </>
   );

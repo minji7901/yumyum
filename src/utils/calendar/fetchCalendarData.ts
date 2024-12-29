@@ -3,6 +3,8 @@
 import { Tables } from '@/types/supabase';
 import { createClient } from '../supabase/server';
 import { NutrientsJson } from '@/types/NutrientsJson';
+import { FoodTagDataType } from '@/types/SelectedFoodInfo';
+import { calculateNewNutrients } from './calculateNewNutrient';
 
 interface FoodTagMeta {
   year: number;
@@ -41,7 +43,6 @@ export async function getCalendarDate({ year, month, day, userId }: FoodTagMeta)
       .eq('month', month)
       .eq('day', day)
       .single();
-
     return data;
   } catch (error) {
     throw new Error(`${error}`);
@@ -58,10 +59,9 @@ export async function getFoodTags({
     const supabase = createClient();
 
     const { id } = await getCalendarDate({ year, month, day, userId });
-    if (id === null) return null;
-
-    const { data } = await supabase.from('consumed_foods').select().eq('calendar_id', id);
-
+    const { data, error } = await supabase.from('consumed_foods').select().eq('calendar_id', id);
+    if(error) console.error(error);
+    
     return data;
   } catch {
     return null;
@@ -73,17 +73,73 @@ export async function getFoodTagById(id: string): Promise<Tables<'consumed_foods
 
   const { data, error } = await supabase.from('consumed_foods').select().eq('id', id).single();
   if (error) console.error('supabase error!', error);
-  // 음식 태그를 삭제하면 재렌더링 과정에서 여기서 에러가 발생한다. 
-  // 태그 아이디가 사라졌을 때는 초기 화면으로 돌아가도록 하자
 
   return data;
+}
+
+//interface InsertToCalendarType {
+//  user_id: string | undefined;
+//  year: number;
+//  month: number;
+//  day: number;
+//  total_calories?: number;
+//  total_nutritions?: NutrientsJson;
+//}
+interface CalendarRowParams extends FoodTagMeta {
+  totalCalories?: number;
+  totalNutritions?: NutrientsJson;
+}
+export async function createCalendarRow({ userId, year, month, day }: CalendarRowParams): Promise<Tables<'calendars'>> {
+  try {
+    const supabase = createClient();
+
+    const { data } = await supabase
+      .from('calendars')
+      .insert({
+        user_id: userId,
+        year,
+        month,
+        day
+      })
+      .select()
+      .single();
+      console.log('create calendar row', year, month, day);
+    return data;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}
+
+interface CreateConsumedFoodsParams {
+  calendarId: string;
+  name: string;
+  calorie: number;
+  nutritions: NutrientsJson;
+  servingSize: string;
+  amount: number;
+}
+export async function createConsumedFoods({
+  calendarId,
+  name,
+  calorie,
+  nutritions,
+  servingSize,
+  amount
+}: CreateConsumedFoodsParams) {
+  try {
+    const supabase = createClient();
+    await supabase
+      .from('consumed_foods')
+      .insert({ calendar_id: calendarId, name, calorie, nutritions, serving_size: servingSize, amount });
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
 }
 
 interface UpdateCalendarParams extends FoodTagMeta {
   newTotalCalories: number | null;
   newNutrientInfo: NutrientsJson | null;
-}
-
+} //
 export async function updateCalendarNutrientInfo({
   year,
   month,
@@ -94,16 +150,31 @@ export async function updateCalendarNutrientInfo({
 }: UpdateCalendarParams) {
   try {
     const supabase = createClient();
-    const newNutrientJson = JSON.stringify(newNutrientInfo);
     await supabase
       .from('calendars')
-      .update({ total_calories: newTotalCalories, total_nutritions: newNutrientJson })
+      .update({ total_calories: newTotalCalories, total_nutritions: newNutrientInfo })
       .eq('user_id', userId)
       .eq('year', year)
       .eq('month', month)
       .eq('day', day);
   } catch (error) {
     throw console.error('supabase calendar update error!', error);
+  }
+}
+
+interface DeleteCalendarRowParams {
+  userId: string;
+  year: number;
+  month: number;
+  day: number;
+}
+export async function deleteCalendarRow({ userId, year, month, day }: DeleteCalendarRowParams) {
+  try {
+    const supabase = createClient();
+    const { id: calendarId } = await getCalendarDate({ userId, year, month, day });
+    await supabase.from('calendars').delete().eq('id', calendarId);
+  } catch (error) {
+    throw new Error(`${error}`);
   }
 }
 
@@ -139,4 +210,71 @@ export async function deleteTagAndUpdateCalendar({
   } catch (error) {
     throw new Error(`${error}`);
   }
+}
+
+interface createTagAndUpdateParams {
+  userId: string | undefined;
+  calendarId: string;
+  foodTagData: FoodTagDataType;
+  amount: number;
+}
+export async function createTagAndUpdateCalendar({
+  calendarId,
+  userId,
+  foodTagData,
+  amount
+}: createTagAndUpdateParams) {
+  try {
+    //기존 정보를 받아와 새 정보를 넣어서 영양 정보를 계산한다.
+    const { year, month, day, name, calorie, nutritions, servingSize } = foodTagData;
+    const { total_calories: totalCalories, total_nutritions: totalNutritions } = await getCalendarDate({
+      year,
+      month,
+      day,
+      userId
+    });
+    const { calculatedCalories: newTotalCalories, calculatedNutrients: newNutrientInfo } = calculateNewNutrients({
+      totalCalories,
+      totalNutritions: totalNutritions as NutrientsJson,
+      nutritions,
+      calorie,
+      consumedAmount: amount,
+      mode: 'update'
+    });
+
+    // calendar에 바뀐 total nutrition과 total carlories를 업데이트한다.
+    await updateCalendarNutrientInfo({ year, month, day, userId, newTotalCalories, newNutrientInfo });
+
+    // consumed_foods에서 tag를 생성한다
+    await createConsumedFoods({
+      calendarId,
+      name,
+      calorie,
+      nutritions,
+      servingSize,
+      amount
+    });
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}
+
+interface CreateFirstTag {
+  year:number;
+  month:number;
+  day:number;
+  userId:string;
+  foodTagData:FoodTagDataType;
+  amount:number;
+}
+export async function createFirstTag({ year, month, day, userId, foodTagData, amount }: CreateFirstTag) {
+  //캘린더 생성
+  const { id: calendarId } = await createCalendarRow({ userId, year, month, day });
+  //태그 추가
+  createTagAndUpdateCalendar({
+    calendarId,
+    userId,
+    foodTagData,
+    amount
+  });
 }
