@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  const supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,7 +20,6 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  console.log("User fetched:", user);
 
   if (!user) {
     if (request.nextUrl.pathname.startsWith('/calendar') || request.nextUrl.pathname.startsWith('/todaysmeal')) {
