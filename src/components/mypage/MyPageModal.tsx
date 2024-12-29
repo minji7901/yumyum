@@ -12,7 +12,7 @@ interface MyPageModalProps {
 }
 
 const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
-  const { user, setUser } = useAuthStore();
+  const { user, setUser, logout } = useAuthStore();
   const [newNickname, setNewNickname] = useState<string>('');
   const [isEditingNickname, setIsEditingNickname] = useState<boolean>(false);
 
@@ -101,9 +101,9 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
         title: '회원 탈퇴',
         text: responseData.message
       });
-
-      await supabase.auth.signOut();
+      logout();
       setUser(null);
+      await supabase.auth.signOut();
       onClose();
     } catch (error) {
       console.error(error);
@@ -117,7 +117,7 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="relative bg-white p-5 rounded-lg shadow-lg max-w-md w-full">
+      <div className="md:w-full relative bg-white p-5 rounded-lg shadow-lg max-w-md w-[80%]">
         <button className="absolute right-5" onClick={onClose}>
           <IoMdClose className="text-2xl" />
         </button>
