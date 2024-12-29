@@ -12,7 +12,6 @@ const useAuthListener = () => {
   useEffect(() => {
     // Supabase Auth 상태 변경 감지
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth State Changed:', event, session);
 
       if (session) {
         const { data: userData, error } = await supabase
@@ -25,8 +24,6 @@ const useAuthListener = () => {
           console.error('사용자 데이터 조회 실패:', error);
           return;
         }
-
-        console.log('사용자 데이터 조회 성공:', userData);
 
         // 상태 업데이트
         setUser({
