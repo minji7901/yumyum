@@ -33,6 +33,7 @@ const useGetNewNutrientInfo = ({
       const { total_calories: totalCalories, total_nutritions: totalNutritions } = foodConsumption;
       const totalNutrients = { ...(totalNutritions as NutrientsJson) };
       const nutrientsInfo = { ...(nutritions as NutrientsJson) };
+      console.log( 'before calculation', totalNutrients, nutrientsInfo);
 
       const { calculatedCalories, calculatedNutrients } = calculateNewNutrients({
         totalCalories,
@@ -42,12 +43,12 @@ const useGetNewNutrientInfo = ({
         consumedAmount,
         mode
       });
+      console.log('after calculation', calculatedCalories, calculatedNutrients);
 
       setNewTotalCalories(calculatedCalories);
       setNewNutrientInfo(calculatedNutrients);
     }
   }, [foodConsumption]);
-
   return { newTotalCalories, newNutrientInfo };
 };
 

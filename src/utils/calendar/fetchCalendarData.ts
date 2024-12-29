@@ -4,6 +4,7 @@ import { Tables } from '@/types/supabase';
 import { createClient } from '../supabase/server';
 import { NutrientsJson } from '@/types/NutrientsJson';
 import { FoodTagDataType } from '@/types/SelectedFoodInfo';
+import { calculateNewNutrients } from './calculateNewNutrient';
 
 interface FoodTagMeta {
   year: number;
@@ -42,7 +43,6 @@ export async function getCalendarDate({ year, month, day, userId }: FoodTagMeta)
       .eq('month', month)
       .eq('day', day)
       .single();
-
     return data;
   } catch (error) {
     throw new Error(`${error}`);
@@ -78,38 +78,34 @@ export async function getFoodTagById(id: string): Promise<Tables<'consumed_foods
   return data;
 }
 
-interface InsertToCalendarType {
-  user_id: string | undefined;
-  year: number;
-  month: number;
-  day: number;
-  total_calories?: number;
-  total_nutritions?: NutrientsJson;
-}
+//interface InsertToCalendarType {
+//  user_id: string | undefined;
+//  year: number;
+//  month: number;
+//  day: number;
+//  total_calories?: number;
+//  total_nutritions?: NutrientsJson;
+//}
 interface CalendarRowParams extends FoodTagMeta {
   totalCalories?: number;
   totalNutritions?: NutrientsJson;
 }
-export async function createCalendarRow({
-  userId,
-  year,
-  month,
-  day,
-  totalCalories,
-  totalNutritions
-}: CalendarRowParams) {
+export async function createCalendarRow({ userId, year, month, day }: CalendarRowParams): Promise<Tables<'calendars'>> {
   try {
     const supabase = createClient();
-    const toInsert: InsertToCalendarType = {
-      user_id: userId,
-      year,
-      month,
-      day
-    };
-    if (totalCalories) toInsert['total_calories'] = totalCalories;
-    if (totalNutritions) toInsert['total_nutritions'] = totalNutritions;
 
-    await supabase.from('calendars').insert(toInsert);
+    const { data } = await supabase
+      .from('calendars')
+      .insert({
+        user_id: userId,
+        year,
+        month,
+        day
+      })
+      .select()
+      .single();
+      console.log('create calendar row', day);
+    return data;
   } catch (error) {
     throw new Error(`${error}`);
   }
@@ -144,7 +140,7 @@ export async function createConsumedFoods({
 interface UpdateCalendarParams extends FoodTagMeta {
   newTotalCalories: number | null;
   newNutrientInfo: NutrientsJson | null;
-}
+} //
 export async function updateCalendarNutrientInfo({
   year,
   month,
@@ -215,8 +211,6 @@ export async function deleteTagAndUpdateCalendar({
 
 interface createTagAndUpdateParams {
   userId: string | undefined;
-  newTotalCalories: number | null;
-  newNutrientInfo: NutrientsJson | null;
   calendarId: string;
   foodTagData: FoodTagDataType;
   amount: number;
@@ -225,14 +219,29 @@ export async function createTagAndUpdateCalendar({
   calendarId,
   userId,
   foodTagData,
-  newTotalCalories,
-  newNutrientInfo,
   amount
 }: createTagAndUpdateParams) {
   try {
-    // calendar에 바뀐 total nutrition과 total carlories를 업데이트한다다.
+    //기존 정보를 받아와 새 정보를 넣어서 영양 정보를 계산한다.
     const { year, month, day, name, calorie, nutritions, servingSize } = foodTagData;
+    const { total_calories: totalCalories, total_nutritions: totalNutritions } = await getCalendarDate({
+      year,
+      month,
+      day,
+      userId
+    });
+    const { calculatedCalories: newTotalCalories, calculatedNutrients: newNutrientInfo } = calculateNewNutrients({
+      totalCalories,
+      totalNutritions: totalNutritions as NutrientsJson,
+      nutritions,
+      calorie,
+      consumedAmount: amount,
+      mode: 'update'
+    });
+
+    // calendar에 바뀐 total nutrition과 total carlories를 업데이트한다.
     await updateCalendarNutrientInfo({ year, month, day, userId, newTotalCalories, newNutrientInfo });
+
     // consumed_foods에서 tag를 생성한다
     await createConsumedFoods({
       calendarId,
@@ -245,4 +254,24 @@ export async function createTagAndUpdateCalendar({
   } catch (error) {
     throw new Error(`${error}`);
   }
+}
+
+interface CreateFirstTag {
+  year:number;
+  month:number;
+  day:number;
+  userId:string;
+  foodTagData:FoodTagDataType;
+  amount:number;
+}
+export async function createFirstTag({ year, month, day, userId, foodTagData, amount }: CreateFirstTag) {
+  //캘린더 생성
+  const { id: calendarId } = await createCalendarRow({ userId, year, month, day });
+  //태그 추가
+  createTagAndUpdateCalendar({
+    calendarId,
+    userId,
+    foodTagData,
+    amount
+  });
 }

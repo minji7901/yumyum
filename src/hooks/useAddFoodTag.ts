@@ -1,47 +1,25 @@
 import useAuthStore from '@/store/authStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import useGetNewNutrientInfo from './useGetNewNutrientInfo';
 import { createTagAndUpdateCalendar } from '@/utils/calendar/fetchCalendarData';
 import { FoodTagDataType } from '@/types/SelectedFoodInfo';
 
-
-interface getCalendarIdQueryData {
-  [dataName: string]: string;
+export interface AddFoodTagParams {
+  foodTagData: FoodTagDataType;
+  consumedAmount: number;
 }
-interface DeleteFoodTagParams {
-  foodTagData: FoodTagDataType | null;
-  consumedAmount: number | null;
-}
-const useAddFoodTag = ({
-  foodTagData,
-  consumedAmount
-}: DeleteFoodTagParams) => {
+const useAddFoodTag = ({ foodTagData, consumedAmount }: AddFoodTagParams) => {
   const queryClient = useQueryClient();
   const { user } = useAuthStore((state) => state);
-  const userId = user?.id;
-  const { year, month, day, nutritions, calorie } = foodTagData;
-  const { id: calendarId } = queryClient.getQueryData([`${year}-${month}-${day}-${userId}`]) as getCalendarIdQueryData;
- 
-  const { newTotalCalories, newNutrientInfo } = useGetNewNutrientInfo({
-    year,
-    month,
-    day,
-    nutritions,
-    calorie,
-    consumedAmount,
-    mode: 'update'
-  });
+  const userId = (user?.id) ? user?.id : '';
 
-//year, month, day, nutritions, calorie, name, servingSize;
+  const { year, month, day } = foodTagData;
 
   const { mutate } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (calendarId: string) => {
       createTagAndUpdateCalendar({
         calendarId,
         userId,
         foodTagData,
-        newTotalCalories,
-        newNutrientInfo,
         amount: consumedAmount
       });
     },

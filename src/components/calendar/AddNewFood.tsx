@@ -1,9 +1,9 @@
 'use client';
 
-import { FormEvent, useContext, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import SearchBar from '../search/SearchBar';
 import FoodList from '../search/FoodList';
-import { FoodTagDataType, SearchedFood, SelectedFoodInfo } from '@/types/SelectedFoodInfo';
+import { SearchedFood, SelectedFoodInfo } from '@/types/SelectedFoodInfo';
 import { SelectedDateContext } from './CalendarDateContext';
 import { useQueryClient } from '@tanstack/react-query';
 import useAuthStore from '@/store/authStore';
@@ -20,35 +20,51 @@ interface AddFoodFormProps {
 }
 
 const AddFoodForm = ({ searchedFood, howManyTags }: AddFoodFormProps) => {
+  const queryClient = useQueryClient();
   const { selectedDate } = useContext(SelectedDateContext);
   const { year, month, day } = selectedDate;
-
   const { user } = useAuthStore((state) => state);
   const userId = user?.id;
-  const queryClient = useQueryClient();
-  const createCalendarDay = useCreateCalendarRow({ year, month, day });
+  const queryData = queryClient.getQueryData([`${year}-${month}-${day}-${userId}`]) as getCalendarIdQueryData;
+  const calendarId = queryData?.id ? queryData.id : '';
 
-  const [foodTagData, setFoodTagData] = useState<FoodTagDataType | null>(null);
-  const [consumedAmount, setConsumedAmount] = useState<number | null>(null);
+  const [consumedAmount, setConsumedAmount] = useState<number>(1);
+  const searchedFoodDefault = {
+    nutritions: {
+      protein: 0,
+      fat: 0,
+      carb: 0,
+      sugar: 0,
+      natrium: 0,
+      calories: 0
+    },
+    servingSize: '',
+    calorie: 0,
+    name: ''
+  };
+  const searchedFoodObj = searchedFood ? searchedFood : searchedFoodDefault;
+  const foodTagData = { ...searchedFoodObj, amount: consumedAmount, year, month, day };
+
   //mutate 생성
+  const createFirstTag = useCreateCalendarRow({ year, month, day, foodTagData, consumedAmount });
   const addFoodTag = useAddFoodTag({ foodTagData, consumedAmount });
+
+  //amount 값 업데이트트
+  const onAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const amount = e.target.selectedFoodAmount.value;
+    setConsumedAmount(amount);
+  };
 
   const onFoodSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchedFood) {
-      const amount = e.target.selectedFoodAmount.value;
-      const foodTagData = { ...searchedFood, amount, year, month, day };
-
-      // 분기처리
       if (howManyTags === 0) {
-        /*캘린더 생성, query자체는 있으니까 mutate로*/
-        createCalendarDay();
+        // 기존에 존재하는 태그가 없다면 캘린더 생성, 새로운 태그 생성
+        createFirstTag();
+        return;
       }
-      const { id } = queryClient.getQueryData([`${year}-${month}-${day}-${userId}`]) as getCalendarIdQueryData;
-      // 여기서 mutate를 사용해 db에 데이터를 추가하도록 하자.
-      setFoodTagData(foodTagData);
-      setConsumedAmount(amount);
-      
+      // 기존에 존재하는 태그가 있다면 새로운 태그만 생성
+      addFoodTag(calendarId);
     }
   };
   return (
@@ -71,6 +87,9 @@ const AddFoodForm = ({ searchedFood, howManyTags }: AddFoodFormProps) => {
           id="selectedFoodAmount"
           defaultValue="1"
           className="w-[3rem] h-[2rem] text-center border-2 border-gray-400 rounded"
+          onChange={(e) => {
+            onAmountChange(e);
+          }}
         />
       </div>
       <button className="m-auto common-btn px-2 py-1">추가</button>

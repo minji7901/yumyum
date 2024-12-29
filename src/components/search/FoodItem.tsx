@@ -15,7 +15,7 @@ const FoodItem = ({ data, isInModal, onSelectFoodHandler }: FoodItemProps) => {
   const amount = `${amountNumericValue}g`;
   const kcal = `${kcalNumericValue}kcal`;
 
-  const foodInfo = { servingSize: amountNumericValue, calorie: kcalNumericValue, name: data.FOOD_NM_KR, data };
+  const foodInfo = { servingSize: amount, calorie: kcalNumericValue, name: data.FOOD_NM_KR, data };
 
   return (
     <div className="flex flex-col gap-2 p-5 border-b border-primary">
