@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/client';
 
 const useSocialLogin = () => {
   const supabase = createClient();
+  
   const handleGoogleLogin = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -35,7 +36,7 @@ const useSocialLogin = () => {
         }
       });
       if (error) {
-        console.log(error);
+        console.error(error);
       }
     } catch (error) {
       console.error('에러', error);

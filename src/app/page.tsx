@@ -2,7 +2,7 @@ import SearchSection from '@/components/search/SearchSection';
 import Image from 'next/image';
 import { FaArrowDown } from 'react-icons/fa';
 
-const Home = () => {
+const Home = () => { 
   return (
     <>
       <div className="absolute top-0 left-0 w-screen h-screen overflow-hidden">
