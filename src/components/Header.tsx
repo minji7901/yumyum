@@ -7,7 +7,7 @@ import { MdOutlinePersonOutline } from 'react-icons/md';
 import { IoMdLogIn } from 'react-icons/io';
 import { RiLogoutCircleLine } from 'react-icons/ri';
 import { createClient } from '@/utils/supabase/client';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import MyPageModal from './mypage/MyPageModal';
 import useAuthStore from '@/store/authStore';
 import useAuthListener from '@/hooks/useAuthListener';
@@ -17,7 +17,6 @@ const Header = () => {
   const { isLogin, logout, setUser } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
 
@@ -40,18 +39,18 @@ const Header = () => {
     if (result.isConfirmed) {
       logout();
       setUser(null);
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.log('로그아웃 오류', error.message);
-      }
 
       Swal.fire({
         icon: 'success',
         title: '로그아웃 성공',
         text: '로그아웃 되었습니다'
       }).then(() => {
-        router.push('/');
+        window.location.reload();
       });
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('로그아웃 오류', error.message);
+      }
     }
   };
 
