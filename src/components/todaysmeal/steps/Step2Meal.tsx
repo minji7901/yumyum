@@ -17,7 +17,18 @@ const Step2Meal = ({ onNext, onPrev, mealData }: Step2MealProps) => {
   const [selectedMeals, setSelectedMeals] = useState<string[]>(mealData ?? []); // 복수 선택 상태관리
 
   const handleMealToggle = (meal: string) => {
-    setSelectedMeals((prev) => (prev.includes(meal) ? prev.filter((m) => m !== meal) : [...prev, meal]));
+    setSelectedMeals((prev) => {
+      const updated = prev.includes(meal)
+        ? prev.filter((m) => m !== meal) // 선택된 게 있으면 제거
+        : [...prev, meal]; // 선택된 게 없으면 추가
+
+      // 항상 정렬된 상태로 반환(아침, 점심, 저녁 순으로 )
+      return updated.sort((a, b) => {
+        // 아침, 점심, 저녁 순으로 sort해주기
+        const order = ['아침', '점심', '저녁'];
+        return order.indexOf(a) - order.indexOf(b);
+      });
+    });
     // 선택한 게 이미 선택 리스트에 있으면 빼버리고, 없으면 추가
   };
 
