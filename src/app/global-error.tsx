@@ -7,7 +7,7 @@ const GlobalError = ({ error, reset }: { error: Error & { digest?: string }; res
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
           <div className="mb-6">
             <svg
-              className="w-16 h-16 text-red-500 mx-auto mb-4"
+              className="w-16 h-16 text-primary mx-auto mb-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -21,12 +21,9 @@ const GlobalError = ({ error, reset }: { error: Error & { digest?: string }; res
               />
             </svg>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">문제가 발생했습니다😱</h2>
-            <p className="text-gray-600 mb-6">{error.message}</p>
+            <p className="text-gray-600 mb-6">에러 내용 : {error.message}</p>
           </div>
-          <button
-            onClick={() => reset()}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-md transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-          >
+          <button onClick={() => reset()} className="bg-primary text-white font-semibold py-2 px-6 rounded-md">
             다시 시도하기
           </button>
         </div>

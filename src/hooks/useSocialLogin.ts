@@ -36,7 +36,7 @@ const useSocialLogin = () => {
         }
       });
       if (error) {
-        console.log(error);
+        console.error(error);
       }
     } catch (error) {
       console.error('에러', error);
