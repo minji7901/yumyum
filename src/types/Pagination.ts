@@ -4,6 +4,5 @@ export interface PageProps {
 
 export interface PaginationType<T> {
   data: T[];
-  nextPage: number;
-  hasMore: boolean;
+  nextPage: number | null;
 }

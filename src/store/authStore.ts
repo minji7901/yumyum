@@ -18,36 +18,15 @@ const useAuthStore = create(
     (set) => ({
       user: null,
       isLogin: false,
-      setUser: async () => {
-        try {
-          const {
-            data: { session }
-          } = await supabase.auth.getSession();
+      setUser: (user) => set({ user, isLogin: !!user }),
 
-          if (session) {
-            const { data: userData, error } = await supabase
-              .from('users')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
+      logout: () => {
+        set({ user: null, isLogin: false });
 
-            if (error) {
-              console.error(error.message);
-              set({ user: null, isLogin: false });
-              return;
-            }
-
-            set({ user: userData, isLogin: true });
-          } else {
-            set({ user: null, isLogin: false });
-          }
-        } catch (error) {
-          console.error(error);
-          set({ user: null, isLogin: false });
-        }
-      },
-
-      logout: () => set({ user: null, isLogin: false })
+        localStorage.removeItem('supabase.auth.token');
+        document.cookie = 'supabase.auth.token=; Max-Age=0'; 
+        supabase.auth.signOut();
+      }
     }),
     {
       name: 'auth-storage'
