@@ -205,12 +205,10 @@ export async function deleteTagAndUpdateCalendar({
 
 interface createTagAndUpdateParams {
   userId: string | undefined;
-  calendarId: string;
   foodTagData: FoodTagDataType;
   amount: number;
 }
 export async function createTagAndUpdateCalendar({
-  calendarId,
   userId,
   foodTagData,
   amount
@@ -218,7 +216,7 @@ export async function createTagAndUpdateCalendar({
   try {
     //기존 정보를 받아와 새 정보를 넣어서 영양 정보를 계산한다.
     const { year, month, day, name, calorie, nutritions, servingSize } = foodTagData;
-    const { total_calories: totalCalories, total_nutritions: totalNutritions } = await getCalendarDate({
+    const { id:calendarId, total_calories: totalCalories, total_nutritions: totalNutritions } = await getCalendarDate({
       year,
       month,
       day,
@@ -263,7 +261,6 @@ export async function createFirstTag({ year, month, day, userId, foodTagData, am
   const { id: calendarId } = await createCalendarRow({ userId, year, month, day });
   //태그 추가
   createTagAndUpdateCalendar({
-    calendarId,
     userId,
     foodTagData,
     amount
