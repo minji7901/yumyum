@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import FoodNutrition from '@/types/FoodNutrition';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url);
@@ -10,7 +12,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const API_URL = `http://api.data.go.kr/openapi/tn_pubr_public_nutri_food_info_api`;
     const SERVICE_KEY = process.env.NUTRITION_API_KEY;
 
-    const url = `${API_URL}?serviceKey=${SERVICE_KEY}&pageNo=${pageNo}&numOfRows=10&type=json&foodLv3Cd=${foodLv3Cd}`;
+    const url = `${API_URL}?serviceKey=${SERVICE_KEY}&pageNo=${pageNo}&numOfRows=20&type=json&foodLv3Cd=${foodLv3Cd}`;
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -32,6 +34,3 @@ export async function GET(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: '서버쪽 오류' }, { status: 500 });
   }
 }
-
-
-

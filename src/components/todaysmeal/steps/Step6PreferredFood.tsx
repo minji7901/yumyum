@@ -5,7 +5,6 @@ import TodaysmealOption from '../todaysmeal-option/TodaysmealOption';
 import { SelectedFoods } from '../types/MealPlanData';
 import PreviousButton from '../buttons/PreviousButton';
 import NextButton from '../buttons/NextButton';
-
 interface FoodOptions {
   main: Record<string, string>;
   side: {
@@ -117,8 +116,8 @@ const Step6PreferredFood = ({ mealData, onNext, onPrev }: Step6PreferredFoodProp
 
         {/* 끼니별 주식 옵션 */}
         {mealData?.map((meal) => (
-          <div key={meal} className="mb-6">
-            <div className="text-lg font-semibold underline">{meal}</div>
+          <div key={meal} className="mb-10 bg-green-50 p-10 rounded-xl ">
+            <div className="text-lg font-semibold border-b-2 border-yellow-500 inline-block mb-10">🍚 {meal} 🍚</div>
             <div className="flex justify-center items-center flex-wrap gap-10 mt-4 rounded-md p-2 mb-10">
               {/* 배열로 바꿔서(map 이용할거임) 메인 옵션 생성*/}
               {Object.entries(foodOptions.main).map(([key, label]) => (
