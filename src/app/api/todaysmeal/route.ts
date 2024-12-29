@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
 import FoodNutrition from '@/types/FoodNutrition';
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request): Promise<NextResponse> {
-  try {
-    const { searchParams } = new URL(request.url);
-    const foodLv3Cd = searchParams.get('foodLv3Cd') || '01'; // 기본값: 01 (밥류)
-    const pageNo = searchParams.get('pageNo') || '1'; // 기본값: 1
+  const { searchParams } = new URL(request.url);
+  const foodLv3Cd = searchParams.get('foodLv3Cd') || '01'; // 기본값: 01 (밥류)
+  const pageNo = searchParams.get('pageNo') || '1'; // 기본값: 1
 
+  try {
     const API_URL = `http://api.data.go.kr/openapi/tn_pubr_public_nutri_food_info_api`;
     const SERVICE_KEY = process.env.NUTRITION_API_KEY;
 
