@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import useRecommend from '@/hooks/useRecommend';
 import MealPlanData from '@/components/todaysmeal/types/MealPlanData';
 import { calculateCalories } from '@/lib/calculateCalories';
-// import ProgressLoadingAnimation from '../todaysmeal-lottie/ProgressLoadingAnimation';
-// import ResultAnimation from '../todaysmeal-lottie/ResultAnimation';
+import ProgressLoadingAnimation from '../todaysmeal-lottie/ProgressLoadingAnimation';
+import ResultAnimation from '../todaysmeal-lottie/ResultAnimation';
 import FoodNutrition from '@/types/FoodNutrition';
 import FoodDetails from '../foodDetails/FoodDetails';
 import Recommend from '../types/Recommend';
@@ -61,7 +61,7 @@ const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
   if (isPending) {
     return (
       <div className="w-2/3 flex flex-col justify-center items-center gap-5 min-h-screen">
-        {/* <ProgressLoadingAnimation></ProgressLoadingAnimation> */}
+        <ProgressLoadingAnimation></ProgressLoadingAnimation>
         {/* lottie 애니메이션 활용함 */}
         <div className="font-bold text-primary text-2xl">건강하고 맛있는 밥상 차리는 중....</div>
       </div>
@@ -95,7 +95,7 @@ const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
           모든 식단은 사라지고 처음 페이지로 이동합니다.)
         </div>
       </div>
-      {/* <ResultAnimation></ResultAnimation> */}
+      <ResultAnimation></ResultAnimation>
 
       {/* 추천 식단 */}
       <div className="max-w-xl lg:max-w-2xl mx-auto mt-8">
