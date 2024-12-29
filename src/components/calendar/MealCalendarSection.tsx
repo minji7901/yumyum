@@ -12,11 +12,11 @@ const MealCalendarSection = () => {
 
   return (
     <section>
-      <div className="mb-3">
+      <div className="mb-4">
         <h4 className="text-center mb-2 font-bold text-lg">{year}년</h4>
-        <h5 className="text-center font-bold text-lg">{month}월</h5>
+        <h5 className="text-center font-bold text-2xl">{month}월</h5>
       </div>
-      <div className="w-full m-auto relative">
+      <div className="w-full max-w-[1000px] m-auto relative">
         <div className="w-10/12 m-auto">
           <MealCalendarSheet />
         </div>

@@ -106,7 +106,7 @@ export const Graph = () => {
 
   if (isError || !user) {
     return (
-      <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-8 px-6 my-14 bg-[#f8f9fa] text-[#333] text-center">
+      <div className="w-full max-w-[1000px] mx-auto flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-8 px-6 my-14 bg-[#f8f9fa] text-[#333] text-center">
         <h2 className="text-xl font-semibold mb-4">오류 발생</h2>
         <p>그래프 데이터를 가져오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</p>
       </div>
@@ -116,7 +116,7 @@ export const Graph = () => {
   if (isEmptyData || !ratioData) {
     return (
       <>
-        <div className="w-[full] flex justify-start gap-2 mb-2 mt-20">
+        <div className="w-full max-w-[1000px] mx-auto flex justify-start gap-2 mb-2 mt-20">
           <button
             onClick={handleMonthClick}
             className={`px-8 py-1 font-bold rounded-3xl border-2 ${
@@ -134,7 +134,7 @@ export const Graph = () => {
             일
           </button>
         </div>
-        <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-40 mb-14">
+        <div className="w-full max-w-[1000px] mx-auto flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-40 mb-14">
           <div className="text-lg text-[#666666]">달력에 식단 데이터를 추가해 보세요.</div>
         </div>
       </>
@@ -143,7 +143,7 @@ export const Graph = () => {
 
   return (
     <>
-      <div className="w-[full] flex justify-start gap-2 mb-2 mt-20">
+      <div className="w-full max-w-[1000px] mx-auto flex justify-start gap-2 mb-2 mt-20">
         <button
           onClick={handleMonthClick}
           className={`px-8 py-1 font-bold rounded-3xl border-2 ${
@@ -161,7 +161,7 @@ export const Graph = () => {
           일
         </button>
       </div>
-      <div className="w-full flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 px-40 mb-14">
+      <div className="w-full max-w-[1000px] mx-auto flex flex-col justify-center items-center border-[1px] rounded-xl border-softly py-14 mb-14 px-5 lg:px-24 md:px-16 sm:px-5">
         {isMonthSelected ? ( 
           <><h1 className="text-2xl text-[#333333] font-bold mb-2">지난 30일간 영양소 평균 섭취율</h1>
           <span className="text-sm text-gray-400 mb-4">{`(${year}년 ${month}월 ${day}일 기준)`}</span></>
