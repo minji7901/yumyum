@@ -176,6 +176,7 @@ const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
         </div>
       </div>
 
+      
       {/* 버튼 그룹 */}
       <div className="flex justify-center gap-4 mt-8">
         {/* 재생성 버튼 */}
@@ -194,6 +195,8 @@ const Step7Recommendation = ({ data }: Step7RecommendationProps) => {
           홈으로
         </button>
       </div>
+
+
       {/* 상세 정보 모달 */}
       {selectedFood && <FoodDetails food={selectedFood} onClose={closeFoodDetails} />}
     </div>
