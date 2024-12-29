@@ -55,7 +55,7 @@ const Header = () => {
   };
 
   return (
-    <header className="px-5 sticky top-0 bg-white shadow-md py-4 z-50 lg:px-0">
+    <header className="px-5 sticky top-0 bg-white shadow-md py-4 z-50 xl:px-0">
       <div className="relative flex items-center mx-auto max-w-[1200px] font-bold">
         <Link href="/">
           <img src="/img/logo.svg" className="max-w-10" alt="냠냠로그 로고" />
