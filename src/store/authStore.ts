@@ -1,8 +1,11 @@
-import { Tables } from '@/types/supabase';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-type User = Tables<'users'>;
+type User = {
+  id: string;
+  email: string;
+  nickname: string;
+};
 interface AuthStore {
   user: User | null;
   isLogin: boolean;

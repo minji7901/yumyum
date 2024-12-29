@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { CiEdit } from 'react-icons/ci';
@@ -5,14 +6,13 @@ import { FaCheck } from 'react-icons/fa6';
 import Swal from 'sweetalert2';
 import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/store/authStore';
-
 interface MyPageModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
-  const { user } = useAuthStore();
+  const { user, logOut, setUser } = useAuthStore();
   const [newNickname, setNewNickname] = useState<string>('');
   const [isEditingNickname, setIsEditingNickname] = useState<boolean>(false);
 
@@ -28,37 +28,34 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
         title: '닉네임 변경 실패',
         text: '닉네임을 입력해주세요.'
       });
+      return;
     }
 
-    try {
-      const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', user.id);
+    const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', user.id);
 
-      if (error) {
-        console.error(error.message);
-        Swal.fire({
-          icon: 'error',
-          title: '닉네임 변경 실패',
-          text: '닉네임 변경 중 문제가 발생했습니다.'
-        });
-      }
-
-      Swal.fire({
-        icon: 'success',
-        title: '닉네임 변경 성공',
-        text: '닉네임이 변경되었습니다.'
-      });
-
-      setIsEditingNickname(false);
-
-      user.nickname = newNickname;
-    } catch (error) {
-      console.error(error);
+    if (error) {
+      console.error('닉네임 변경 실패:', error.message);
       Swal.fire({
         icon: 'error',
         title: '닉네임 변경 실패',
-        text: '예기치 않은 오류가 발생했습니다.'
+        text: '닉네임을 변경하는 중에 오류가 발생했습니다.'
       });
+      return;
     }
+
+    setUser({
+      ...user,
+      nickname: newNickname
+    });
+    console.log(user);
+
+    Swal.fire({
+      icon: 'success',
+      title: '닉네임 변경 성공',
+      text: '닉네임이 변경되었습니다.'
+    });
+
+    setIsEditingNickname(false);
   };
 
   // 회원 탈퇴
@@ -101,7 +98,11 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
         title: '회원 탈퇴',
         text: responseData.message
       });
+
       await supabase.auth.signOut();
+      logOut();
+      localStorage.clear();
+      window.location.href = '/';
       onClose();
     } catch (error) {
       console.error(error);
@@ -135,7 +136,7 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
             </>
           ) : (
             <>
-              <strong className="text-xl">{user.nickname === "" ? '사용자님' : user.nickname}</strong>
+              <strong className="text-xl">{user.nickname === '' ? '사용자님' : user.nickname}</strong>
               <button
                 type="button"
                 className="text-xl"

@@ -10,9 +10,7 @@ const useAuthListener = () => {
   const setUser = useAuthStore((state) => state.setUser);
 
   useEffect(() => {
-    // Supabase Auth 상태 변경 감지
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-
       if (session) {
         const { data: userData, error } = await supabase
           .from('users')
@@ -25,12 +23,11 @@ const useAuthListener = () => {
           return;
         }
 
-        // 상태 업데이트
+        // user 저장
         setUser({
           id: userData.id,
           email: userData.email,
           nickname: userData.nickname || '',
-          created_at: userData.created_at || ''
         });
       } else {
         // 로그아웃 상태 처리

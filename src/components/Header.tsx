@@ -32,7 +32,7 @@ const Header = () => {
       return;
     }
     logOut();
-    localStorage.clear();
+    localStorage.removeItem('auth-storage');
     window.location.href = '/';
   };
 
