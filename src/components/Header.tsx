@@ -38,7 +38,8 @@ const Header = () => {
           title: '로그아웃 성공',
           text: '로그아웃 되었습니다'
         });
-        router.push('/');
+        // router.push('/');
+        window.location.href = '/';
       } catch (error) {
         console.error('로그아웃 실패:', error);
         Swal.fire({
