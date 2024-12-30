@@ -24,8 +24,6 @@ const useRecommend = (preferredFoods: SelectedFoods, recommendedCalories: number
   // 같은 음식 종류를 선택했을 떄, 아침, 점심, 저녁 메뉴가 달라야하니까 page별로 나눠서 추천하게함. (page는 1 부터 시작하니까 index + 1로 설정함, side 메뉴는 보통 데이터 개수가 적어서 그냥 1로 고정함)
 
   const results = useQueries({ queries });
-  // console.log("result", results);
-  // console.log("result", results[0].data);
   /*
     result의 0, 2, 4=> main이고, 1, 3, 5 side임...
     각각 20개씩 정보 들어옴..(route.ts에서 내가 이미 설정한 값...)
@@ -67,9 +65,6 @@ const useRecommend = (preferredFoods: SelectedFoods, recommendedCalories: number
     const mainData = removeDuplicates((results[index * 2]?.data as FoodNutrition[]) || []); // main (index 짝수들)
     const sideData = removeDuplicates((results[index * 2 + 1]?.data as FoodNutrition[]) || []); // side (index 홀수들)
     // tanstack query로 받아온 result 값에 타입을 as 사용해서 확실히 FoodNutrition[]으로 명시해줌.
-
-    // console.log('메인', mainData);
-    // console.log('사이드', sideData);
 
     // 조합 배열 생성
     const combinations = mainData.map((main: FoodNutrition) => {
@@ -125,8 +120,6 @@ const useRecommend = (preferredFoods: SelectedFoods, recommendedCalories: number
     return acc;
   }, {} as Recommend);
   //initial value는 빈 객체인데, typescript때문에 as로 타입 추가해줌....
-
-  // console.log('추천:', recommendations);
 
   return { recommendations, isPending, isError };
 };

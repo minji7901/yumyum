@@ -77,14 +77,6 @@ export async function getFoodTagById(id: string): Promise<Tables<'consumed_foods
   return data;
 }
 
-//interface InsertToCalendarType {
-//  user_id: string | undefined;
-//  year: number;
-//  month: number;
-//  day: number;
-//  total_calories?: number;
-//  total_nutritions?: NutrientsJson;
-//}
 interface CalendarRowParams extends FoodTagMeta {
   totalCalories?: number;
   totalNutritions?: NutrientsJson;
@@ -103,7 +95,6 @@ export async function createCalendarRow({ userId, year, month, day }: CalendarRo
       })
       .select()
       .single();
-      console.log('create calendar row', year, month, day);
     return data;
   } catch (error) {
     throw new Error(`${error}`);
@@ -214,12 +205,10 @@ export async function deleteTagAndUpdateCalendar({
 
 interface createTagAndUpdateParams {
   userId: string | undefined;
-  calendarId: string;
   foodTagData: FoodTagDataType;
   amount: number;
 }
 export async function createTagAndUpdateCalendar({
-  calendarId,
   userId,
   foodTagData,
   amount
@@ -227,7 +216,7 @@ export async function createTagAndUpdateCalendar({
   try {
     //기존 정보를 받아와 새 정보를 넣어서 영양 정보를 계산한다.
     const { year, month, day, name, calorie, nutritions, servingSize } = foodTagData;
-    const { total_calories: totalCalories, total_nutritions: totalNutritions } = await getCalendarDate({
+    const { id:calendarId, total_calories: totalCalories, total_nutritions: totalNutritions } = await getCalendarDate({
       year,
       month,
       day,
@@ -269,10 +258,9 @@ interface CreateFirstTag {
 }
 export async function createFirstTag({ year, month, day, userId, foodTagData, amount }: CreateFirstTag) {
   //캘린더 생성
-  const { id: calendarId } = await createCalendarRow({ userId, year, month, day });
+  await createCalendarRow({ userId, year, month, day });
   //태그 추가
-  createTagAndUpdateCalendar({
-    calendarId,
+  await createTagAndUpdateCalendar({
     userId,
     foodTagData,
     amount

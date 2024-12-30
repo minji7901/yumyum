@@ -91,7 +91,6 @@ const Step6PreferredFood = ({ mealData, onNext, onPrev }: Step6PreferredFoodProp
   // 부식 선택
   const handleSideSelect = (meal: string, side: string) => {
     setSelectedFoods((prev) => ({ ...prev, [meal]: { ...prev[meal], side } }));
-    console.log('선택', selectedFoods);
   };
 
   //  every 사용해서 모든 meal 마다 main, side 다 있는지 확인! 다 있으면 true반환할거고 이거 기준으로 버튼 disabled할지 enable하게 될지 결정함함
@@ -100,7 +99,6 @@ const Step6PreferredFood = ({ mealData, onNext, onPrev }: Step6PreferredFoodProp
   const handleNextClick = () => {
     if (selectedFoods) {
       onNext(selectedFoods);
-      // console.log('선택', selectedFoods);
     }
   };
 

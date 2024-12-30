@@ -21,7 +21,6 @@ const MealPlanner = () => {
 
   const handleNext = (data: Partial<MealPlanData>, nextStep: string) => {
     setMealPlanData((prev) => ({ ...prev, ...data }));
-    console.log(mealPlanData);
     next(nextStep);
   };
 

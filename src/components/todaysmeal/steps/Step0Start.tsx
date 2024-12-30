@@ -17,8 +17,6 @@ const Step0Start = ({ onNext }: Step0StartProps) => {
         </div>
       </div>
 
-      {/* TODO: 나중에 이미지를 배경으로 두거나해서 디자인 좀 전체적으로 개선 필요 */}
-
       {/* 이미지 요소 */}
       <div className="flex justify-center mb-8">
         <Image
