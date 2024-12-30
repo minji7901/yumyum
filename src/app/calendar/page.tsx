@@ -1,4 +1,3 @@
-//import CalendarDateContext from '@/components/calendar/CalendarDateContext';
 import { Graph } from '@/components/calendar/Graph';
 import MealCalendarSection from '@/components/calendar/MealCalendarSection';
 import Title from '@/components/Title';

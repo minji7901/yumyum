@@ -4,7 +4,7 @@ import FoodNutrition from '@/types/FoodNutrition';
 export async function GET(request: Request): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const foodLv3Cd = searchParams.get('foodLv3Cd') || '01'; // 기본값: 01 (밥류)
-  const pageNo = searchParams.get('pageNo') || '1'; // 기본값: 1
+  const pageNo = searchParams.get('pageNo') || '1';
 
   try {
     const API_URL = `http://api.data.go.kr/openapi/tn_pubr_public_nutri_food_info_api`;
@@ -24,11 +24,9 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: '결과가 없습니다.' }, { status: 404 });
     }
 
-    // console.log(FoodNutritionData);
-
     return NextResponse.json(FoodNutritionData);
   } catch (error) {
-    console.log('서버쪽 에러', error);
+    console.error('서버쪽 에러', error);
     return NextResponse.json({ error: '서버쪽 오류' }, { status: 500 });
   }
 }

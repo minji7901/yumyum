@@ -80,7 +80,7 @@ const FoodTagBox = ({ modalMode, onModalModeSwitch, setSelectedFoodTag, setHowMa
   const { data: tagData, isPending, isError } = useFetchDailyFoodTags({ year, month, day });
 
   useEffect(() => {
-    if (tagData) setHowManyTags(tagData.length);//태그데이터가 없다고 뜬다. 리렌더링은 된다.
+    if (tagData) setHowManyTags(tagData.length);
   }, [tagData]);
 
   if (isPending) return <div>Loading...</div>;

@@ -9,9 +9,8 @@ export const calculateCalories = (data: MealPlanData): NutritionRecommendation |
   }
 
   // 기초 대사량 계산
-  /* 해리스-베네딕트 방정식으로 사용하려고 했는데 검색을 추가적으로 더더 해본 결과 미핀 세이트 젤 방정식이 더 정확하다고 해서
-  미핀 세인트 젤 방정식을 기반으로 계산함.
-  */
+  /* 미핀 세인트 젤 방정식을 기반으로 계산함.*/
+
   let bmr: number;
   if (gender === 'male') {
     bmr = 10 * weight + 6.25 * height - 5 * age + 5;
