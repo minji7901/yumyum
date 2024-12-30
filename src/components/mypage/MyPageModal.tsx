@@ -6,6 +6,7 @@ import { FaCheck } from 'react-icons/fa6';
 import Swal from 'sweetalert2';
 import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/store/authStore';
+import { handleLogout } from '@/app/signin/actions';
 interface MyPageModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -99,7 +100,7 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
         text: responseData.message
       });
 
-      await supabase.auth.signOut();
+      await handleLogout();
       logOut();
       localStorage.clear();
       window.location.href = '/';
