@@ -35,8 +35,8 @@ export const calculateRatioNutrients = (data: SumNutrients, days: number, weight
         return Number(((value / ((weight || 65) * 0.9 * days)) * 100).toFixed(1));
       case 'sugar': // 당류 (g)=총 섭취 에너지의 10~20%
         return Number(((value / ((weight || 65) * 30 * 0.15 * 0.25 * days)) * 100).toFixed(1));
-      case 'natrium': // 나트륨(mg) 2g 기준 %
-        return Number(((value / (2 * days)) * 100).toFixed(1));
+      case 'natrium': // 나트륨(mg) 2000mg 기준 %
+        return Number(((value / (2000 * days)) * 100).toFixed(1));
       default:
         return Math.round(value / days);
     }
