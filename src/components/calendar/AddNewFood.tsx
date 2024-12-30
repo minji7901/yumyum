@@ -5,16 +5,10 @@ import SearchBar from '../search/SearchBar';
 import FoodList from '../search/FoodList';
 import { SearchedFood, SelectedFoodInfo } from '@/types/SelectedFoodInfo';
 import { SelectedDateContext } from './CalendarDateContext';
-import { useQueryClient } from '@tanstack/react-query';
-import useAuthStore from '@/store/authStore';
 import useCreateCalendarRow from '@/hooks/useCreateCalendarRow';
 import useAddFoodTag from '@/hooks/useAddFoodTag';
 import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md';
 
-//useAddFoodTag에 똑같은 것 있음
-interface getCalendarIdQueryData {
-  [dataName: string]: string;
-}
 interface AddFoodFormProps {
   searchedFood: SearchedFood | null;
   howManyTags: number;
@@ -22,14 +16,9 @@ interface AddFoodFormProps {
 }
 
 const AddFoodForm = ({ searchedFood, howManyTags, setHowManyTags }: AddFoodFormProps) => {
-  const queryClient = useQueryClient();
   const { selectedDate } = useContext(SelectedDateContext);
   const { year, month, day } = selectedDate;
-  const { user } = useAuthStore((state) => state);
-  const userId = user?.id;
-  const queryData = queryClient.getQueryData([`${year}-${month}-${day}-${userId}`]) as getCalendarIdQueryData;
-  const calendarId = queryData?.id ? queryData.id : '';
-
+  
   const [consumedAmount, setConsumedAmount] = useState<number>(1);
   const searchedFoodDefault = {
     nutritions: {
@@ -67,7 +56,7 @@ const AddFoodForm = ({ searchedFood, howManyTags, setHowManyTags }: AddFoodFormP
         return;
       }
       // 기존에 존재하는 태그가 있다면 새로운 태그만 생성
-      addFoodTag(calendarId);
+      addFoodTag();
       setHowManyTags(howManyTags + 1);
     }
   };

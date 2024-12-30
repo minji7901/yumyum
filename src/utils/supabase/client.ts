@@ -1,4 +1,3 @@
-// import { Database } from '@/types/supabase';
 import { createBrowserClient } from '@supabase/ssr';
 
 export function createClient() {

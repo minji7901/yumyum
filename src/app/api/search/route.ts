@@ -24,7 +24,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       nextPage: searchData.pageNo * searchData.numOfRows < searchData.totalCount ? searchData.pageNo + 1 : null
     });
   } catch (error) {
-    console.log('error => ', error);
+    console.error('error => ', error);
     return NextResponse.json({ error: 'Internal server error occurred' }, { status: 500 });
   }
 }

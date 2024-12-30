@@ -23,8 +23,18 @@ const FoodInfo = ({ selectedFoodTag, howManyTags, setHowManyTags }: FoodInfoProp
   const { data: selectedFood, isPending, isError } = useFetchFoodTagData(selectedFoodTag);
   if (selectedFoodTag === '') return <FoodUnselected />;
 
-  if (isPending) return <div>Loading...</div>;
-  if (isError) return <div>Error!</div>;
+  if (isPending)
+    return (
+      <div className="h-[16rem] flex justify-center items-center">
+        <span>Loading...</span>
+      </div>
+    );
+  if (isError)
+    return (
+      <div className="h-[16rem] flex justify-center items-center">
+        <span>Error!</span>
+      </div>
+    );
 
   return (
     <>
@@ -50,8 +60,18 @@ const ShowDailyMealData = ({ selectedFoodTag, howManyTags, setHowManyTags }: Sho
 
   const { data: foodConsumption, isPending, isError } = useFetchDailyFoodConsumption({ year, month, day });
 
-  if (isPending) return <div>Loading...</div>;
-  if (isError) return <div>Error!</div>;
+  if (isPending)
+    return (
+      <div className="h-[16rem] flex justify-center items-center">
+        <span>Loading...</span>
+      </div>
+    );
+  if (isError)
+    return (
+      <div className="h-[16rem] flex justify-center items-center">
+        <span>Error!</span>
+      </div>
+    );
 
   const totalCalories = foodConsumption ? foodConsumption['total_calories'] : '...';
 
