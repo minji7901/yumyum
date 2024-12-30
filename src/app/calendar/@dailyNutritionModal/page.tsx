@@ -5,6 +5,7 @@ import { SelectedDateContext } from '@/components/calendar/CalendarDateContext';
 import FoodTagBox from '@/components/calendar/FoodTagBox';
 import ShowDailyMealData from '@/components/calendar/ShowDailyMealData';
 import { useContext, useRef, useState } from 'react';
+import { IoMdClose } from 'react-icons/io';
 
 type ModalModeType = 'showData' | 'addData';
 
@@ -45,6 +46,16 @@ const Modal = () => {
         className="overflow-scroll relative my-6 max-w-[500px] w-[calc(100vw-48px)] h-[calc(100vh-128px)] rounded-3xl bg-white z-[20]"
       >
         <div className="relative my-8 mx-4">
+          <button
+            type="button"
+            onClick={() => {
+              handleModalVisibility(false);
+              setSelectedFoodTag('');
+              setHowManyTags(0);
+            }}
+          >
+            <IoMdClose className="text-2xl absolute top-0 right-0" />
+          </button>
           <h2 className="mb-3 text-2xl font-bold text-center">식품 추가</h2>
           <FoodTagBox
             modalMode={modalMode}
