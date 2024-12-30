@@ -5,15 +5,10 @@ import SearchBar from '../search/SearchBar';
 import FoodList from '../search/FoodList';
 import { SearchedFood, SelectedFoodInfo } from '@/types/SelectedFoodInfo';
 import { SelectedDateContext } from './CalendarDateContext';
-import { useQueryClient } from '@tanstack/react-query';
-import useAuthStore from '@/store/authStore';
 import useCreateCalendarRow from '@/hooks/useCreateCalendarRow';
 import useAddFoodTag from '@/hooks/useAddFoodTag';
 import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md';
 
-interface getCalendarIdQueryData {
-  [dataName: string]: string;
-}
 interface AddFoodFormProps {
   searchedFood: SearchedFood | null;
   howManyTags: number;

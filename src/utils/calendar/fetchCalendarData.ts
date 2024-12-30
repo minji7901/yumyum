@@ -258,9 +258,9 @@ interface CreateFirstTag {
 }
 export async function createFirstTag({ year, month, day, userId, foodTagData, amount }: CreateFirstTag) {
   //캘린더 생성
-  const { id: calendarId } = await createCalendarRow({ userId, year, month, day });
+  await createCalendarRow({ userId, year, month, day });
   //태그 추가
-  createTagAndUpdateCalendar({
+  await createTagAndUpdateCalendar({
     userId,
     foodTagData,
     amount
