@@ -125,7 +125,7 @@ const AddNewFood = ({ onModalModeSwitch, howManyTags, setHowManyTags }: AddNewFo
       </button>
       <div className="m-auto w-[90%]">
         <SearchBar handleSubmit={handleSubmit} />
-        <div className="h-[16rem] hide-scroll-y">
+        <div className="h-[14.5rem] hide-scroll-y">
           <FoodList keyword={keyword} isInModal={true} onSelectFoodHandler={onSelectFoodHandler} />
         </div>
       </div>

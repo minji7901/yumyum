@@ -45,11 +45,11 @@ const FoodInfoBox = ({ selectedFood, howManyTags, setHowManyTags }: FoodInfoBoxP
   return (
     <>
       <div>
-        <h3 className="mb-1 text-lg font-bold text-center">{foodName}</h3>
+        <h3 className="mb-1 text-base font-bold text-center">{foodName}</h3>
         <h4 className="text-base font-bold text-center text-gray-400">{`${foddCalories}kcal`}</h4>
         <h4 className="text-xs font-bold text-center text-gray-400">{`1인분 ${servingSize}`}</h4>
       </div>
-      <table className="m-auto mt-3 mb-6">
+      <table className="m-auto mt-3 mb-3">
         <tbody>
           {nutritionsArr.map(([nutrition, quantity]) => {
             return (
