@@ -73,10 +73,15 @@ const useSignForm = ({ isLoginMode, onSuccess }: UseSignFormProps) => {
 
       if (isLoginMode) {
         const { user } = response;
-        authStore.setUser(user);
+        const userData = {
+          id: user.id,
+          email: user.email,
+          nickname: user.user_metadata?.nickname || ''
+        };
+        authStore.setUser(userData);
+
         window.location.href = '/';
       }
-
       onSuccess();
     } catch (error) {
       Swal.fire({
