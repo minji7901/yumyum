@@ -8,7 +8,7 @@ import FoodInfoBox from './FoodInfoBox';
 
 const FoodUnselected = () => {
   return (
-    <div className="h-[16rem] flex justify-center items-center">
+    <div className="h-[14rem] flex justify-center items-center">
       <span>음식 태그를 클릭하시면 영양정보를 볼 수 있습니다</span>
     </div>
   );
@@ -80,7 +80,7 @@ const ShowDailyMealData = ({ selectedFoodTag, howManyTags, setHowManyTags }: Sho
       <div className="py-6 border-b">
         <FoodInfo selectedFoodTag={selectedFoodTag} howManyTags={howManyTags} setHowManyTags={setHowManyTags} />
       </div>
-      <div className="my-5 ">
+      <div className="my-3 ">
         <h3 className="mb-3 text-base font-bold text-center">{`${year}년 ${month}월 ${day}일의 하루 섭취 영양`}</h3>
         <div className="text-xl font-bold text-center text-[#da6b5d]">{`${totalCalories}kcal`}</div>
       </div>
