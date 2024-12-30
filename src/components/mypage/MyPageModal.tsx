@@ -4,9 +4,8 @@ import { IoMdClose } from 'react-icons/io';
 import { CiEdit } from 'react-icons/ci';
 import { FaCheck } from 'react-icons/fa6';
 import Swal from 'sweetalert2';
-import { createClient } from '@/utils/supabase/client';
 import useAuthStore from '@/store/authStore';
-import { handleLogout } from '@/app/signin/actions';
+import { handleLogout, handleNicknameRename } from '@/app/signin/actions';
 interface MyPageModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -19,8 +18,6 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen || !user) return null;
 
-  const supabase = createClient();
-
   // 닉네임 변경
   const handleNicknameChange = async () => {
     if (!newNickname.trim()) {
@@ -32,23 +29,12 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
       return;
     }
 
-    const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', user.id);
-
-    if (error) {
-      console.error('닉네임 변경 실패:', error.message);
-      Swal.fire({
-        icon: 'error',
-        title: '닉네임 변경 실패',
-        text: '닉네임을 변경하는 중에 오류가 발생했습니다.'
-      });
-      return;
-    }
+    await handleNicknameRename({ id: user.id }, newNickname);
 
     setUser({
       ...user,
       nickname: newNickname
     });
-    console.log(user);
 
     Swal.fire({
       icon: 'success',
@@ -100,8 +86,8 @@ const MyPageModal: React.FC<MyPageModalProps> = ({ isOpen, onClose }) => {
         text: responseData.message
       });
 
-      await handleLogout();
       logOut();
+      await handleLogout();
       localStorage.clear();
       window.location.href = '/';
       onClose();
