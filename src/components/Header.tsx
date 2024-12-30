@@ -2,23 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Swal from 'sweetalert2';
 import { MdOutlinePersonOutline } from 'react-icons/md';
 import { IoMdLogIn } from 'react-icons/io';
 import { RiLogoutCircleLine } from 'react-icons/ri';
-import { createClient } from '@/utils/supabase/client';
 import { usePathname } from 'next/navigation';
 import MyPageModal from './mypage/MyPageModal';
 import useAuthStore from '@/store/authStore';
 import useAuthListener from '@/hooks/useAuthListener';
 import { IoIosMenu, IoMdClose } from 'react-icons/io';
+import { handleLogout } from '@/app/signin/actions';
 
 const Header = () => {
-  const { isLogin, logout, setUser } = useAuthStore();
+  const { isLogin, logOut } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const supabase = createClient();
 
   useAuthListener();
 
@@ -26,32 +24,10 @@ const Header = () => {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  const handleLogout = async () => {
-    const result = await Swal.fire({
-      icon: 'question',
-      title: '로그아웃 하시겠습니까?',
-      showCancelButton: true,
-      confirmButtonColor: '#7EB369',
-      confirmButtonText: '로그아웃',
-      cancelButtonText: '취소'
-    });
-
-    if (result.isConfirmed) {
-      logout();
-      setUser(null);
-
-      Swal.fire({
-        icon: 'success',
-        title: '로그아웃 성공',
-        text: '로그아웃 되었습니다'
-      }).then(() => {
-        window.location.reload();
-      });
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('로그아웃 오류', error.message);
-      }
-    }
+  const handleClientLogout = async () => {
+    await handleLogout();
+    logOut();
+    window.location.href = '/';
   };
 
   return (
@@ -87,7 +63,7 @@ const Header = () => {
               <MdOutlinePersonOutline className="text-xl" />
               마이페이지
             </button>
-            <button className="flex items-center gap-2" onClick={handleLogout}>
+            <button className="flex items-center gap-2" onClick={handleClientLogout}>
               <RiLogoutCircleLine className="mb-[2px]" />
               로그아웃
             </button>
